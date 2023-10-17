@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { featureModel } from 'src/features/model/feature.schema';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
-import { MongooseModule } from '@nestjs/mongoose'
-import { adminModel } from './schema/admin.schema';
 
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: "admin", schema: adminModel }])],
+  imports: [MongooseModule.forFeature([{ name: "feature", schema: featureModel }])],
   providers: [AdminService],
   controllers: [AdminController]
 

@@ -1,15 +1,13 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { sign } from 'jsonwebtoken';
 import { Model } from 'mongoose';
 import { Admin } from 'src/admin/schema/admin.schema';
-import { tokenRequestType } from 'src/middleware/tokenRequest';
 import { adminSigninResponse, adminTokenResponse } from './auth.types';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel('admin') private adminModel: Model<Admin>, @Inject(REQUEST) private readonly req: tokenRequestType) { }
+  constructor(@InjectModel('admin') private adminModel: Model<Admin>) { }
 
   // admin sign-in
   async signIn(AdminSigninResponse: adminSigninResponse): Promise<adminTokenResponse> {
