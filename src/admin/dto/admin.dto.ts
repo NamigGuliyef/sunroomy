@@ -14,3 +14,4 @@ export class updateAdminDto {
   @Length(8, 16)
   password: string
 }
+

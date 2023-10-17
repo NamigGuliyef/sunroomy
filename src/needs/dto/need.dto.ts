@@ -1,21 +1,18 @@
-import { IsNotEmpty, Matches } from 'class-validator';
+import { IsNotEmpty, Matches } from "class-validator";
 
-export class createFeatureDto {
+export class createProjectNeedDto {
   @IsNotEmpty({ message: 'Title is empty' })
   @Matches(new RegExp("^[A-Z a-z-]{3,50}$"))
-  title: string;
+  title: string
   @IsNotEmpty({ message: 'Description is empty' })
-  description: string;
-  icon: string;
+  description: string
 }
 
 
-export class updateFeatureDto {
+export class updateProjectNeedDto {
   @IsNotEmpty({ message: 'Title is empty' })
   @Matches(new RegExp("^[A-Z a-z-]{3,50}$"))
-  title: string;
+  title: string
   @IsNotEmpty({ message: 'Description is empty' })
-  description: string;
-  icon: string;
+  description: string
 }
-
