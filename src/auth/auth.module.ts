@@ -6,6 +6,7 @@ import { adminModel } from 'src/admin/schema/admin.schema';
 import { featureModel } from 'src/features/model/feature.schema';
 import { projectNeedModel } from 'src/needs/model/need.schema';
 import { usedProductsModel } from 'src/used-products/model/usedProduct.schema';
+import { applicationModel } from 'src/applications/model/application.schema';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { usedProductsModel } from 'src/used-products/model/usedProduct.schema';
       { name: 'admin', schema: adminModel },
       { name: 'feature', schema: featureModel },
       { name: "projectneed", schema: projectNeedModel },
-      { name: 'usedproducts', schema: usedProductsModel }
+      { name: 'usedproducts', schema: usedProductsModel },
+      { name: 'application', schema: applicationModel }
     ]),
   ],
   controllers: [AuthController],
