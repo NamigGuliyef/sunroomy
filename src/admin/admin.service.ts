@@ -1,15 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Feature } from 'src/features/model/feature.schema';
 import { Model } from 'mongoose';
 import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto';
-import { ProjectNeed } from 'src/needs/model/need.schema';
+import { Feature } from 'src/features/model/feature.schema';
 import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.dto';
+import { ProjectNeed } from 'src/needs/model/need.schema';
+import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
+import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 
 @Injectable()
 export class AdminService {
   constructor(@InjectModel('feature') private featureModel: Model<Feature>,
-    @InjectModel('feature') private projectNeedModel: Model<ProjectNeed>) { }
+    @InjectModel('projectneed') private projectNeedModel: Model<ProjectNeed>,
+    @InjectModel('usedproducts') private usedProductsModel: Model<UsedProducts>
+    ) { }
 
   // create feature
   async createFeature(CreateFeatureDto: createFeatureDto, file: Express.Multer.File): Promise<Feature> {
@@ -46,7 +50,12 @@ export class AdminService {
 
   // get single feature
   async getSingleFeature(id: string): Promise<Feature> {
-    return await this.featureModel.findById(id)
+    const feature=await this.featureModel.findById(id)
+    if(!feature){
+        throw new HttpException('Feature not found',HttpStatus.NOT_FOUND)
+    }else{
+      return await this.featureModel.findById(id)
+    }
   }
 
   // get all features
@@ -65,9 +74,63 @@ export class AdminService {
     if (!projectNeedExist) {
       throw new HttpException('No project requirements found to be modified', HttpStatus.NOT_FOUND)
     } else {
-      const updateProjectNeed = await this.projectNeedModel.findByIdAndUpdate(id, { $set: { UpdateProjectNeedDto } }, { new: true })
+      const updateProjectNeed = await this.projectNeedModel.findByIdAndUpdate(id, { $set:  UpdateProjectNeedDto  }, { new: true })
       return updateProjectNeed
     }
-
   }
+
+  // delete Project needs
+async deleteProjectNeed(id:string):Promise<string>{
+  const projectNeed=await this.projectNeedModel.findById(id)
+  if(!projectNeed){
+    throw new HttpException('The project needs you want to delete were not found', HttpStatus.NOT_FOUND)
+  }else{
+    await this.projectNeedModel.findByIdAndDelete(id)
+    return 'Project need removed'
+  }
+}
+
+  // get single project needs
+  async getSingleProjectNeed(id:string):Promise<ProjectNeed>{
+    const projectNeed=await this.projectNeedModel.findById(id)
+    if(!projectNeed){
+    throw new HttpException('Project needs not found', HttpStatus.NOT_FOUND)
+    }else{
+      return await this.projectNeedModel.findById(id)
+    }
+  }
+
+  //get All project needs
+  async getAllProjectNeed():Promise<ProjectNeed[]>{
+    return await this.projectNeedModel.find()
+  }
+
+  // create used Products
+  async createUsedProducts(CreateUsedProductsDto:createUsedProductsDto):Promise<UsedProducts>{
+    return await this.usedProductsModel.create(CreateUsedProductsDto)
+  }
+
+  // update used Products
+async updateUsedProducts(id:string,UpdateUsedProducts:updateUsedProductsDto):Promise<UsedProducts>{
+  const usedProductsExist=await this.usedProductsModel.findById(id)
+  if(!usedProductsExist){
+    throw new HttpException('The used products you want to change were not found',HttpStatus.NOT_FOUND)
+  }else{
+    const updateUsedProduct = await this.usedProductsModel.findByIdAndUpdate(id,{$set:UpdateUsedProducts},{new:true})
+    return updateUsedProduct
+  }
+}
+
+  // delete used Products
+async deleteUsedProducts(id:string):Promise<string>{
+  const usedProducts = await this.usedProductsModel.findById(id)
+  if(!usedProducts){
+    throw new HttpException('The used products you want to delete were not found',HttpStatus.NOT_FOUND)
+  }else{
+    await this.usedProductsModel.findByIdAndDelete(id)
+    return 'Removed used products'
+  }
+}
+
+
 }

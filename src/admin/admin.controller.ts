@@ -3,9 +3,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from 'src/config/multer/multer';
 import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto';
 import { Feature } from 'src/features/model/feature.schema';
-import { createProjectNeedDto } from 'src/needs/dto/need.dto';
+import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.dto';
 import { ProjectNeed } from 'src/needs/model/need.schema';
 import { AdminService } from './admin.service';
+import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
+import { UsedProducts, usedProductsModel } from 'src/used-products/model/usedProduct.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -55,8 +57,46 @@ export class AdminController {
   @Put('/dashboard/projectneeds/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  async updateProjectNeed(@Param('id') id: string, @Body() CreateProjectNeedDto: createProjectNeedDto): Promise<ProjectNeed> {
-    return await this.adminService.updateProjectNeed(id, CreateProjectNeedDto)
+  async updateProjectNeed(@Param('id') id: string, @Body() UpdateProjectNeedDto: updateProjectNeedDto): Promise<ProjectNeed> {
+    return await this.adminService.updateProjectNeed(id, UpdateProjectNeedDto)
   }
+
+  @Delete('/dashboard/projectneeds/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteProjectNeed(@Param('id') id:string):Promise<string>{
+    return await this.adminService.deleteProjectNeed(id)
+  }
+
+  @Get('/dashboard/projectneeds/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleProjectNeed(@Param('id') id:string):Promise<ProjectNeed>{
+    return await this.adminService.getSingleProjectNeed(id)
+  }
+  
+  @Get('/dashboard/projectneeds')
+  @HttpCode(HttpStatus.OK)
+  async getAllProjectNeed():Promise<ProjectNeed[]>{
+    return await this.adminService.getAllProjectNeed()
+}
+
+@Post('/dashboard/usedproducts')
+@HttpCode(HttpStatus.CREATED)
+@UsePipes(new ValidationPipe())
+async createUsedProducts(@Body() CreateUsedProductsDto:createUsedProductsDto):Promise<UsedProducts>{
+  return await this.adminService.createUsedProducts(CreateUsedProductsDto)
+}
+
+@Put('/dashboard/usedproducts/:id')
+@HttpCode(HttpStatus.OK)
+@UsePipes(new ValidationPipe())
+async updateUsedProducts(@Param('id') id:string,@Body() UpdateUsedProductsDto:updateUsedProductsDto):Promise<UsedProducts>{
+  return await this.adminService.updateUsedProducts(id,UpdateUsedProductsDto)
+}
+
+@Delete('/dashboard/usedproducts/:id')
+@HttpCode(HttpStatus.OK)
+async deleteUsedProducts(@Param('id') id:string):Promise<string>{
+  return await this.adminService.deleteUsedProducts(id)
+}
 
 }
