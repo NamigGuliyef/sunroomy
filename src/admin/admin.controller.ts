@@ -10,6 +10,8 @@ import { ProjectNeed } from 'src/needs/model/need.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 import { AdminService } from './admin.service';
+import { createProjectDto, updateProjectDto } from 'src/projects/dto/project.dto';
+import { Project } from 'src/projects/model/project.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -146,5 +148,22 @@ export class AdminController {
   async getAllApplication():Promise<Application[]>{
     return await this.adminService.getAllApplication()
   }
+
+  @Post('/dashboard/projects')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
+  async createProject(@Body() CreateProjectDto:createProjectDto, @UploadedFiles() files:Express.Multer.File[]):Promise<Project>{
+  return await this.adminService.createProject(CreateProjectDto,files)
+}
+
+  @Put('/dashboard/projects/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
+  async updateProject(@Param('id') id:string,@Body() UpdateProjectDto:updateProjectDto,@UploadedFiles() files:Express.Multer.File[]):Promise<Project>{
+    return 
+  }
+
 
 }

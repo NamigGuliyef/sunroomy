@@ -8,6 +8,8 @@ import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto
 import { Feature } from 'src/features/model/feature.schema';
 import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.dto';
 import { ProjectNeed } from 'src/needs/model/need.schema';
+import { createProjectDto, updateProjectDto } from 'src/projects/dto/project.dto';
+import { Project } from 'src/projects/model/project.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 
@@ -17,6 +19,7 @@ export class AdminService {
     @InjectModel('projectneed') private projectNeedModel: Model<ProjectNeed>,
     @InjectModel('usedproducts') private usedProductsModel: Model<UsedProducts>,
     @InjectModel('application') private applicationModel: Model<Application>,
+    @InjectModel('project') private projectModel: Model<Project>
   ) { }
 
   // create feature
@@ -204,5 +207,31 @@ async deleteApplication(id:string):Promise<string> {
     return await this.applicationModel.find()
   }
 
+// create project
+  async createProject(CreateProjectDto:createProjectDto,files:Express.Multer.File[]):Promise<Project>{
+  const fileUrls=[]
+  for(let i=0;i<files.length;i++){
+    const fileUrl=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
+    fileUrls.push(fileUrl.url)
+  }
+  const project=await this.projectModel.create({...CreateProjectDto,photos:fileUrls})
+  return project
+}
+
+// update project
+async updateProject(id:string,UpdateProjectDto:updateProjectDto,files:Express.Multer.File[]):Promise<Project>{
+  const project=await this.projectModel.findById(id)
+  if(!project){
+    throw new HttpException('The project to be change was not found',HttpStatus.NOT_FOUND)
+  }else{
+    const fileUrls=[]
+    for(let i=0;i<files.length;i++){
+      const fileUrl=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
+      fileUrls.push(fileUrl.url)
+    }
+    const updateProject=await this.projectModel.findByIdAndUpdate(id,{$set:{...UpdateProjectDto,photos:fileUrls}})
+    return updateProject
+  }
+}
 
 }
