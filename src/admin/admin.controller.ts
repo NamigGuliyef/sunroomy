@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UploadedFile, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { createApplicationDto } from 'src/applications/dto/application.dto';
+import { createApplicationDto, updateApplicationDto } from 'src/applications/dto/application.dto';
 import { Application } from 'src/applications/model/application.schema';
-import { MulterOptions } from 'src/config/multer/multer';
+import { MulterOptions, MulterOptionsCloudinary } from 'src/config/multer/multer';
 import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto';
 import { Feature } from 'src/features/model/feature.schema';
 import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.dto';
@@ -116,10 +116,35 @@ export class AdminController {
   @Post('/dashboard/applications')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FilesInterceptor('photo', 10, MulterOptions))
+  @UseInterceptors(FilesInterceptor('photo', 10, MulterOptionsCloudinary))
   async createApplication(@Body() CreateApplicationDto: createApplicationDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Application> {
     return await this.adminService.createApplication(CreateApplicationDto, files)
   }
   
+  @Put('/dashboard/applications/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FilesInterceptor('photo',10, MulterOptionsCloudinary))
+  async updateApplication(@Param('id') id:string,@Body() UpdateApplicationDto:updateApplicationDto,@UploadedFiles() files:Express.Multer.File[]):Promise<Application>{
+    return await this.adminService.updateApplication(id,UpdateApplicationDto,files)
+}
+
+  @Delete('/dashboard/applications/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteApplication(@Param('id') id:string):Promise<string>{
+    return await this.adminService.deleteApplication(id)
+  }
+
+  @Get('/dashboard/applications/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleApplication(@Param('id') id:string):Promise<Application>{
+    return await this.adminService.getSingleApplication(id)
+  }
+
+  @Get('dashboard/applications')
+  @HttpCode(HttpStatus.OK)
+  async getAllApplication():Promise<Application[]>{
+    return await this.adminService.getAllApplication()
+  }
 
 }

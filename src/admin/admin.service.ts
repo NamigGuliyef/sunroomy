@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { createApplicationDto } from 'src/applications/dto/application.dto';
+import { createApplicationDto, updateApplicationDto } from 'src/applications/dto/application.dto';
 import { Application } from 'src/applications/model/application.schema';
 import cloudinary from 'src/config/cloudinary/cloudinary';
 import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto';
@@ -58,7 +58,7 @@ export class AdminService {
     if (!feature) {
       throw new HttpException('Feature not found', HttpStatus.NOT_FOUND)
     } else {
-      return await this.featureModel.findById(id)
+      return feature
     }
   }
 
@@ -100,7 +100,7 @@ export class AdminService {
     if (!projectNeed) {
       throw new HttpException('Project needs not found', HttpStatus.NOT_FOUND)
     } else {
-      return await this.projectNeedModel.findById(id)
+      return projectNeed
     }
   }
 
@@ -142,7 +142,7 @@ export class AdminService {
     if (!usedPorducts) {
       throw new HttpException('Used products not found', HttpStatus.NOT_FOUND)
     } else {
-      return await this.usedProductsModel.findById(id)
+      return usedPorducts
     }
   }
 
@@ -150,7 +150,6 @@ export class AdminService {
   async getAllUsedProducts(): Promise<UsedProducts[]> {
     return await this.usedProductsModel.find()
   }
-
 
   // create product application
   async createApplication(CreateApplicationDto: createApplicationDto, files: Express.Multer.File[]): Promise<Application> {
@@ -161,6 +160,48 @@ export class AdminService {
     }
     const application = await this.applicationModel.create({ ...CreateApplicationDto, photos: fileUrls })
     return application
+  }
+
+// update product application
+async updateApplication(id:string,UpdateApplicationDto:updateApplicationDto,files:Express.Multer.File[]):Promise<Application>{
+  const application=await this.applicationModel.findById(id)
+  if(!application){
+    throw new HttpException('The application you want to update was not found',HttpStatus.NOT_FOUND)
+  }else{
+    const fileUrls=[]
+    for(let i=0;i<files.length;i++){
+      const fileUrl=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
+      fileUrls.push(fileUrl.url)
+    }
+    const updateApplication=await this.applicationModel.findByIdAndUpdate(id,{$set:{...UpdateApplicationDto,photos:fileUrls}},{new:true})
+    return updateApplication
+  }
+}
+
+// delete product application
+async deleteApplication(id:string):Promise<string> {
+  const application=await this.applicationModel.findById(id)
+  if(!application){
+    throw new HttpException('The application you want to uninstall was not found',HttpStatus.NOT_FOUND)
+  }else{
+    await this.applicationModel.findByIdAndDelete(id)
+    return "The application has been deleted"
+  }
+}
+
+// get single product application
+  async getSingleApplication(id:string):Promise<Application>{
+    const application=await this.applicationModel.findById(id)
+  if(!application){
+  throw new HttpException('Application not found',HttpStatus.NOT_FOUND)
+  }else{
+  return application
+  }
+}
+
+// get all product application
+  async getAllApplication():Promise<Application[]>{
+    return await this.applicationModel.find()
   }
 
 
