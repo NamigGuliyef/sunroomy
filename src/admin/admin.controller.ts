@@ -7,11 +7,11 @@ import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto
 import { Feature } from 'src/features/model/feature.schema';
 import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.dto';
 import { ProjectNeed } from 'src/needs/model/need.schema';
+import { createProjectDto, updateProjectDto } from 'src/projects/dto/project.dto';
+import { Project } from 'src/projects/model/project.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 import { AdminService } from './admin.service';
-import { createProjectDto, updateProjectDto } from 'src/projects/dto/project.dto';
-import { Project } from 'src/projects/model/project.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -161,8 +161,14 @@ export class AdminController {
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
-  async updateProject(@Param('id') id:string,@Body() UpdateProjectDto:updateProjectDto,@UploadedFiles() files:Express.Multer.File[]):Promise<Project>{
-    return 
+  async updateProject(@Param('id') id:string, @Body() UpdateProjectDto:updateProjectDto,@UploadedFiles() files:Express.Multer.File[]):Promise<Project>{
+    return await this.adminService.updateProject(id,UpdateProjectDto,files)
+  }
+
+  @Delete('/dashboard/projects/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteProject(@Param('id') id:string):Promise<string>{
+    return await this.adminService.deleteProject(id)
   }
 
 

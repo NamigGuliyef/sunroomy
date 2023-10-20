@@ -229,9 +229,24 @@ async updateProject(id:string,UpdateProjectDto:updateProjectDto,files:Express.Mu
       const fileUrl=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
       fileUrls.push(fileUrl.url)
     }
-    const updateProject=await this.projectModel.findByIdAndUpdate(id,{$set:{...UpdateProjectDto,photos:fileUrls}})
+    const updateProject=await this.projectModel.findByIdAndUpdate(id,{$set:{...UpdateProjectDto,photos:fileUrls}},{new:true})
     return updateProject
   }
 }
+
+// delete project
+async deleteProject(id:string):Promise<string>{
+  const project=await this.projectModel.findById(id)
+  if(!project){
+    throw new HttpException('The project you want to delete was not found',HttpStatus.NOT_FOUND)
+  }else{
+    await this.projectModel.findByIdAndDelete(id)
+    return 'The project has been deleted'
+  }
+}
+
+// get single project
+
+
 
 }
