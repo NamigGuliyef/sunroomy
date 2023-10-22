@@ -6,6 +6,8 @@ export class UsedProducts {
   title: string;
   @Prop({ required: true })
   description: string;
+  @Prop({ required: true })
+  photos:string[]
 }
 
-export const usedProductsModel=SchemaFactory.createForClass(UsedProducts)
+export const usedProductsModel = SchemaFactory.createForClass(UsedProducts)

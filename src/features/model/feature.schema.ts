@@ -6,7 +6,7 @@ export class Feature {
   title: string;
   @Prop({ required: true })
   description: string;
-  @Prop({ required: true })
+  @Prop()
   icon: string;
 }
 

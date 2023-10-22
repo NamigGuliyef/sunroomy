@@ -7,8 +7,14 @@ import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto
 import { Feature } from 'src/features/model/feature.schema';
 import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.dto';
 import { ProjectNeed } from 'src/needs/model/need.schema';
+import { createProductDto, updateProductDto } from 'src/product/dto/product.dto';
+import { Product } from 'src/product/model/product.schema';
 import { createProjectDto, updateProjectDto } from 'src/projects/dto/project.dto';
 import { Project } from 'src/projects/model/project.schema';
+import { createSpecificationDto, updateSpecificationDto } from 'src/specifications/dto/specification.dto';
+import { Specification } from 'src/specifications/model/specification.schema';
+import { createSubProductDto, updateSubProductDto } from 'src/subproduct/dto/subproduct.dto';
+import { Subproduct } from 'src/subproduct/model/subproduct.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 import { AdminService } from './admin.service';
@@ -86,15 +92,17 @@ export class AdminController {
   @Post('/dashboard/usedproducts')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async createUsedProducts(@Body() CreateUsedProductsDto: createUsedProductsDto): Promise<UsedProducts> {
-    return await this.adminService.createUsedProducts(CreateUsedProductsDto)
+  @UseInterceptors(FilesInterceptor('photos', 5, MulterOptionsCloudinary))
+  async createUsedProducts(@Body() CreateUsedProductsDto: createUsedProductsDto, @UploadedFiles() files: Express.Multer.File[]): Promise<UsedProducts> {
+    return await this.adminService.createUsedProducts(CreateUsedProductsDto, files)
   }
 
   @Put('/dashboard/usedproducts/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  async updateUsedProducts(@Param('id') id: string, @Body() UpdateUsedProductsDto: updateUsedProductsDto): Promise<UsedProducts> {
-    return await this.adminService.updateUsedProducts(id, UpdateUsedProductsDto)
+  @UseInterceptors(FilesInterceptor('photos', 5, MulterOptionsCloudinary))
+  async updateUsedProducts(@Param('id') id: string, @Body() UpdateUsedProductsDto: updateUsedProductsDto, @UploadedFiles() files: Express.Multer.File[]): Promise<UsedProducts> {
+    return await this.adminService.updateUsedProducts(id, UpdateUsedProductsDto, files)
   }
 
   @Delete('/dashboard/usedproducts/:id')
@@ -122,54 +130,162 @@ export class AdminController {
   async createApplication(@Body() CreateApplicationDto: createApplicationDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Application> {
     return await this.adminService.createApplication(CreateApplicationDto, files)
   }
-  
+
   @Put('/dashboard/applications/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FilesInterceptor('photo',10, MulterOptionsCloudinary))
-  async updateApplication(@Param('id') id:string,@Body() UpdateApplicationDto:updateApplicationDto,@UploadedFiles() files:Express.Multer.File[]):Promise<Application>{
-    return await this.adminService.updateApplication(id,UpdateApplicationDto,files)
-}
+  @UseInterceptors(FilesInterceptor('photo', 10, MulterOptionsCloudinary))
+  async updateApplication(@Param('id') id: string, @Body() UpdateApplicationDto: updateApplicationDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Application> {
+    return await this.adminService.updateApplication(id, UpdateApplicationDto, files)
+  }
 
   @Delete('/dashboard/applications/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteApplication(@Param('id') id:string):Promise<string>{
+  async deleteApplication(@Param('id') id: string): Promise<string> {
     return await this.adminService.deleteApplication(id)
   }
 
   @Get('/dashboard/applications/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleApplication(@Param('id') id:string):Promise<Application>{
+  async getSingleApplication(@Param('id') id: string): Promise<Application> {
     return await this.adminService.getSingleApplication(id)
   }
 
   @Get('dashboard/applications')
   @HttpCode(HttpStatus.OK)
-  async getAllApplication():Promise<Application[]>{
+  async getAllApplication(): Promise<Application[]> {
     return await this.adminService.getAllApplication()
   }
 
   @Post('/dashboard/projects')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
-  async createProject(@Body() CreateProjectDto:createProjectDto, @UploadedFiles() files:Express.Multer.File[]):Promise<Project>{
-  return await this.adminService.createProject(CreateProjectDto,files)
-}
+  @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
+  async createProject(@Body() CreateProjectDto: createProjectDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Project> {
+    return await this.adminService.createProject(CreateProjectDto, files)
+  }
 
   @Put('/dashboard/projects/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
-  async updateProject(@Param('id') id:string, @Body() UpdateProjectDto:updateProjectDto,@UploadedFiles() files:Express.Multer.File[]):Promise<Project>{
-    return await this.adminService.updateProject(id,UpdateProjectDto,files)
+  @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
+  async updateProject(@Param('id') id: string, @Body() UpdateProjectDto: updateProjectDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Project> {
+    return await this.adminService.updateProject(id, UpdateProjectDto, files)
   }
 
   @Delete('/dashboard/projects/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteProject(@Param('id') id:string):Promise<string>{
+  async deleteProject(@Param('id') id: string): Promise<string> {
     return await this.adminService.deleteProject(id)
   }
 
+  @Get('/dashboard/projects/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleProject(@Param('id') id: string): Promise<Project> {
+    return await this.adminService.getSingleProject(id)
+  }
+
+  @Get('/dashboard/projects')
+  @HttpCode(HttpStatus.OK)
+  async getAllProject(): Promise<Project[]> {
+    return await this.adminService.getAllProject()
+  }
+
+  @Post('/dashboard/specifications')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createSpecification(@Body() CreateSpecificationDto: createSpecificationDto): Promise<Specification> {
+    return await this.adminService.createSpecification(CreateSpecificationDto)
+  }
+
+  @Put('/dashboard/specifications/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateSpecification(@Param('id') id: string, @Body() UpdateSpecificationDto: updateSpecificationDto): Promise<Specification> {
+    return await this.adminService.updateSpecification(id, UpdateSpecificationDto)
+  }
+
+  @Delete('/dashboard/specifications/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteSpecification(@Param('id') id: string): Promise<string> {
+    return await this.adminService.deleteSpecification(id)
+  }
+
+  @Get('/dashboard/specifications/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSpecification(@Param('id') id: string): Promise<Specification> {
+    return await this.adminService.getSingleSpecification(id)
+  }
+
+  @Get('/dashboard/specifications')
+  @HttpCode(HttpStatus.OK)
+  async getAllSpecification(): Promise<Specification[]> {
+    return await this.adminService.getAllSpecification()
+  }
+
+  @Post('/dashboard/subproducts')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto): Promise<Subproduct> {
+    return await this.adminService.createSubProduct(CreateSubproductDto)
+  }
+
+  @Put('/dashboard/subproducts/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto): Promise<Subproduct> {
+    return await this.adminService.updateSubProduct(id, UpdateSubproductDto)
+  }
+
+  @Delete('/dashboard/subproducts/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteSubProduct(@Param('id') id: string): Promise<string> {
+    return await this.adminService.deleteSubProduct(id)
+  }
+
+  @Get('/dashboard/subproducts/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSubProduct(@Param('id') id: string): Promise<Subproduct> {
+    return await this.adminService.getSingleSubProduct(id)
+  }
+
+  @Get('/dashboard/subproducts')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubProduct(): Promise<Subproduct[]> {
+    return await this.adminService.getAllSubProduct()
+  }
+
+  @Post('/dashboard/products')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createProduct(@Body() CreateProductDto: createProductDto): Promise<Product> {
+    return await this.adminService.createProduct(CreateProductDto)
+  }
+
+  @Put('/dashboard/products/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateProduct(@Param('id') id: string, @Body() UpdateProductDto: updateProductDto): Promise<Product> {
+    return await this.adminService.updateProduct(id, UpdateProductDto)
+  }
+
+  @Delete('/dashboard/products/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteProduct(@Param('id') id: string) {
+    return await this.adminService.deleteProduct(id)
+  }
+
+  @Get('/dashboard/products/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleProduct(@Param('id') id:string):Promise<Product>{
+    return await this.adminService.getSingleProduct(id)
+  }
+
+  @Get('/dashboard/products')
+  @HttpCode(HttpStatus.OK)
+  async getAllProduct():Promise<Product[]>{
+    return await this.adminService.getAllProduct()
+  }
 
 }
+

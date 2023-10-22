@@ -7,6 +7,8 @@ export class Project {
   title: string;
   @Prop({ required: true })
   location: string;
+  @Prop({required:true})
+  used_products_joint:string
   @Prop({ required: true })
   description: string;
   @Prop({ required: true })

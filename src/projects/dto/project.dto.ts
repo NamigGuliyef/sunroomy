@@ -6,6 +6,8 @@ export class createProjectDto {
   title: string;
   @IsNotEmpty({ message: 'Location is empty' })
   location: string;
+  @IsNotEmpty({ message: 'Used products joint is empty' })
+  used_products_joint:string
   @IsNotEmpty({ message: 'Description is empty' })
   description: string;
   @IsNotEmpty()
@@ -22,6 +24,8 @@ export class updateProjectDto {
   title: string;
   @IsNotEmpty({ message: 'Location is empty' })
   location: string;
+  @IsNotEmpty({ message: 'Used products joint is empty' })
+  used_products_joint:string
   @IsNotEmpty({ message: 'Description is empty' })
   description: string;
   @IsNotEmpty()
