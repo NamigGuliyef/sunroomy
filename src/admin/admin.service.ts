@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { title } from 'process';
 import { createApplicationDto, updateApplicationDto } from 'src/applications/dto/application.dto';
 import { Application } from 'src/applications/model/application.schema';
 import cloudinary from 'src/config/cloudinary/cloudinary';
@@ -23,10 +22,12 @@ import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
+import { MailerService } from '@nestjs-modules/mailer/dist'; 
 
 @Injectable()
 export class AdminService {
-  constructor(@InjectModel('feature') private featureModel: Model<Feature>,
+  constructor(private mailerService:MailerService,
+    @InjectModel('feature') private featureModel: Model<Feature>,
     @InjectModel('projectneed') private projectNeedModel: Model<ProjectNeed>,
     @InjectModel('usedproducts') private usedProductsModel: Model<UsedProducts>,
     @InjectModel('application') private applicationModel: Model<Application>,
@@ -475,9 +476,14 @@ async createContact(CreateContactDto:createContactDto):Promise<Contact>{
     return await this.subscribeModel.create(CreateSubscribeDto)
 }
 
-// get subscribe
+ // get subscribe
 async getAllSubscribe():Promise<Subscribe[]>{
   return await this.subscribeModel.find()
 }
+
+ // create broadcast
+//  async createBroadcast():Promise<string>{
+// this.mailerService.sendMail()
+//  }
 
 }
