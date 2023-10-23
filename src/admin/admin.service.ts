@@ -5,6 +5,8 @@ import { title } from 'process';
 import { createApplicationDto, updateApplicationDto } from 'src/applications/dto/application.dto';
 import { Application } from 'src/applications/model/application.schema';
 import cloudinary from 'src/config/cloudinary/cloudinary';
+import { createContactDto, updateContactDto } from 'src/contact/dto/contact.dto';
+import { Contact } from 'src/contact/model/contact.schema';
 import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto';
 import { Feature } from 'src/features/model/feature.schema';
 import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.dto';
@@ -29,7 +31,8 @@ export class AdminService {
     @InjectModel('project') private projectModel: Model<Project>,
     @InjectModel('specification') private specificationModel: Model<Specification>,
     @InjectModel('subproduct') private subProductModel: Model<Subproduct>,
-    @InjectModel('product') private productModel: Model<Product>
+    @InjectModel('product') private productModel: Model<Product>,
+    @InjectModel('contact') private contactModel: Model<Contact>
   ) { }
 
   // create feature
@@ -418,9 +421,45 @@ export class AdminService {
     return await this.subProductModel.find()
   }
 
+  // create contact
+async createContact(CreateContactDto:createContactDto):Promise<Contact>{
+  const contactExist=await this.contactModel.findOne({location:CreateContactDto.location})
+  if(contactExist){
+    throw new HttpException('Location already created',HttpStatus.CONFLICT)
+  }
+  return await this.contactModel.create(CreateContactDto)
+}
 
+  // update contact
+  async updateContact(id:string,UpdateContactDto:updateContactDto):Promise<Contact>{
+    const contactExist=await this.contactModel.findById(id)
+    if(!contactExist){
+      throw new HttpException('Contact not found',HttpStatus.NOT_FOUND)
+    }
+    return await this.contactModel.findByIdAndUpdate(id,{$set:UpdateContactDto},{new:true})
+  }
 
+  // delete contact
+  async deleteContact(id:string):Promise<string>{
+  const contactExist=await this.contactModel.findById(id)
+  if(!contactExist){
+  throw new HttpException('Contact not found',HttpStatus.NOT_FOUND)
+  }
+    await this.contactModel.findByIdAndDelete(id)
+    return 'Contact information has been removed'
+  }
 
+  // get single contact
+  async getSingleContact(id:string):Promise<Contact>{
+    const contactExist=await this.contactModel.findById(id)
+    if(!contactExist){
+    throw new HttpException('Contact not found',HttpStatus.NOT_FOUND)
+    }
+    return contactExist
+  }
 
-
+  // get all contact
+  async getAllContact():Promise<Contact[]>{
+    return await this.contactModel.find()
+  }
 }

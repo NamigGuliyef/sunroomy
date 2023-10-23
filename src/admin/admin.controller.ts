@@ -18,6 +18,8 @@ import { Subproduct } from 'src/subproduct/model/subproduct.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 import { AdminService } from './admin.service';
+import { createContactDto, updateContactDto } from 'src/contact/dto/contact.dto';
+import { Contact } from 'src/contact/model/contact.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -286,6 +288,39 @@ export class AdminController {
   async getAllProduct():Promise<Product[]>{
     return await this.adminService.getAllProduct()
   }
+
+  @Post('/dashboard/contacts')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createContact(@Body() CreateContactDto:createContactDto):Promise<Contact>{
+    return await this.adminService.createContact(CreateContactDto)
+  }
+
+  @Put('/dashboard/contacts/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateContact(@Param('id') id:string, @Body() UpdateContactDto:updateContactDto):Promise<Contact>{
+    return await this.adminService.updateContact(id,UpdateContactDto)
+  }
+
+  @Delete('/dashboard/contacts/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteContact(@Param('id') id:string):Promise<string>{
+    return await this.adminService.deleteContact(id)
+  }
+
+  @Get('/dashboard/contacts/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleContact(@Param('id') id:string):Promise<Contact>{
+    return await this.adminService.getSingleContact(id)
+  }
+
+  @Get('/dashboard/contacts')
+  @HttpCode(HttpStatus.OK)
+  async getAllContact():Promise<Contact[]>{
+    return await this.adminService.getAllContact()
+  }
+
 
 }
 
