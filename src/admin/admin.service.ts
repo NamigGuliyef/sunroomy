@@ -19,6 +19,8 @@ import { createSpecificationDto, updateSpecificationDto } from 'src/specificatio
 import { Specification } from 'src/specifications/model/specification.schema';
 import { createSubProductDto, updateSubProductDto } from 'src/subproduct/dto/subproduct.dto';
 import { Subproduct } from 'src/subproduct/model/subproduct.schema';
+import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
+import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 
@@ -32,8 +34,9 @@ export class AdminService {
     @InjectModel('specification') private specificationModel: Model<Specification>,
     @InjectModel('subproduct') private subProductModel: Model<Subproduct>,
     @InjectModel('product') private productModel: Model<Product>,
-    @InjectModel('contact') private contactModel: Model<Contact>
-  ) { }
+    @InjectModel('contact') private contactModel: Model<Contact>,
+    @InjectModel('subscribe') private subscribeModel: Model<Subscribe>)
+{ }
 
   // create feature
   async createFeature(CreateFeatureDto: createFeatureDto, file: Express.Multer.File): Promise<Feature> {
@@ -462,4 +465,19 @@ async createContact(CreateContactDto:createContactDto):Promise<Contact>{
   async getAllContact():Promise<Contact[]>{
     return await this.contactModel.find()
   }
+
+  // create subscribe
+  async createSubscribe(CreateSubscribeDto:createSubscribeDto):Promise<Subscribe>{
+  const subscribeExist=await this.subscribeModel.findOne({email:CreateSubscribeDto.email})
+  if(subscribeExist){
+    throw new HttpException('The email address is already subscribed', HttpStatus.CONFLICT)
+  }
+    return await this.subscribeModel.create(CreateSubscribeDto)
+}
+
+// get subscribe
+async getAllSubscribe():Promise<Subscribe[]>{
+  return await this.subscribeModel.find()
+}
+
 }

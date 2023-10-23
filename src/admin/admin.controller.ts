@@ -20,6 +20,8 @@ import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 import { AdminService } from './admin.service';
 import { createContactDto, updateContactDto } from 'src/contact/dto/contact.dto';
 import { Contact } from 'src/contact/model/contact.schema';
+import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
+import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -320,6 +322,20 @@ export class AdminController {
   async getAllContact():Promise<Contact[]>{
     return await this.adminService.getAllContact()
   }
+
+  @Post('/dashboard/subscribe')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createSubscribe(@Body() CreateSubscribeDto:createSubscribeDto):Promise<Subscribe>{
+    return await this.adminService.createSubscribe(CreateSubscribeDto)
+  }
+
+  @Get('/dashboard/subscribe')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubscribe():Promise<Subscribe[]>{
+    return await this.adminService.getAllSubscribe()
+  }
+
 
 
 }

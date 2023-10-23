@@ -12,6 +12,7 @@ import { specificationModel } from 'src/specifications/model/specification.schem
 import { subProductModel } from 'src/subproduct/model/subproduct.schema';
 import { productModel } from 'src/product/model/product.schema';
 import { contactModel } from 'src/contact/model/contact.schema';
+import { subscribeModel } from 'src/subscribe/model/subscribe.schema';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { contactModel } from 'src/contact/model/contact.schema';
       { name: 'specification', schema: specificationModel },
       { name: 'subproduct', schema: subProductModel },
       { name: 'product', schema: productModel },
-      { name: 'contact', schema: contactModel }
+      { name: 'contact', schema: contactModel },
+      { name: 'subscribe', schema: subscribeModel }
     ]),
   ],
   controllers: [AuthController],
