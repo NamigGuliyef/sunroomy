@@ -18,8 +18,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
         port:587,
         service:"gmail",
         auth:{
-          user:"outdoor.project.2023@gmail.com",
-          pass:""
+          user:"quliyevnamiq8@gmail.com",
+          pass:"kuuozvazyyafntrg"
         }
       },
       

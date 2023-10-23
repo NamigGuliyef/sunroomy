@@ -1,3 +1,4 @@
+import { MailerService } from '@nestjs-modules/mailer/dist';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -18,15 +19,14 @@ import { createSpecificationDto, updateSpecificationDto } from 'src/specificatio
 import { Specification } from 'src/specifications/model/specification.schema';
 import { createSubProductDto, updateSubProductDto } from 'src/subproduct/dto/subproduct.dto';
 import { Subproduct } from 'src/subproduct/model/subproduct.schema';
-import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
+import { createSubscribeDto, sendEmailText } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
-import { MailerService } from '@nestjs-modules/mailer/dist'; 
 
 @Injectable()
 export class AdminService {
-  constructor(private mailerService:MailerService,
+  constructor(private mailerService: MailerService,
     @InjectModel('feature') private featureModel: Model<Feature>,
     @InjectModel('projectneed') private projectNeedModel: Model<ProjectNeed>,
     @InjectModel('usedproducts') private usedProductsModel: Model<UsedProducts>,
@@ -36,8 +36,7 @@ export class AdminService {
     @InjectModel('subproduct') private subProductModel: Model<Subproduct>,
     @InjectModel('product') private productModel: Model<Product>,
     @InjectModel('contact') private contactModel: Model<Contact>,
-    @InjectModel('subscribe') private subscribeModel: Model<Subscribe>)
-{ }
+    @InjectModel('subscribe') private subscribeModel: Model<Subscribe>) { }
 
   // create feature
   async createFeature(CreateFeatureDto: createFeatureDto, file: Express.Multer.File): Promise<Feature> {
@@ -426,64 +425,73 @@ export class AdminService {
   }
 
   // create contact
-async createContact(CreateContactDto:createContactDto):Promise<Contact>{
-  const contactExist=await this.contactModel.findOne({location:CreateContactDto.location})
-  if(contactExist){
-    throw new HttpException('Location already created',HttpStatus.CONFLICT)
+  async createContact(CreateContactDto: createContactDto): Promise<Contact> {
+    const contactExist = await this.contactModel.findOne({ location: CreateContactDto.location })
+    if (contactExist) {
+      throw new HttpException('Location already created', HttpStatus.CONFLICT)
+    }
+    return await this.contactModel.create(CreateContactDto)
   }
-  return await this.contactModel.create(CreateContactDto)
-}
 
   // update contact
-  async updateContact(id:string,UpdateContactDto:updateContactDto):Promise<Contact>{
-    const contactExist=await this.contactModel.findById(id)
-    if(!contactExist){
-      throw new HttpException('Contact not found',HttpStatus.NOT_FOUND)
+  async updateContact(id: string, UpdateContactDto: updateContactDto): Promise<Contact> {
+    const contactExist = await this.contactModel.findById(id)
+    if (!contactExist) {
+      throw new HttpException('Contact not found', HttpStatus.NOT_FOUND)
     }
-    return await this.contactModel.findByIdAndUpdate(id,{$set:UpdateContactDto},{new:true})
+    return await this.contactModel.findByIdAndUpdate(id, { $set: UpdateContactDto }, { new: true })
   }
 
   // delete contact
-  async deleteContact(id:string):Promise<string>{
-  const contactExist=await this.contactModel.findById(id)
-  if(!contactExist){
-  throw new HttpException('Contact not found',HttpStatus.NOT_FOUND)
-  }
+  async deleteContact(id: string): Promise<string> {
+    const contactExist = await this.contactModel.findById(id)
+    if (!contactExist) {
+      throw new HttpException('Contact not found', HttpStatus.NOT_FOUND)
+    }
     await this.contactModel.findByIdAndDelete(id)
     return 'Contact information has been removed'
   }
 
   // get single contact
-  async getSingleContact(id:string):Promise<Contact>{
-    const contactExist=await this.contactModel.findById(id)
-    if(!contactExist){
-    throw new HttpException('Contact not found',HttpStatus.NOT_FOUND)
+  async getSingleContact(id: string): Promise<Contact> {
+    const contactExist = await this.contactModel.findById(id)
+    if (!contactExist) {
+      throw new HttpException('Contact not found', HttpStatus.NOT_FOUND)
     }
     return contactExist
   }
 
   // get all contact
-  async getAllContact():Promise<Contact[]>{
+  async getAllContact(): Promise<Contact[]> {
     return await this.contactModel.find()
   }
 
   // create subscribe
-  async createSubscribe(CreateSubscribeDto:createSubscribeDto):Promise<Subscribe>{
-  const subscribeExist=await this.subscribeModel.findOne({email:CreateSubscribeDto.email})
-  if(subscribeExist){
-    throw new HttpException('The email address is already subscribed', HttpStatus.CONFLICT)
-  }
+  async createSubscribe(CreateSubscribeDto: createSubscribeDto): Promise<Subscribe> {
+    const subscribeExist = await this.subscribeModel.findOne({ email: CreateSubscribeDto.email })
+    if (subscribeExist) {
+      throw new HttpException('The email address is already subscribed', HttpStatus.CONFLICT)
+    }
     return await this.subscribeModel.create(CreateSubscribeDto)
+  }
+
+  // get subscribe
+  async getAllSubscribe(): Promise<Subscribe[]> {
+    return await this.subscribeModel.find()
+  }
+
+  // send email
+  async sendEmail(text: sendEmailText): Promise<string> {
+    const subscribers = await this.subscribeModel.find()
+    for (let i = 0; i < subscribers.length; i++) {
+      this.mailerService.sendMail({
+        from: "quliyevnamiq8@gmail.com",
+        to: `${subscribers[i].email}`,
+        subject: "Outdorr new information",
+        text: `${text.text}`
+      })
+    }
+    return "An email has been sent to site subscribers"
+  }
 }
 
- // get subscribe
-async getAllSubscribe():Promise<Subscribe[]>{
-  return await this.subscribeModel.find()
-}
-
- // create broadcast
-//  async createBroadcast():Promise<string>{
-// this.mailerService.sendMail()
-//  }
-
-}

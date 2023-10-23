@@ -7,6 +7,8 @@ export class Product {
   title: string
   @Prop({ required: true })
   description: string
+  @Prop({ required: true })
+  photo: string
   @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'subproduct' })
   subProductIds: Types.ObjectId
 }

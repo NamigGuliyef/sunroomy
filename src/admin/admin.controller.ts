@@ -3,6 +3,8 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { createApplicationDto, updateApplicationDto } from 'src/applications/dto/application.dto';
 import { Application } from 'src/applications/model/application.schema';
 import { MulterOptions, MulterOptionsCloudinary } from 'src/config/multer/multer';
+import { createContactDto, updateContactDto } from 'src/contact/dto/contact.dto';
+import { Contact } from 'src/contact/model/contact.schema';
 import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto';
 import { Feature } from 'src/features/model/feature.schema';
 import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.dto';
@@ -15,13 +17,11 @@ import { createSpecificationDto, updateSpecificationDto } from 'src/specificatio
 import { Specification } from 'src/specifications/model/specification.schema';
 import { createSubProductDto, updateSubProductDto } from 'src/subproduct/dto/subproduct.dto';
 import { Subproduct } from 'src/subproduct/model/subproduct.schema';
+import { createSubscribeDto, sendEmailText } from 'src/subscribe/dto/subscribe.dto';
+import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 import { AdminService } from './admin.service';
-import { createContactDto, updateContactDto } from 'src/contact/dto/contact.dto';
-import { Contact } from 'src/contact/model/contact.schema';
-import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
-import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -281,62 +281,68 @@ export class AdminController {
 
   @Get('/dashboard/products/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleProduct(@Param('id') id:string):Promise<Product>{
+  async getSingleProduct(@Param('id') id: string): Promise<Product> {
     return await this.adminService.getSingleProduct(id)
   }
 
   @Get('/dashboard/products')
   @HttpCode(HttpStatus.OK)
-  async getAllProduct():Promise<Product[]>{
+  async getAllProduct(): Promise<Product[]> {
     return await this.adminService.getAllProduct()
   }
 
   @Post('/dashboard/contacts')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async createContact(@Body() CreateContactDto:createContactDto):Promise<Contact>{
+  async createContact(@Body() CreateContactDto: createContactDto): Promise<Contact> {
     return await this.adminService.createContact(CreateContactDto)
   }
 
   @Put('/dashboard/contacts/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  async updateContact(@Param('id') id:string, @Body() UpdateContactDto:updateContactDto):Promise<Contact>{
-    return await this.adminService.updateContact(id,UpdateContactDto)
+  async updateContact(@Param('id') id: string, @Body() UpdateContactDto: updateContactDto): Promise<Contact> {
+    return await this.adminService.updateContact(id, UpdateContactDto)
   }
 
   @Delete('/dashboard/contacts/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteContact(@Param('id') id:string):Promise<string>{
+  async deleteContact(@Param('id') id: string): Promise<string> {
     return await this.adminService.deleteContact(id)
   }
 
   @Get('/dashboard/contacts/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleContact(@Param('id') id:string):Promise<Contact>{
+  async getSingleContact(@Param('id') id: string): Promise<Contact> {
     return await this.adminService.getSingleContact(id)
   }
 
   @Get('/dashboard/contacts')
   @HttpCode(HttpStatus.OK)
-  async getAllContact():Promise<Contact[]>{
+  async getAllContact(): Promise<Contact[]> {
     return await this.adminService.getAllContact()
   }
 
-  @Post('/dashboard/subscribe')
+  @Post('/dashboard/subscribers')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async createSubscribe(@Body() CreateSubscribeDto:createSubscribeDto):Promise<Subscribe>{
+  async createSubscribe(@Body() CreateSubscribeDto: createSubscribeDto): Promise<Subscribe> {
     return await this.adminService.createSubscribe(CreateSubscribeDto)
   }
 
-  @Get('/dashboard/subscribe')
+  @Get('/dashboard/subscribers')
   @HttpCode(HttpStatus.OK)
-  async getAllSubscribe():Promise<Subscribe[]>{
+  async getAllSubscribe(): Promise<Subscribe[]> {
     return await this.adminService.getAllSubscribe()
   }
 
+  @Post('/dashboard/subscribers/sendEmail')
+  @HttpCode(HttpStatus.CREATED)
+  async sendEmail(@Body() text: sendEmailText): Promise<string> {
+    return await this.adminService.sendEmail(text)
+  }
 
-
+  
+  
 }
 

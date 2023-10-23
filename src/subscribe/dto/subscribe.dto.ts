@@ -6,3 +6,7 @@ export class createSubscribeDto {
   email: string;
 }
 
+export class sendEmailText {
+  @IsNotEmpty()
+  text: string
+}
