@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator"
+import { IsNotEmpty, IsOptional } from "class-validator"
 import mongoose from "mongoose"
 
 export class createSubProductDto {
@@ -8,9 +8,9 @@ export class createSubProductDto {
   description: string
   @IsNotEmpty({ message: 'Description 2 is empty' })
   description_2: string
-  @IsNotEmpty()
+  @IsOptional()
   featuresIds: mongoose.Schema.Types.ObjectId
-  @IsNotEmpty()
+  @IsOptional()
   specifications: mongoose.Schema.Types.ObjectId
   @IsNotEmpty()
   productId: mongoose.Schema.Types.ObjectId
@@ -23,9 +23,9 @@ export class updateSubProductDto {
   description: string
   @IsNotEmpty({ message: 'Description 2 is empty' })
   description_2: string
-  @IsNotEmpty()
+  @IsOptional()
   featuresIds: mongoose.Schema.Types.ObjectId
-  @IsNotEmpty()
+  @IsOptional()
   specifications: mongoose.Schema.Types.ObjectId
   @IsNotEmpty()
   productId: mongoose.Schema.Types.ObjectId

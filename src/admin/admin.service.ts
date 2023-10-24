@@ -45,6 +45,7 @@ export class AdminService {
       return await this.featureModel.create({ title, description })
     } else {
       const feature = await this.featureModel.create({ ...CreateFeatureDto, icon: file.originalname })
+      await this.subProductModel.findOneAndUpdate({_id:feature.subProductId},{$push:{featuresIds:feature._id}})
       return feature
     }
   }
@@ -276,7 +277,7 @@ export class AdminService {
 
   // get single project
   async getSingleProject(id: string): Promise<Project> {
-    const project = await this.projectModel.findById(id).populate({ path: 'featuresId', select: ['title', 'description'] })
+    const project = await this.projectModel.findById(id).populate({ path: 'featuresId', select: ['title', 'description','subProductId'] })
     if (!project) {
       throw new HttpException('The project you are looking for has not been found', HttpStatus.NOT_FOUND)
     }
@@ -337,21 +338,23 @@ export class AdminService {
   }
 
   // create product
-  async createProduct(CreateProductDto: createProductDto): Promise<Product> {
+  async createProduct(CreateProductDto: createProductDto,file:Express.Multer.File): Promise<Product> {
     const product = await this.productModel.findOne({ title: CreateProductDto.title })
     if (product) {
       throw new HttpException('The product is already available', HttpStatus.CONFLICT)
     }
-    return await this.productModel.create(CreateProductDto)
+    const fileuRL=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})
+    return await this.productModel.create({...CreateProductDto,photo:fileuRL.url})
   }
 
   // update product
-  async updateProduct(id: string, UpdateProductDto: updateProductDto): Promise<Product> {
+  async updateProduct(id: string, UpdateProductDto: updateProductDto,file:Express.Multer.File): Promise<Product> {
     const product = await this.productModel.findById(id)
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND)
     }
-    return await this.productModel.findByIdAndUpdate(id, { $set: UpdateProductDto }, { new: true })
+    const fileUrl=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})
+    return await this.productModel.findByIdAndUpdate(id, { $set: {...UpdateProductDto,photo:fileUrl.url} }, { new: true })
   }
 
   // delete product
@@ -379,24 +382,34 @@ export class AdminService {
   }
 
   // create sub product
-  async createSubProduct(CreateSubProductDto: createSubProductDto): Promise<Subproduct> {
+  async createSubProduct(CreateSubProductDto: createSubProductDto,files:Express.Multer.File[]): Promise<Subproduct> {
     const { title } = CreateSubProductDto
     const subProductExist = await this.subProductModel.findOne({ title })
     if (subProductExist) {
       throw new HttpException('Sub product already created', HttpStatus.CONFLICT)
     }
-    const subProduct = await this.subProductModel.create(CreateSubProductDto)
+    const fileUrls=[]
+    for(let i=0;i<files.length;i++){
+    const fileUrl=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
+    fileUrls.push(fileUrl.url)
+  }
+    const subProduct = await this.subProductModel.create({...CreateSubProductDto,photos: fileUrls})
     await this.productModel.findOneAndUpdate({ _id: subProduct.productId }, { $push: { subProductIds: subProduct.id } }, { new: true })
     return subProduct
   }
 
   // update sub product
-  async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto): Promise<Subproduct> {
+  async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto, files:Express.Multer.File[]): Promise<Subproduct> {
     const subProductExist = await this.subProductModel.findById(id)
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND)
     }
-    return await this.subProductModel.findByIdAndUpdate(id, { $set: UpdateSubproductDto }, { new: true })
+    const fileUrls=[]
+    for(let i=0;i<files.length;i++){
+    const fileUrl=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
+    fileUrls.push(fileUrl.url)
+  }
+    return await this.subProductModel.findByIdAndUpdate(id, { $set: {...UpdateSubproductDto, photos:fileUrls} }, { new: true })
   }
 
   // delete sub product

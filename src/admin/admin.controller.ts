@@ -230,15 +230,17 @@ export class AdminController {
   @Post('/dashboard/subproducts')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto): Promise<Subproduct> {
-    return await this.adminService.createSubProduct(CreateSubproductDto)
+  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
+  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFiles() files:Express.Multer.File[]): Promise<Subproduct> {
+    return await this.adminService.createSubProduct(CreateSubproductDto, files)
   }
 
   @Put('/dashboard/subproducts/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto): Promise<Subproduct> {
-    return await this.adminService.updateSubProduct(id, UpdateSubproductDto)
+  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
+  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto, @UploadedFiles() files:Express.Multer.File[]): Promise<Subproduct> {
+    return await this.adminService.updateSubProduct(id, UpdateSubproductDto, files)
   }
 
   @Delete('/dashboard/subproducts/:id')
@@ -262,15 +264,17 @@ export class AdminController {
   @Post('/dashboard/products')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async createProduct(@Body() CreateProductDto: createProductDto): Promise<Product> {
-    return await this.adminService.createProduct(CreateProductDto)
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async createProduct(@Body() CreateProductDto: createProductDto, @UploadedFile() file:Express.Multer.File): Promise<Product> {
+    return await this.adminService.createProduct(CreateProductDto,file)
   }
 
   @Put('/dashboard/products/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  async updateProduct(@Param('id') id: string, @Body() UpdateProductDto: updateProductDto): Promise<Product> {
-    return await this.adminService.updateProduct(id, UpdateProductDto)
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async updateProduct(@Param('id') id: string, @Body() UpdateProductDto: updateProductDto, @UploadedFile() file:Express.Multer.File): Promise<Product> {
+    return await this.adminService.updateProduct(id, UpdateProductDto, file)
   }
 
   @Delete('/dashboard/products/:id')

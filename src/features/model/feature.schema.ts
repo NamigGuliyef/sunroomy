@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { Types } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Feature {
@@ -8,6 +9,9 @@ export class Feature {
   description: string;
   @Prop()
   icon: string;
+  @Prop({type:mongoose.Schema.Types.ObjectId,ref:'subproduct'})
+  subProductId:Types.ObjectId
 }
 
 export const featureModel = SchemaFactory.createForClass(Feature);
+

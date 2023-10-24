@@ -1,4 +1,5 @@
-import { IsNotEmpty, Matches } from 'class-validator';
+import { IsNotEmpty, IsOptional, Matches } from 'class-validator';
+import mongoose from 'mongoose';
 
 export class createFeatureDto {
   @IsNotEmpty({ message: 'Title is empty' })
@@ -6,7 +7,10 @@ export class createFeatureDto {
   title: string;
   @IsNotEmpty({ message: 'Description is empty' })
   description: string;
+  @IsOptional()
   icon: string;
+  @IsOptional()
+  subProductId:mongoose.Schema.Types.ObjectId
 }
 
 
@@ -16,6 +20,9 @@ export class updateFeatureDto {
   title: string;
   @IsNotEmpty({ message: 'Description is empty' })
   description: string;
+  @IsOptional()
   icon: string;
+  @IsOptional()
+  subProductId:mongoose.Schema.Types.ObjectId
 }
 
