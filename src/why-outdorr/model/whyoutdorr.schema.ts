@@ -7,7 +7,7 @@ export class WhyOutdorr {
   title: string;
   @Prop({required:true})
   description: string;
-  @Prop({type:[mongoose.Schema.Types.ObjectId], ref:'aboutOutdorr',required:true})
+  @Prop({type:[mongoose.Schema.Types.ObjectId], ref:'aboutoutdorr',required:true})
   about_outdorr: Types.ObjectId;
 }
 export const whyOutdorrModel = SchemaFactory.createForClass(WhyOutdorr);

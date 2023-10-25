@@ -41,10 +41,8 @@ export class AdminService {
     @InjectModel('product') private productModel: Model<Product>,
     @InjectModel('contact') private contactModel: Model<Contact>,
     @InjectModel('subscribe') private subscribeModel: Model<Subscribe>,
-    @InjectModel('whyoutdorr') private whyOutdorrModel:Model<WhyOutdorr>,
-    @InjectModel('aboutoutdorr') private aboutOutdorrModel:Model<AboutOutdorr> )
-    
-   { }
+    @InjectModel('whyoutdorr') private whyOutdorrModel: Model<WhyOutdorr>,
+    @InjectModel('aboutoutdorr') private aboutOutdorrModel: Model<AboutOutdorr>) { }
 
   // create feature - problem var
   async createFeature(CreateFeatureDto: createFeatureDto, file: Express.Multer.File): Promise<Feature> {
@@ -53,7 +51,7 @@ export class AdminService {
       return await this.featureModel.create({ title, description })
     } else {
       const feature = await this.featureModel.create({ ...CreateFeatureDto, icon: file.originalname })
-      await this.subProductModel.findOneAndUpdate({_id:feature.subProductId},{$push:{featuresIds:feature._id}})
+      await this.subProductModel.findOneAndUpdate({ _id: feature.subProductId }, { $push: { featuresIds: feature._id } })
       return feature
     }
   }
@@ -79,7 +77,7 @@ export class AdminService {
       throw new HttpException('The feature you want to remove was not found', HttpStatus.NOT_FOUND)
     } else {
       const deleteFeature = await this.featureModel.findByIdAndDelete(id)
-      await this.subProductModel.findOneAndUpdate({_id:deleteFeature.subProductId},{$pull:{featuresIds:deleteFeature._id}})
+      await this.subProductModel.findOneAndUpdate({ _id: deleteFeature.subProductId }, { $pull: { featuresIds: deleteFeature._id } })
       return 'Project feature removed'
     }
   }
@@ -286,7 +284,7 @@ export class AdminService {
 
   // get single project
   async getSingleProject(id: string): Promise<Project> {
-    const project = await this.projectModel.findById(id).populate({ path: 'featuresId', select: ['title', 'description','subProductId'] })
+    const project = await this.projectModel.findById(id).populate({ path: 'featuresId', select: ['title', 'description', 'subProductId'] })
     if (!project) {
       throw new HttpException('The project you are looking for has not been found', HttpStatus.NOT_FOUND)
     }
@@ -305,8 +303,8 @@ export class AdminService {
     if (specificationExist) {
       throw new HttpException('The specification has already been created', HttpStatus.CONFLICT)
     }
-    const specification= await this.specificationModel.create(CreateSpecificationDto)
-    await this.subProductModel.findOneAndUpdate({_id:specification.subProductId},{$push:{specifications:specification._id}})
+    const specification = await this.specificationModel.create(CreateSpecificationDto)
+    await this.subProductModel.findOneAndUpdate({ _id: specification.subProductId }, { $push: { specifications: specification._id } })
     return specification
   }
 
@@ -331,7 +329,7 @@ export class AdminService {
       throw new HttpException('Specification not found', HttpStatus.NOT_FOUND)
     }
     await this.specificationModel.findByIdAndDelete(id)
-    await this.subProductModel.findOneAndUpdate({_id:specification.subProductId},{$pull:{specifications:specification._id}})
+    await this.subProductModel.findOneAndUpdate({ _id: specification.subProductId }, { $pull: { specifications: specification._id } })
     return 'The specification has been removed'
   }
 
@@ -350,23 +348,23 @@ export class AdminService {
   }
 
   // create product
-  async createProduct(CreateProductDto: createProductDto,file:Express.Multer.File): Promise<Product> {
+  async createProduct(CreateProductDto: createProductDto, file: Express.Multer.File): Promise<Product> {
     const product = await this.productModel.findOne({ title: CreateProductDto.title })
     if (product) {
       throw new HttpException('The product is already available', HttpStatus.CONFLICT)
     }
-    const fileuRL=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})
-    return await this.productModel.create({...CreateProductDto,photo:fileuRL.url})
+    const fileuRL = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
+    return await this.productModel.create({ ...CreateProductDto, photo: fileuRL.url })
   }
 
   // update product
-  async updateProduct(id: string, UpdateProductDto: updateProductDto,file:Express.Multer.File): Promise<Product> {
+  async updateProduct(id: string, UpdateProductDto: updateProductDto, file: Express.Multer.File): Promise<Product> {
     const product = await this.productModel.findById(id)
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND)
     }
-    const fileUrl=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})
-    return await this.productModel.findByIdAndUpdate(id, { $set: {...UpdateProductDto,photo:fileUrl.url} }, { new: true })
+    const fileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
+    return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, photo: fileUrl.url } }, { new: true })
   }
 
   // delete product
@@ -394,34 +392,34 @@ export class AdminService {
   }
 
   // create sub product
-  async createSubProduct(CreateSubProductDto: createSubProductDto,files:Express.Multer.File[]): Promise<Subproduct> {
+  async createSubProduct(CreateSubProductDto: createSubProductDto, files: Express.Multer.File[]): Promise<Subproduct> {
     const { title } = CreateSubProductDto
     const subProductExist = await this.subProductModel.findOne({ title })
     if (subProductExist) {
       throw new HttpException('Sub product already created', HttpStatus.CONFLICT)
     }
-    const fileUrls=[]
-    for(let i=0;i<files.length;i++){
-    const fileUrl=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
-    fileUrls.push(fileUrl.url)
-  }
-    const subProduct = await this.subProductModel.create({...CreateSubProductDto,photos: fileUrls})
+    const fileUrls = []
+    for (let i = 0; i < files.length; i++) {
+      const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
+      fileUrls.push(fileUrl.url)
+    }
+    const subProduct = await this.subProductModel.create({ ...CreateSubProductDto, photos: fileUrls })
     await this.productModel.findOneAndUpdate({ _id: subProduct.productId }, { $push: { subProductIds: subProduct.id } }, { new: true })
     return subProduct
   }
 
   // update sub product
-  async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto, files:Express.Multer.File[]): Promise<Subproduct> {
+  async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto, files: Express.Multer.File[]): Promise<Subproduct> {
     const subProductExist = await this.subProductModel.findById(id)
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND)
     }
-    const fileUrls=[]
-    for(let i=0;i<files.length;i++){
-    const fileUrl=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
-    fileUrls.push(fileUrl.url)
-  }
-    return await this.subProductModel.findByIdAndUpdate(id, { $set: {...UpdateSubproductDto, photos:fileUrls} }, { new: true })
+    const fileUrls = []
+    for (let i = 0; i < files.length; i++) {
+      const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
+      fileUrls.push(fileUrl.url)
+    }
+    return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, photos: fileUrls } }, { new: true })
   }
 
   // delete sub product
@@ -491,14 +489,6 @@ export class AdminService {
     return await this.contactModel.find()
   }
 
-  // create subscribe
-  async createSubscribe(CreateSubscribeDto: createSubscribeDto): Promise<Subscribe> {
-    const subscribeExist = await this.subscribeModel.findOne({ email: CreateSubscribeDto.email })
-    if (subscribeExist) {
-      throw new HttpException('The email address is already subscribed', HttpStatus.CONFLICT)
-    }
-    return await this.subscribeModel.create(CreateSubscribeDto)
-  }
 
   // get subscribe
   async getAllSubscribe(): Promise<Subscribe[]> {
@@ -520,110 +510,110 @@ export class AdminService {
   }
 
   // create why-outdorr 
-  async createWhyOutdorr(CreateWhyOutdorrDto:createWhyOutdorrDto):Promise<WhyOutdorr>{
-    const {title,description}=CreateWhyOutdorrDto
-    const whyOutdorrExist=await this.whyOutdorrModel.findOne({title,description})
-    if(whyOutdorrExist){
-      throw new HttpException('Title and description are already created',HttpStatus.CONFLICT)
-    }else{
+  async createWhyOutdorr(CreateWhyOutdorrDto: createWhyOutdorrDto): Promise<WhyOutdorr> {
+    const { title, description } = CreateWhyOutdorrDto
+    const whyOutdorrExist = await this.whyOutdorrModel.findOne({ title, description })
+    if (whyOutdorrExist) {
+      throw new HttpException('Title and description are already created', HttpStatus.CONFLICT)
+    } else {
       return await this.whyOutdorrModel.create(CreateWhyOutdorrDto)
     }
   }
 
   // update why-outdorr
-  async updateWhyOutdorr(id:string,UpdateOutdorrDto:updateWhyOutdorrDto):Promise<WhyOutdorr>{
-    const whyoutdorrExist=await this.whyOutdorrModel.findById(id)
-    if(!whyoutdorrExist){
-      throw new HttpException('No information found to change',HttpStatus.NOT_FOUND)
+  async updateWhyOutdorr(id: string, UpdateOutdorrDto: updateWhyOutdorrDto): Promise<WhyOutdorr> {
+    const whyoutdorrExist = await this.whyOutdorrModel.findById(id)
+    if (!whyoutdorrExist) {
+      throw new HttpException('No information found to change', HttpStatus.NOT_FOUND)
     }
-    const{title,description}=UpdateOutdorrDto
-    const whyoutdorr=await this.whyOutdorrModel.findOne({title,description})
-    if(whyoutdorr){
-      throw new HttpException('Title and description are already created',HttpStatus.CONFLICT)
+    const { title, description } = UpdateOutdorrDto
+    const whyoutdorr = await this.whyOutdorrModel.findOne({ title, description })
+    if (whyoutdorr) {
+      throw new HttpException('Title and description are already created', HttpStatus.CONFLICT)
     }
-    return await this.whyOutdorrModel.findByIdAndUpdate(id,{$set:UpdateOutdorrDto},{new:true})
+    return await this.whyOutdorrModel.findByIdAndUpdate(id, { $set: UpdateOutdorrDto }, { new: true })
   }
 
   // delete why-outdorr
-  async deleteWhyOutdorr(id:string):Promise<string>{
-    const whyoutdorrExist=await this.whyOutdorrModel.findById(id)
-    if(!whyoutdorrExist){
-      throw new HttpException('The information you want to delete was not found',HttpStatus.NOT_FOUND)
+  async deleteWhyOutdorr(id: string): Promise<string> {
+    const whyoutdorrExist = await this.whyOutdorrModel.findById(id)
+    if (!whyoutdorrExist) {
+      throw new HttpException('The information you want to delete was not found', HttpStatus.NOT_FOUND)
     }
-      await this.whyOutdorrModel.findByIdAndDelete(id)
-      return 'The data has been deleted'
-    }
+    await this.whyOutdorrModel.findByIdAndDelete(id)
+    return 'The data has been deleted'
+  }
 
   // get single why-outdorr
-  async getSingleWhyOutdorr(id:string):Promise<WhyOutdorr>{
-    const whyoutdorrExist=await this.whyOutdorrModel.findById(id)
-    if(!whyoutdorrExist){
-      throw new HttpException('The information you were looking for was not found',HttpStatus.NOT_FOUND)
+  async getSingleWhyOutdorr(id: string): Promise<WhyOutdorr> {
+    const whyoutdorrExist = await this.whyOutdorrModel.findById(id)
+    if (!whyoutdorrExist) {
+      throw new HttpException('The information you were looking for was not found', HttpStatus.NOT_FOUND)
     }
     return whyoutdorrExist
   }
 
   // get all why-outdorr
-  async getAllWhyOutdorr():Promise<WhyOutdorr[]>{
+  async getAllWhyOutdorr(): Promise<WhyOutdorr[]> {
     return await this.whyOutdorrModel.find()
   }
 
   // create about-outdorr
-  async createAboutOutdorr(CreateAboutOutdorrDto:createAboutOutdorrDto):Promise<AboutOutdorr>{
+  async createAboutOutdorr(CreateAboutOutdorrDto: createAboutOutdorrDto): Promise<AboutOutdorr> {
     const { key, value } = CreateAboutOutdorrDto
     const aboutOutdorrExist = await this.aboutOutdorrModel.findOne({ key, value })
     if (aboutOutdorrExist) {
       throw new HttpException('The information about outdoor has already been created', HttpStatus.CONFLICT)
     }
-    const aboutOutdorr= await this.aboutOutdorrModel.create(CreateAboutOutdorrDto)
-    await this.whyOutdorrModel.findOneAndUpdate({_id:aboutOutdorr.why_outdorr},{$push:{about_outdorr:aboutOutdorr._id}})
+    const aboutOutdorr = await this.aboutOutdorrModel.create(CreateAboutOutdorrDto)
+    await this.whyOutdorrModel.findOneAndUpdate({ _id: aboutOutdorr.why_outdorr }, { $push: { about_outdorr: aboutOutdorr._id } })
     return aboutOutdorr
   }
 
-    // update about-outdorr
-  async updateAboutOutdorr(id:string, UpdateAboutOutdorrDto:updateAboutOutdorrDto):Promise<AboutOutdorr>{
-    const aboutOutdorrExist=await this.aboutOutdorrModel.findById(id)
-    if(!aboutOutdorrExist){
+  // update about-outdorr
+  async updateAboutOutdorr(id: string, UpdateAboutOutdorrDto: updateAboutOutdorrDto): Promise<AboutOutdorr> {
+    const aboutOutdorrExist = await this.aboutOutdorrModel.findById(id)
+    if (!aboutOutdorrExist) {
       throw new HttpException('The information you want to change does not exist', HttpStatus.NOT_FOUND)
     }
     const { key, value } = UpdateAboutOutdorrDto
     const aboutOutdorr = await this.aboutOutdorrModel.findOne({ key, value })
     if (aboutOutdorr) {
       throw new HttpException('There is information already mentioned about the outdoor', HttpStatus.CONFLICT)
-    }else{
-      return await this.aboutOutdorrModel.findByIdAndUpdate(id,{$set:UpdateAboutOutdorrDto})
+    } else {
+      return await this.aboutOutdorrModel.findByIdAndUpdate(id, { $set: UpdateAboutOutdorrDto },{new:true})
     }
   }
 
-    // delete about-outdorr
-    async deleteAboutOutdorr(id:string):Promise<string>{
-      const aboutOutdorrExist=await this.aboutOutdorrModel.findById(id)
-      if(!aboutOutdorrExist){
-        throw new HttpException('The information you want to delete does not exist', HttpStatus.NOT_FOUND)
-      }else{
-        const deleteAboutOutdorr=await this.aboutOutdorrModel.findByIdAndDelete(id)
-        await this.whyOutdorrModel.findOneAndUpdate({_id:deleteAboutOutdorr.why_outdorr},{$pull:{about_outdorr:deleteAboutOutdorr._id}})
-        return 'Information about Outdoor has been deleted'
-      }
+  // delete about-outdorr
+  async deleteAboutOutdorr(id: string): Promise<string> {
+    const aboutOutdorrExist = await this.aboutOutdorrModel.findById(id)
+    if (!aboutOutdorrExist) {
+      throw new HttpException('The information you want to delete does not exist', HttpStatus.NOT_FOUND)
+    } else {
+      const deleteAboutOutdorr = await this.aboutOutdorrModel.findByIdAndDelete(id)
+      await this.whyOutdorrModel.findOneAndUpdate({ _id: deleteAboutOutdorr.why_outdorr }, { $pull: { about_outdorr: deleteAboutOutdorr._id } })
+      return 'Information about Outdoor has been deleted'
     }
-
-    // get single about-outdorr
-    async getSingleAboutOutdorr(id:string):Promise<AboutOutdorr>{
-      const aboutOutdorrExist=await this.aboutOutdorrModel.findById(id)
-      if(!aboutOutdorrExist){
-        throw new HttpException('Data not found', HttpStatus.NOT_FOUND)
-      }else{
-        return aboutOutdorrExist
-      }
-    }
-
-    // get all about-outdorr
-    async getAllAboutOutdorr():Promise<AboutOutdorr[]>{
-      return await this.aboutOutdorrModel.find()
-    }
-
-
   }
+
+  // get single about-outdorr
+  async getSingleAboutOutdorr(id: string): Promise<AboutOutdorr> {
+    const aboutOutdorrExist = await this.aboutOutdorrModel.findById(id)
+    if (!aboutOutdorrExist) {
+      throw new HttpException('Data not found', HttpStatus.NOT_FOUND)
+    } else {
+      return aboutOutdorrExist
+    }
+  }
+
+  // get all about-outdorr-yoxlanildi 
+  async getAllAboutOutdorr(): Promise<AboutOutdorr[]> {
+    return await this.aboutOutdorrModel.find()
+  }
+
+
+}
 
 
 

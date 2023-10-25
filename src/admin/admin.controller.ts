@@ -24,6 +24,8 @@ import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 import { AdminService } from './admin.service';
 import { createWhyOutdorrDto, updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
+import { createAboutOutdorrDto, updateAboutOutdorrDto } from 'src/about-outdorr/dto/aboutoutdorr.dto';
+import { AboutOutdorr } from 'src/about-outdorr/model/aboutoutdorr.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -232,16 +234,16 @@ export class AdminController {
   @Post('/dashboard/subproducts')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
-  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFiles() files:Express.Multer.File[]): Promise<Subproduct> {
+  @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
+  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Subproduct> {
     return await this.adminService.createSubProduct(CreateSubproductDto, files)
   }
 
   @Put('/dashboard/subproducts/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
-  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto, @UploadedFiles() files:Express.Multer.File[]): Promise<Subproduct> {
+  @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
+  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Subproduct> {
     return await this.adminService.updateSubProduct(id, UpdateSubproductDto, files)
   }
 
@@ -267,15 +269,15 @@ export class AdminController {
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
-  async createProduct(@Body() CreateProductDto: createProductDto, @UploadedFile() file:Express.Multer.File): Promise<Product> {
-    return await this.adminService.createProduct(CreateProductDto,file)
+  async createProduct(@Body() CreateProductDto: createProductDto, @UploadedFile() file: Express.Multer.File): Promise<Product> {
+    return await this.adminService.createProduct(CreateProductDto, file)
   }
 
   @Put('/dashboard/products/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
-  async updateProduct(@Param('id') id: string, @Body() UpdateProductDto: updateProductDto, @UploadedFile() file:Express.Multer.File): Promise<Product> {
+  async updateProduct(@Param('id') id: string, @Body() UpdateProductDto: updateProductDto, @UploadedFile() file: Express.Multer.File): Promise<Product> {
     return await this.adminService.updateProduct(id, UpdateProductDto, file)
   }
 
@@ -329,13 +331,6 @@ export class AdminController {
     return await this.adminService.getAllContact()
   }
 
-  @Post('/dashboard/subscribers')
-  @HttpCode(HttpStatus.CREATED)
-  @UsePipes(new ValidationPipe())
-  async createSubscribe(@Body() CreateSubscribeDto: createSubscribeDto): Promise<Subscribe> {
-    return await this.adminService.createSubscribe(CreateSubscribeDto)
-  }
-
   @Get('/dashboard/subscribers')
   @HttpCode(HttpStatus.OK)
   async getAllSubscribe(): Promise<Subscribe[]> {
@@ -351,34 +346,67 @@ export class AdminController {
   @Post('/dashboard/why-outdorr')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async createWhyOutdorr(@Body() CreateWhyOutdorrDto:createWhyOutdorrDto):Promise<WhyOutdorr>{
+  async createWhyOutdorr(@Body() CreateWhyOutdorrDto: createWhyOutdorrDto): Promise<WhyOutdorr> {
     return await this.adminService.createWhyOutdorr(CreateWhyOutdorrDto)
   }
 
   @Put('/dashboard/why-outdorr/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  async updateWhyOutdorr(@Param('id') id:string, @Body() UpdateWhyOutdorrDto:updateWhyOutdorrDto):Promise<WhyOutdorr>{
+  async updateWhyOutdorr(@Param('id') id: string, @Body() UpdateWhyOutdorrDto: updateWhyOutdorrDto): Promise<WhyOutdorr> {
     return await this.adminService.updateWhyOutdorr(id, UpdateWhyOutdorrDto)
   }
 
   @Delete('/dashboard/why-outdorr/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteWhyOutdorr(@Param('id') id:string):Promise<string>{
+  async deleteWhyOutdorr(@Param('id') id: string): Promise<string> {
     return await this.adminService.deleteWhyOutdorr(id)
   }
 
   @Get('/dashboard/why-outdorr/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleWhyOutdorr(@Param('id') id:string):Promise<WhyOutdorr>{
+  async getSingleWhyOutdorr(@Param('id') id: string): Promise<WhyOutdorr> {
     return await this.adminService.getSingleWhyOutdorr(id)
   }
 
   @Get('/dashboard/why-outdorr')
   @HttpCode(HttpStatus.OK)
-  async getAllWhyOutdorr():Promise<WhyOutdorr[]>{
+  async getAllWhyOutdorr(): Promise<WhyOutdorr[]> {
     return await this.adminService.getAllWhyOutdorr()
   }
 
+  @Post('/dashboard/about-outdorr')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createAboutOutdorr(@Body() CreateAboutOutdorrDto: createAboutOutdorrDto): Promise<AboutOutdorr> {
+    return await this.adminService.createAboutOutdorr(CreateAboutOutdorrDto)
+  }
+
+  @Put('/dashboard/about-outdorr/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateAboutOutdorr(@Param('id') id: string, @Body() UpdateAboutOutdorrDto: updateAboutOutdorrDto): Promise<AboutOutdorr> {
+    return await this.adminService.updateAboutOutdorr(id, UpdateAboutOutdorrDto)
+  }
+
+  @Delete('/dashboard/about-outdorr/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteAboutOutdorr(@Param('id') id: string): Promise<string> {
+    return await this.adminService.deleteAboutOutdorr(id)
+  }
+
+  @Get('/dashboard/about-outdorr/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleAboutOutdorr(@Param('id') id:string):Promise<AboutOutdorr>{
+    return await this.adminService.getSingleAboutOutdorr(id)
+  }
+
+  @Get('/dashboard/about-outdorr')
+  @HttpCode(HttpStatus.OK)
+  async getAllAboutOutdorr():Promise<AboutOutdorr[]>{
+    return await this.adminService.getAllAboutOutdorr()
+  }
+
 }
+
 
