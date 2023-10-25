@@ -1,3 +1,4 @@
+import { MailerModule } from '@nestjs-modules/mailer';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AdminController } from './admin/admin.controller';
@@ -5,8 +6,8 @@ import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { GuestModule } from './guest/guest.module';
 import { tokenCheckMiddleware } from './middleware/tokencheck.middleware';
-import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       
     }),
     AdminModule,
+    GuestModule,
   ],
   controllers: [AppController],
   providers: [AppService],
