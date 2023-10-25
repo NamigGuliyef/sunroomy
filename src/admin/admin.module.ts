@@ -12,6 +12,8 @@ import { subProductModel } from 'src/subproduct/model/subproduct.schema';
 import { productModel } from 'src/product/model/product.schema';
 import { contactModel } from 'src/contact/model/contact.schema';
 import { subscribeModel } from 'src/subscribe/model/subscribe.schema';
+import { whyOutdorrModel } from 'src/why-outdorr/model/whyoutdorr.schema';
+import { aboutOutdorrModel } from 'src/about-outdorr/model/aboutoutdorr.schema';
 
 @Module({
   imports: [
@@ -25,7 +27,9 @@ import { subscribeModel } from 'src/subscribe/model/subscribe.schema';
       { name: 'subproduct', schema: subProductModel },
       { name: 'product', schema: productModel },
       { name: 'contact', schema: contactModel },
-      { name: 'subscribe', schema: subscribeModel }
+      { name: 'subscribe', schema: subscribeModel },
+      { name: 'whyoutdorr', schema: whyOutdorrModel },
+      { name: 'aboutoutdorr', schema: aboutOutdorrModel }
     ]),
   ],
   providers: [AdminService],

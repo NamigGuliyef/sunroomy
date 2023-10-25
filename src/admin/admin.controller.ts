@@ -22,6 +22,8 @@ import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
 import { AdminService } from './admin.service';
+import { createWhyOutdorrDto, updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
+import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -346,7 +348,37 @@ export class AdminController {
     return await this.adminService.sendEmail(text)
   }
 
-  
-  
+  @Post('/dashboard/why-outdorr')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createWhyOutdorr(@Body() CreateWhyOutdorrDto:createWhyOutdorrDto):Promise<WhyOutdorr>{
+    return await this.adminService.createWhyOutdorr(CreateWhyOutdorrDto)
+  }
+
+  @Put('/dashboard/why-outdorr/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateWhyOutdorr(@Param('id') id:string, @Body() UpdateWhyOutdorrDto:updateWhyOutdorrDto):Promise<WhyOutdorr>{
+    return await this.adminService.updateWhyOutdorr(id, UpdateWhyOutdorrDto)
+  }
+
+  @Delete('/dashboard/why-outdorr/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteWhyOutdorr(@Param('id') id:string):Promise<string>{
+    return await this.adminService.deleteWhyOutdorr(id)
+  }
+
+  @Get('/dashboard/why-outdorr/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleWhyOutdorr(@Param('id') id:string):Promise<WhyOutdorr>{
+    return await this.adminService.getSingleWhyOutdorr(id)
+  }
+
+  @Get('/dashboard/why-outdorr')
+  @HttpCode(HttpStatus.OK)
+  async getAllWhyOutdorr():Promise<WhyOutdorr[]>{
+    return await this.adminService.getAllWhyOutdorr()
+  }
+
 }
 
