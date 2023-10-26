@@ -134,7 +134,7 @@ export class AdminController {
   @Post('/dashboard/applications')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FilesInterceptor('photo', 10, MulterOptionsCloudinary))
+  @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
   async createApplication(@Body() CreateApplicationDto: createApplicationDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Application> {
     return await this.adminService.createApplication(CreateApplicationDto, files)
   }
@@ -142,7 +142,7 @@ export class AdminController {
   @Put('/dashboard/applications/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FilesInterceptor('photo', 10, MulterOptionsCloudinary))
+  @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
   async updateApplication(@Param('id') id: string, @Body() UpdateApplicationDto: updateApplicationDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Application> {
     return await this.adminService.updateApplication(id, UpdateApplicationDto, files)
   }
@@ -181,11 +181,11 @@ export class AdminController {
     return await this.adminService.updateProject(id, UpdateProjectDto, files)
   }
 
-  @Delete('/dashboard/projects/:id')
-  @HttpCode(HttpStatus.OK)
-  async deleteProject(@Param('id') id: string): Promise<string> {
-    return await this.adminService.deleteProject(id)
-  }
+  // @Delete('/dashboard/projects/:id')
+  // @HttpCode(HttpStatus.OK)
+  // async deleteProject(@Param('id') id: string): Promise<string> {
+  //   return await this.adminService.deleteProject(id)
+  // }
 
   @Get('/dashboard/projects/:id')
   @HttpCode(HttpStatus.OK)
@@ -357,11 +357,11 @@ export class AdminController {
     return await this.adminService.updateWhyOutdorr(id, UpdateWhyOutdorrDto)
   }
 
-  @Delete('/dashboard/why-outdorr/:id')
-  @HttpCode(HttpStatus.OK)
-  async deleteWhyOutdorr(@Param('id') id: string): Promise<string> {
-    return await this.adminService.deleteWhyOutdorr(id)
-  }
+  // @Delete('/dashboard/why-outdorr/:id')
+  // @HttpCode(HttpStatus.OK)
+  // async deleteWhyOutdorr(@Param('id') id: string): Promise<string> {
+  //   return await this.adminService.deleteWhyOutdorr(id)
+  // }
 
   @Get('/dashboard/why-outdorr/:id')
   @HttpCode(HttpStatus.OK)

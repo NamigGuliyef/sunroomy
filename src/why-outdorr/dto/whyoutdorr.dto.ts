@@ -6,8 +6,6 @@ export class createWhyOutdorrDto{
     title: string;
     @IsNotEmpty({message:"Description is empty"})
     description: string;
-    @IsOptional()
-    about_outdorr:mongoose.Schema.Types.ObjectId
 }
 
 
@@ -16,6 +14,4 @@ export class updateWhyOutdorrDto{
     title: string;
     @IsNotEmpty({message:"Description is empty"})
     description: string;
-    @IsOptional()
-    about_outdorr:mongoose.Schema.Types.ObjectId
 }

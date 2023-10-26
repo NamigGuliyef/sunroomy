@@ -17,7 +17,7 @@ export class Project {
   needsId: Types.ObjectId;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'feature' })
   featuresId: Types.ObjectId;
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'usedproduct' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'usedproducts' })
   usedProductsId: Types.ObjectId;
 }
 

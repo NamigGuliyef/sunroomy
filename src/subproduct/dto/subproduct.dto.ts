@@ -8,10 +8,6 @@ export class createSubProductDto {
   description: string
   @IsNotEmpty({ message: 'Description 2 is empty' })
   description_2: string
-  @IsOptional()
-  featuresIds: mongoose.Schema.Types.ObjectId
-  @IsOptional()
-  specifications: mongoose.Schema.Types.ObjectId
   @IsNotEmpty()
   productId: mongoose.Schema.Types.ObjectId
 }
@@ -23,10 +19,6 @@ export class updateSubProductDto {
   description: string
   @IsNotEmpty({ message: 'Description 2 is empty' })
   description_2: string
-  @IsOptional()
-  featuresIds: mongoose.Schema.Types.ObjectId
-  @IsOptional()
-  specifications: mongoose.Schema.Types.ObjectId
   @IsNotEmpty()
   productId: mongoose.Schema.Types.ObjectId
 }

@@ -56,7 +56,7 @@ export class AdminService {
     }
   }
 
-  // update feature
+  // update feature -problem var
   async updateFeature(id: string, UpdateFeatureDto: updateFeatureDto, file: Express.Multer.File): Promise<Feature> {
     const feature = await this.featureModel.findById(id)
     if (!feature) {
@@ -70,7 +70,7 @@ export class AdminService {
     }
   }
 
-  // delete feature
+  // delete feature - test edildi
   async deleteFeature(id: string): Promise<string> {
     const feature = await this.featureModel.findById(id)
     if (!feature) {
@@ -82,7 +82,7 @@ export class AdminService {
     }
   }
 
-  // get single feature
+  // get single feature - test edildi
   async getSingleFeature(id: string): Promise<Feature> {
     const feature = await this.featureModel.findById(id)
     if (!feature) {
@@ -92,17 +92,17 @@ export class AdminService {
     }
   }
 
-  // get all features
+  // get all features - test edildi
   async getAllFeatures(): Promise<Feature[]> {
     return await this.featureModel.find()
   }
 
-  // create Project needs
+  // create Project needs - test edildi
   async createProjectNeed(CreateProjectNeedDto: createProjectNeedDto): Promise<ProjectNeed> {
     return await this.projectNeedModel.create(CreateProjectNeedDto)
   }
 
-  // update Project needs
+  // update Project needs - test edildi
   async updateProjectNeed(id: string, UpdateProjectNeedDto: updateProjectNeedDto): Promise<ProjectNeed> {
     const projectNeedExist = await this.projectNeedModel.findById(id)
     if (!projectNeedExist) {
@@ -113,7 +113,7 @@ export class AdminService {
     }
   }
 
-  // delete Project needs
+  // delete Project needs - test edildi
   async deleteProjectNeed(id: string): Promise<string> {
     const projectNeed = await this.projectNeedModel.findById(id)
     if (!projectNeed) {
@@ -124,7 +124,7 @@ export class AdminService {
     }
   }
 
-  // get single project needs
+  // get single project needs - test edildi
   async getSingleProjectNeed(id: string): Promise<ProjectNeed> {
     const projectNeed = await this.projectNeedModel.findById(id)
     if (!projectNeed) {
@@ -134,12 +134,12 @@ export class AdminService {
     }
   }
 
-  //get All project needs
+  //get All project needs - test edildi 
   async getAllProjectNeed(): Promise<ProjectNeed[]> {
     return await this.projectNeedModel.find()
   }
 
-  // create used Products
+  // create used Products - test edildi
   async createUsedProducts(CreateUsedProductsDto: createUsedProductsDto, files: Express.Multer.File[]): Promise<UsedProducts> {
     const fileUrls = []
     for (let i = 0; i < files.length; i++) {
@@ -149,7 +149,7 @@ export class AdminService {
     return await this.usedProductsModel.create({ ...CreateUsedProductsDto, photos: fileUrls })
   }
 
-  // update used Products
+  // update used Products - test edildi
   async updateUsedProducts(id: string, UpdateUsedProducts: updateUsedProductsDto, files: Express.Multer.File[]): Promise<UsedProducts> {
     const usedProductsExist = await this.usedProductsModel.findById(id)
     if (!usedProductsExist) {
@@ -165,7 +165,7 @@ export class AdminService {
     }
   }
 
-  // delete used Products
+  // delete used Products - test edildi
   async deleteUsedProducts(id: string): Promise<string> {
     const usedProducts = await this.usedProductsModel.findById(id)
     if (!usedProducts) {
@@ -176,7 +176,7 @@ export class AdminService {
     }
   }
 
-  // get single used Products
+  // get single used Products - test edildi
   async getSingleUsedProducts(id: string): Promise<UsedProducts> {
     const usedPorducts = await this.usedProductsModel.findById(id)
     if (!usedPorducts) {
@@ -186,13 +186,17 @@ export class AdminService {
     }
   }
 
-  // get all used Products
+  // get all used Products - test edildi
   async getAllUsedProducts(): Promise<UsedProducts[]> {
     return await this.usedProductsModel.find()
   }
 
-  // create product application
+  // create product application - test edildi
   async createApplication(CreateApplicationDto: createApplicationDto, files: Express.Multer.File[]): Promise<Application> {
+    const applicationExist=await this.applicationModel.findOne({title:CreateApplicationDto.title})
+    if(applicationExist){
+      throw new HttpException('Application already exists',HttpStatus.CONFLICT)
+    }
     const fileUrls = []
     for (let i = 0; i < files.length; i++) {
       const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
@@ -202,12 +206,16 @@ export class AdminService {
     return application
   }
 
-  // update product application
+  // update product application - test edildi
   async updateApplication(id: string, UpdateApplicationDto: updateApplicationDto, files: Express.Multer.File[]): Promise<Application> {
     const application = await this.applicationModel.findById(id)
     if (!application) {
       throw new HttpException('The application you want to update was not found', HttpStatus.NOT_FOUND)
-    } else {
+    }
+    const applicationExist=await this.applicationModel.findOne({title:UpdateApplicationDto.title})
+    if(applicationExist){
+      throw new HttpException('Application already exists', HttpStatus.CONFLICT)
+    }else {
       const fileUrls = []
       for (let i = 0; i < files.length; i++) {
         const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
@@ -218,7 +226,7 @@ export class AdminService {
     }
   }
 
-  // delete product application
+  // delete product application - test edildi
   async deleteApplication(id: string): Promise<string> {
     const application = await this.applicationModel.findById(id)
     if (!application) {
@@ -229,7 +237,7 @@ export class AdminService {
     }
   }
 
-  // get single product application
+  // get single product application - test edildi
   async getSingleApplication(id: string): Promise<Application> {
     const application = await this.applicationModel.findById(id)
     if (!application) {
@@ -239,12 +247,12 @@ export class AdminService {
     }
   }
 
-  // get all product application
+  // get all product application - test edildi
   async getAllApplication(): Promise<Application[]> {
     return await this.applicationModel.find()
   }
 
-  // create project
+  // create project - test edildi
   async createProject(CreateProjectDto: createProjectDto, files: Express.Multer.File[]): Promise<Project> {
     const fileUrls = []
     for (let i = 0; i < files.length; i++) {
@@ -255,7 +263,7 @@ export class AdminService {
     return project
   }
 
-  // update project
+  // update project - test edildi
   async updateProject(id: string, UpdateProjectDto: updateProjectDto, files: Express.Multer.File[]): Promise<Project> {
     const project = await this.projectModel.findById(id)
     if (!project) {
@@ -271,32 +279,35 @@ export class AdminService {
     }
   }
 
-  // delete project
-  async deleteProject(id: string): Promise<string> {
-    const project = await this.projectModel.findById(id)
-    if (!project) {
-      throw new HttpException('The project you want to delete was not found', HttpStatus.NOT_FOUND)
-    } else {
-      await this.projectModel.findByIdAndDelete(id)
-      return 'The project has been deleted'
-    }
-  }
+  // delete project - sorusmaq
+  // async deleteProject(id: string): Promise<string> {
+  //   const project = await this.projectModel.findById(id)
+  //   if (!project) {
+  //     throw new HttpException('The project you want to delete was not found', HttpStatus.NOT_FOUND)
+  //   } else {
+  //     await this.projectModel.findByIdAndDelete(id)
+  //     return 'The project has been deleted'
+  //   }
+  // }
 
-  // get single project
+
+  // get single project - test edildi
   async getSingleProject(id: string): Promise<Project> {
-    const project = await this.projectModel.findById(id).populate({ path: 'featuresId', select: ['title', 'description', 'subProductId'] })
+    const project = await this.projectModel.findById(id).populate([
+      { path: 'featuresId'}, { path: 'needsId'}, { path: 'usedProductsId'}
+  ])
     if (!project) {
       throw new HttpException('The project you are looking for has not been found', HttpStatus.NOT_FOUND)
     }
     return project
   }
 
-  // get all project
+  // get all project - test edildi
   async getAllProject(): Promise<Project[]> {
     return await this.projectModel.find()
   }
 
-  // create specification
+  // create specification - test edildi
   async createSpecification(CreateSpecificationDto: createSpecificationDto): Promise<Specification> {
     const { key, value } = CreateSpecificationDto
     const specificationExist = await this.specificationModel.findOne({ key, value })
@@ -308,7 +319,7 @@ export class AdminService {
     return specification
   }
 
-  // update specification
+  // update specification - test edildi
   async updateSpecification(id: string, UpdateSpecificationDto: updateSpecificationDto): Promise<Specification> {
     const specificationExist = await this.specificationModel.findById(id)
     if (!specificationExist) {
@@ -322,7 +333,7 @@ export class AdminService {
     return await this.specificationModel.findByIdAndUpdate(id, { $set: UpdateSpecificationDto }, { new: true })
   }
 
-  // delete specification
+  // delete specification - test edildi
   async deleteSpecification(id: string): Promise<string> {
     const specification = await this.specificationModel.findById(id)
     if (!specification) {
@@ -333,7 +344,7 @@ export class AdminService {
     return 'The specification has been removed'
   }
 
-  // get single specification
+  // get single specification - test edildi
   async getSingleSpecification(id: string): Promise<Specification> {
     const specification = await this.specificationModel.findById(id)
     if (!specification) {
@@ -342,12 +353,12 @@ export class AdminService {
     return specification
   }
 
-  // get all specification
+  // get all specification - test edildi
   async getAllSpecification(): Promise<Specification[]> {
     return await this.specificationModel.find()
   }
 
-  // create product
+  // create product - test edildi
   async createProduct(CreateProductDto: createProductDto, file: Express.Multer.File): Promise<Product> {
     const product = await this.productModel.findOne({ title: CreateProductDto.title })
     if (product) {
@@ -357,17 +368,21 @@ export class AdminService {
     return await this.productModel.create({ ...CreateProductDto, photo: fileuRL.url })
   }
 
-  // update product
+  // update product - test edildi
   async updateProduct(id: string, UpdateProductDto: updateProductDto, file: Express.Multer.File): Promise<Product> {
     const product = await this.productModel.findById(id)
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND)
     }
+    const productTitleExist = await this.productModel.findOne({ title: UpdateProductDto.title })
+    if (productTitleExist) {
+      throw new HttpException('The product is already available', HttpStatus.CONFLICT)
+    }
     const fileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
     return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, photo: fileUrl.url } }, { new: true })
   }
 
-  // delete product
+  // delete product - test edildi
   async deleteProduct(id: string): Promise<string> {
     const productExist = await this.productModel.findById(id)
     if (!productExist) {
@@ -377,21 +392,21 @@ export class AdminService {
     return "Product deleted"
   }
 
-  // get single product
+  // get single product - test edildi
   async getSingleProduct(id: string): Promise<Product> {
-    const product = await this.productModel.findById(id)
+    const product = await this.productModel.findById(id).populate({path:'subProductIds',select:['title','description','photos']})
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND)
     }
     return product
   }
 
-  // get all product
+  // get all product - test edildi
   async getAllProduct(): Promise<Product[]> {
     return await this.productModel.find()
   }
 
-  // create sub product
+  // create sub product  - test edildi
   async createSubProduct(CreateSubProductDto: createSubProductDto, files: Express.Multer.File[]): Promise<Subproduct> {
     const { title } = CreateSubProductDto
     const subProductExist = await this.subProductModel.findOne({ title })
@@ -408,7 +423,7 @@ export class AdminService {
     return subProduct
   }
 
-  // update sub product
+  // update sub product - test edildi
   async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto, files: Express.Multer.File[]): Promise<Subproduct> {
     const subProductExist = await this.subProductModel.findById(id)
     if (!subProductExist) {
@@ -422,7 +437,7 @@ export class AdminService {
     return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, photos: fileUrls } }, { new: true })
   }
 
-  // delete sub product
+  // delete sub product - test edildi
   async deleteSubProduct(id: string): Promise<string> {
     const subProductExist = await this.subProductModel.findById(id)
     if (!subProductExist) {
@@ -433,7 +448,7 @@ export class AdminService {
     return 'The sub product has been removed'
   }
 
-  // get single sub product
+  // get single sub product - test edildi
   async getSingleSubProduct(id: string): Promise<Subproduct> {
     const subProductExist = await this.subProductModel.findById(id).populate([{ path: 'featuresIds' }, { path: 'specifications' }])
     if (!subProductExist) {
@@ -442,12 +457,12 @@ export class AdminService {
     return subProductExist
   }
 
-  // get all sub product
+  // get all sub product - test edildi
   async getAllSubProduct(): Promise<Subproduct[]> {
     return await this.subProductModel.find()
   }
 
-  // create contact
+  // create contact - test edildi
   async createContact(CreateContactDto: createContactDto): Promise<Contact> {
     const contactExist = await this.contactModel.findOne({ location: CreateContactDto.location })
     if (contactExist) {
@@ -456,16 +471,21 @@ export class AdminService {
     return await this.contactModel.create(CreateContactDto)
   }
 
-  // update contact
+  // update contact - test edildi
   async updateContact(id: string, UpdateContactDto: updateContactDto): Promise<Contact> {
     const contactExist = await this.contactModel.findById(id)
     if (!contactExist) {
       throw new HttpException('Contact not found', HttpStatus.NOT_FOUND)
+    }else{
+      const contactLocationExist = await this.contactModel.findOne({ location: UpdateContactDto.location })
+      if (contactLocationExist) {
+        throw new HttpException('Location already created', HttpStatus.CONFLICT)
+      }
     }
     return await this.contactModel.findByIdAndUpdate(id, { $set: UpdateContactDto }, { new: true })
   }
 
-  // delete contact
+  // delete contact - test edildi
   async deleteContact(id: string): Promise<string> {
     const contactExist = await this.contactModel.findById(id)
     if (!contactExist) {
@@ -475,7 +495,7 @@ export class AdminService {
     return 'Contact information has been removed'
   }
 
-  // get single contact
+  // get single contact - test edildi
   async getSingleContact(id: string): Promise<Contact> {
     const contactExist = await this.contactModel.findById(id)
     if (!contactExist) {
@@ -484,18 +504,18 @@ export class AdminService {
     return contactExist
   }
 
-  // get all contact
+  // get all contact - test edildi
   async getAllContact(): Promise<Contact[]> {
     return await this.contactModel.find()
   }
 
 
-  // get subscribe
+  // get subscribe - test edildi
   async getAllSubscribe(): Promise<Subscribe[]> {
     return await this.subscribeModel.find()
   }
 
-  // send email
+  // send email - test edildi
   async sendEmail(text: sendEmailText): Promise<string> {
     const subscribers = await this.subscribeModel.find()
     for (let i = 0; i < subscribers.length; i++) {
@@ -509,7 +529,7 @@ export class AdminService {
     return "An email has been sent to site subscribers"
   }
 
-  // create why-outdorr 
+  // create why-outdorr - test edildi
   async createWhyOutdorr(CreateWhyOutdorrDto: createWhyOutdorrDto): Promise<WhyOutdorr> {
     const { title, description } = CreateWhyOutdorrDto
     const whyOutdorrExist = await this.whyOutdorrModel.findOne({ title, description })
@@ -520,7 +540,7 @@ export class AdminService {
     }
   }
 
-  // update why-outdorr
+  // update why-outdorr - test edildi
   async updateWhyOutdorr(id: string, UpdateOutdorrDto: updateWhyOutdorrDto): Promise<WhyOutdorr> {
     const whyoutdorrExist = await this.whyOutdorrModel.findById(id)
     if (!whyoutdorrExist) {
@@ -534,17 +554,17 @@ export class AdminService {
     return await this.whyOutdorrModel.findByIdAndUpdate(id, { $set: UpdateOutdorrDto }, { new: true })
   }
 
-  // delete why-outdorr
-  async deleteWhyOutdorr(id: string): Promise<string> {
-    const whyoutdorrExist = await this.whyOutdorrModel.findById(id)
-    if (!whyoutdorrExist) {
-      throw new HttpException('The information you want to delete was not found', HttpStatus.NOT_FOUND)
-    }
-    await this.whyOutdorrModel.findByIdAndDelete(id)
-    return 'The data has been deleted'
-  }
+  // // delete why-outdorr - sorusmaq 
+  // async deleteWhyOutdorr(id: string): Promise<string> {
+  //   const whyoutdorrExist = await this.whyOutdorrModel.findById(id)
+  //   if (!whyoutdorrExist) {
+  //     throw new HttpException('The information you want to delete was not found', HttpStatus.NOT_FOUND)
+  //   }
+  //    await this.whyOutdorrModel.findByIdAndDelete(id)
+  //    return 'The data has been deleted'
+  // }
 
-  // get single why-outdorr
+  // get single why-outdorr - test edildi
   async getSingleWhyOutdorr(id: string): Promise<WhyOutdorr> {
     const whyoutdorrExist = await this.whyOutdorrModel.findById(id)
     if (!whyoutdorrExist) {
@@ -553,12 +573,12 @@ export class AdminService {
     return whyoutdorrExist
   }
 
-  // get all why-outdorr
+  // get all why-outdorr - test edildi
   async getAllWhyOutdorr(): Promise<WhyOutdorr[]> {
     return await this.whyOutdorrModel.find()
   }
 
-  // create about-outdorr
+  // create about-outdorr - test edildi
   async createAboutOutdorr(CreateAboutOutdorrDto: createAboutOutdorrDto): Promise<AboutOutdorr> {
     const { key, value } = CreateAboutOutdorrDto
     const aboutOutdorrExist = await this.aboutOutdorrModel.findOne({ key, value })
@@ -570,7 +590,7 @@ export class AdminService {
     return aboutOutdorr
   }
 
-  // update about-outdorr
+  // update about-outdorr - test edildi
   async updateAboutOutdorr(id: string, UpdateAboutOutdorrDto: updateAboutOutdorrDto): Promise<AboutOutdorr> {
     const aboutOutdorrExist = await this.aboutOutdorrModel.findById(id)
     if (!aboutOutdorrExist) {
@@ -585,7 +605,7 @@ export class AdminService {
     }
   }
 
-  // delete about-outdorr
+  // delete about-outdorr - test edildi
   async deleteAboutOutdorr(id: string): Promise<string> {
     const aboutOutdorrExist = await this.aboutOutdorrModel.findById(id)
     if (!aboutOutdorrExist) {
@@ -597,7 +617,7 @@ export class AdminService {
     }
   }
 
-  // get single about-outdorr
+  // get single about-outdorr - test edildi
   async getSingleAboutOutdorr(id: string): Promise<AboutOutdorr> {
     const aboutOutdorrExist = await this.aboutOutdorrModel.findById(id)
     if (!aboutOutdorrExist) {
@@ -607,7 +627,7 @@ export class AdminService {
     }
   }
 
-  // get all about-outdorr-yoxlanildi 
+  // get all about-outdorr - test edildi
   async getAllAboutOutdorr(): Promise<AboutOutdorr[]> {
     return await this.aboutOutdorrModel.find()
   }
