@@ -193,9 +193,9 @@ export class AdminService {
 
   // create product application - test edildi
   async createApplication(CreateApplicationDto: createApplicationDto, files: Express.Multer.File[]): Promise<Application> {
-    const applicationExist=await this.applicationModel.findOne({title:CreateApplicationDto.title})
-    if(applicationExist){
-      throw new HttpException('Application already exists',HttpStatus.CONFLICT)
+    const applicationExist = await this.applicationModel.findOne({ title: CreateApplicationDto.title })
+    if (applicationExist) {
+      throw new HttpException('Application already exists', HttpStatus.CONFLICT)
     }
     const fileUrls = []
     for (let i = 0; i < files.length; i++) {
@@ -212,10 +212,10 @@ export class AdminService {
     if (!application) {
       throw new HttpException('The application you want to update was not found', HttpStatus.NOT_FOUND)
     }
-    const applicationExist=await this.applicationModel.findOne({title:UpdateApplicationDto.title})
-    if(applicationExist){
+    const applicationExist = await this.applicationModel.findOne({ title: UpdateApplicationDto.title })
+    if (applicationExist) {
       throw new HttpException('Application already exists', HttpStatus.CONFLICT)
-    }else {
+    } else {
       const fileUrls = []
       for (let i = 0; i < files.length; i++) {
         const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
@@ -294,8 +294,8 @@ export class AdminService {
   // get single project - test edildi
   async getSingleProject(id: string): Promise<Project> {
     const project = await this.projectModel.findById(id).populate([
-      { path: 'featuresId'}, { path: 'needsId'}, { path: 'usedProductsId'}
-  ])
+      { path: 'featuresId' }, { path: 'needsId' }, { path: 'usedProductsId' }
+    ])
     if (!project) {
       throw new HttpException('The project you are looking for has not been found', HttpStatus.NOT_FOUND)
     }
@@ -394,7 +394,7 @@ export class AdminService {
 
   // get single product - test edildi
   async getSingleProduct(id: string): Promise<Product> {
-    const product = await this.productModel.findById(id).populate({path:'subProductIds',select:['title','description','photos']})
+    const product = await this.productModel.findById(id).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND)
     }
@@ -476,7 +476,7 @@ export class AdminService {
     const contactExist = await this.contactModel.findById(id)
     if (!contactExist) {
       throw new HttpException('Contact not found', HttpStatus.NOT_FOUND)
-    }else{
+    } else {
       const contactLocationExist = await this.contactModel.findOne({ location: UpdateContactDto.location })
       if (contactLocationExist) {
         throw new HttpException('Location already created', HttpStatus.CONFLICT)
@@ -601,7 +601,7 @@ export class AdminService {
     if (aboutOutdorr) {
       throw new HttpException('There is information already mentioned about the outdoor', HttpStatus.CONFLICT)
     } else {
-      return await this.aboutOutdorrModel.findByIdAndUpdate(id, { $set: UpdateAboutOutdorrDto },{new:true})
+      return await this.aboutOutdorrModel.findByIdAndUpdate(id, { $set: UpdateAboutOutdorrDto }, { new: true })
     }
   }
 

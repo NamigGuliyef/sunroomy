@@ -397,13 +397,13 @@ export class AdminController {
 
   @Get('/dashboard/about-outdorr/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleAboutOutdorr(@Param('id') id:string):Promise<AboutOutdorr>{
+  async getSingleAboutOutdorr(@Param('id') id: string): Promise<AboutOutdorr> {
     return await this.adminService.getSingleAboutOutdorr(id)
   }
 
   @Get('/dashboard/about-outdorr')
   @HttpCode(HttpStatus.OK)
-  async getAllAboutOutdorr():Promise<AboutOutdorr[]>{
+  async getAllAboutOutdorr(): Promise<AboutOutdorr[]> {
     return await this.adminService.getAllAboutOutdorr()
   }
 
