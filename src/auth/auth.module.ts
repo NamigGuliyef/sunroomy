@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
+import { aboutOutdorrModel } from 'src/about-outdorr/model/aboutoutdorr.schema';
 import { adminModel } from 'src/admin/schema/admin.schema';
+import { applicationModel } from 'src/applications/model/application.schema';
+import { contactModel } from 'src/contact/model/contact.schema';
 import { featureModel } from 'src/features/model/feature.schema';
 import { projectNeedModel } from 'src/needs/model/need.schema';
-import { usedProductsModel } from 'src/used-products/model/usedProduct.schema';
-import { applicationModel } from 'src/applications/model/application.schema';
+import { productModel } from 'src/product/model/product.schema';
 import { projectModel } from 'src/projects/model/project.schema';
 import { specificationModel } from 'src/specifications/model/specification.schema';
 import { subProductModel } from 'src/subproduct/model/subproduct.schema';
-import { productModel } from 'src/product/model/product.schema';
-import { contactModel } from 'src/contact/model/contact.schema';
 import { subscribeModel } from 'src/subscribe/model/subscribe.schema';
+import { usedProductsModel } from 'src/used-products/model/usedproduct.schema';
 import { whyOutdorrModel } from 'src/why-outdorr/model/whyoutdorr.schema';
-import { aboutOutdorrModel } from 'src/about-outdorr/model/aboutoutdorr.schema';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [

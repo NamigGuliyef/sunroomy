@@ -24,7 +24,7 @@ import { Subproduct } from 'src/subproduct/model/subproduct.schema';
 import { sendEmailText } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
-import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
+import { UsedProducts } from 'src/used-products/model/usedproduct.schema';
 import { createWhyOutdorrDto, updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 
