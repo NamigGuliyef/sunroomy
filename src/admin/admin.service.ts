@@ -392,7 +392,7 @@ export class AdminService {
     return "Product deleted"
   }
 
-  // get single product - test edildi
+  // // get single product - test edildi
   async getSingleProduct(id: string): Promise<Product> {
     const product = await this.productModel.findById(id).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
     if (!product) {
