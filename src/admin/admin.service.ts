@@ -21,7 +21,7 @@ import { createSpecificationDto, updateSpecificationDto } from 'src/specificatio
 import { Specification } from 'src/specifications/model/specification.schema';
 import { createSubProductDto, updateSubProductDto } from 'src/subproduct/dto/subproduct.dto';
 import { Subproduct } from 'src/subproduct/model/subproduct.schema';
-import { createSubscribeDto, sendEmailText } from 'src/subscribe/dto/subscribe.dto';
+import { sendEmailText } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedProduct.schema';
@@ -44,10 +44,10 @@ export class AdminService {
     @InjectModel('whyoutdorr') private whyOutdorrModel: Model<WhyOutdorr>,
     @InjectModel('aboutoutdorr') private aboutOutdorrModel: Model<AboutOutdorr>) { }
 
-  // create feature - problem var
+  // create feature - test edildi
   async createFeature(CreateFeatureDto: createFeatureDto, file: Express.Multer.File): Promise<Feature> {
-    if (!CreateFeatureDto.icon) {
-      const { title, description } = CreateFeatureDto
+    if (!file) {
+      const { title, description } = CreateFeatureDto;
       return await this.featureModel.create({ title, description })
     } else {
       const feature = await this.featureModel.create({ ...CreateFeatureDto, icon: file.originalname })
@@ -56,12 +56,12 @@ export class AdminService {
     }
   }
 
-  // update feature -problem var
+  // update feature - test edildi
   async updateFeature(id: string, UpdateFeatureDto: updateFeatureDto, file: Express.Multer.File): Promise<Feature> {
     const feature = await this.featureModel.findById(id)
     if (!feature) {
       throw new HttpException('The feature you are looking for was not found', HttpStatus.NOT_FOUND)
-    } else if (!UpdateFeatureDto.icon) {
+    } else if (!file) {
       const { title, description } = UpdateFeatureDto
       return await this.featureModel.findByIdAndUpdate(id, { $set: { title, description } }, { new: true })
     } else {
