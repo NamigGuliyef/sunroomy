@@ -4,11 +4,13 @@ import mongoose, { Types } from 'mongoose';
 @Schema({ timestamps: true, versionKey: false })
 export class Project {
   @Prop({ required: true })
+  type: string
+  @Prop({ required: true })
   title: string;
   @Prop({ required: true })
   location: string;
-  @Prop({required:true})
-  used_products_joint:string
+  @Prop({ required: true })
+  used_products_joint: string
   @Prop({ required: true })
   description: string;
   @Prop({ required: true })
