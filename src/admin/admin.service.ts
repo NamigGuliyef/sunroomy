@@ -27,6 +27,7 @@ import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/
 import { UsedProducts } from 'src/used-products/model/usedproduct.schema';
 import { createWhyOutdorrDto, updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
+import slug from 'slugify'
 
 @Injectable()
 export class AdminService {
@@ -46,11 +47,12 @@ export class AdminService {
 
   // create feature - test edildi
   async createFeature(CreateFeatureDto: createFeatureDto, file: Express.Multer.File): Promise<Feature> {
+    console.log(file)
     if (!file) {
       const { title, description } = CreateFeatureDto;
       return await this.featureModel.create({ title, description })
     } else {
-      const feature = await this.featureModel.create({ ...CreateFeatureDto, icon: file.originalname })
+      const feature = await this.featureModel.create({ ...CreateFeatureDto, icon: file.path })
       await this.subProductModel.findOneAndUpdate({ _id: feature.subProductId }, { $push: { featuresIds: feature._id } })
       return feature
     }
@@ -365,7 +367,7 @@ export class AdminService {
       throw new HttpException('The product is already available', HttpStatus.CONFLICT)
     }
     const fileuRL = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
-    return await this.productModel.create({ ...CreateProductDto, photo: fileuRL.url })
+    return await this.productModel.create({ ...CreateProductDto,slug: slug(CreateProductDto.title,{ lower:true }), photo: fileuRL.url })
   }
 
   // update product - test edildi
@@ -393,8 +395,8 @@ export class AdminService {
   }
 
   // // get single product - test edildi
-  async getSingleProduct(id: string): Promise<Product> {
-    const product = await this.productModel.findById(id).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
+  async getSingleProduct(slug: string): Promise<Product> {
+    const product = await this.productModel.findOne({slug}).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND)
     }

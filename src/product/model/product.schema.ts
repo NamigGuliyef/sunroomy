@@ -1,16 +1,18 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Types } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { Types } from 'mongoose';
 
 @Schema({ versionKey: false, timestamps: true })
 export class Product {
   @Prop({ required: true })
-  title: string
+  title: string;
   @Prop({ required: true })
-  description: string
+  description: string;
   @Prop({ required: true })
-  photo: string
+  photo: string;
   @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'subproduct' })
-  subProductIds: Types.ObjectId
+  subProductIds: Types.ObjectId;
+  @Prop()
+  slug: string;
 }
 
-export const productModel = SchemaFactory.createForClass(Product)
+export const productModel = SchemaFactory.createForClass(Product);

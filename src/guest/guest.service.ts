@@ -25,8 +25,8 @@ export class GuestService {
   }
 
   // get single product - test edildi
-  async getSingleProduct(id: string): Promise<Product> {
-    const product = await this.productModel.findById(id).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
+  async getSingleProduct(slug: string): Promise<Product> {
+    const product = await this.productModel.findOne({slug}).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND)
     }

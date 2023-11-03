@@ -287,10 +287,10 @@ export class AdminController {
     return await this.adminService.deleteProduct(id)
   }
 
-  @Get('/dashboard/products/:id')
+  @Get('/dashboard/products/:slug')
   @HttpCode(HttpStatus.OK)
-  async getSingleProduct(@Param('id') id: string): Promise<Product> {
-    return await this.adminService.getSingleProduct(id)
+  async getSingleProduct(@Param('slug') slug: string): Promise<Product> {
+    return await this.adminService.getSingleProduct(slug)
   }
 
   @Get('/dashboard/products')

@@ -12,10 +12,10 @@ import { GuestService } from './guest.service';
 export class GuestController {
   constructor(private guestService: GuestService){}
 
-  @Get('/products/:id')
+  @Get('/products/:slug')
   @HttpCode(HttpStatus.OK)
-  async getSingleProduct(@Param('id') id: string): Promise<Product> {
-    return await this.guestService.getSingleProduct(id)
+  async getSingleProduct(@Param('slug') slug: string): Promise<Product> {
+    return await this.guestService.getSingleProduct(slug)
   }
 
   @Get('/products')
