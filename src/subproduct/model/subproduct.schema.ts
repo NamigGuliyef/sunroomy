@@ -11,6 +11,8 @@ export class Subproduct {
   description_2: string
   @Prop()
   photos: string[]
+  @Prop()
+  slug:string
   @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'feature'})
   featuresIds: Types.ObjectId
   @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'specification'})

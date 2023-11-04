@@ -47,7 +47,6 @@ export class AdminService {
 
   // create feature - test edildi
   async createFeature(CreateFeatureDto: createFeatureDto, file: Express.Multer.File): Promise<Feature> {
-    console.log(file)
     if (!file) {
       const { title, description } = CreateFeatureDto;
       return await this.featureModel.create({ title, description })
@@ -420,7 +419,7 @@ export class AdminService {
       const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
       fileUrls.push(fileUrl.url)
     }
-    const subProduct = await this.subProductModel.create({ ...CreateSubProductDto, photos: fileUrls })
+    const subProduct = await this.subProductModel.create({ ...CreateSubProductDto,slug: slug(CreateSubProductDto.title,{lower:true}), photos: fileUrls })
     await this.productModel.findOneAndUpdate({ _id: subProduct.productId }, { $push: { subProductIds: subProduct.id } }, { new: true })
     return subProduct
   }
@@ -451,8 +450,8 @@ export class AdminService {
   }
 
   // get single sub product - test edildi
-  async getSingleSubProduct(id: string): Promise<Subproduct> {
-    const subProductExist = await this.subProductModel.findById(id).populate([{ path: 'featuresIds' }, { path: 'specifications' }])
+  async getSingleSubProduct(slug: string): Promise<Subproduct> {
+    const subProductExist = await this.subProductModel.findOne({slug}).populate([{ path: 'featuresIds' }, { path: 'specifications' }])
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND)
     }

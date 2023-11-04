@@ -30,10 +30,10 @@ export class GuestController {
     return await this.guestService.getAllSubProduct()
   }
 
-  @Get('/subproducts/:id')
+  @Get('/subproducts/:slug')
   @HttpCode(HttpStatus.OK)
-  async getSingleSubProduct(@Param('id') id: string): Promise<Subproduct> {
-    return await this.guestService.getSingleSubProduct(id)
+  async getSingleSubProduct(@Param('slug') slug: string): Promise<Subproduct> {
+    return await this.guestService.getSingleSubProduct(slug)
   }
 
   @Get('/projects/:id')

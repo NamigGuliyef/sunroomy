@@ -253,10 +253,10 @@ export class AdminController {
     return await this.adminService.deleteSubProduct(id)
   }
 
-  @Get('/dashboard/subproducts/:id')
+  @Get('/dashboard/subproducts/:slug')
   @HttpCode(HttpStatus.OK)
-  async getSingleSubProduct(@Param('id') id: string): Promise<Subproduct> {
-    return await this.adminService.getSingleSubProduct(id)
+  async getSingleSubProduct(@Param('slug') slug: string): Promise<Subproduct> {
+    return await this.adminService.getSingleSubProduct(slug)
   }
 
   @Get('/dashboard/subproducts')

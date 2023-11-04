@@ -39,8 +39,8 @@ export class GuestService {
   }
 
   // get single sub product - test edildi
-  async getSingleSubProduct(id: string): Promise<Subproduct> {
-    const subProductExist = await this.subProductModel.findById(id).populate([{ path: 'featuresIds' }, { path: 'specifications' }])
+  async getSingleSubProduct(slug: string): Promise<Subproduct> {
+    const subProductExist = await this.subProductModel.findOne({slug}).populate([{ path: 'featuresIds' }, { path: 'specifications' }])
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND)
     }
