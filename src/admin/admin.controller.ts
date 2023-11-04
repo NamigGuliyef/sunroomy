@@ -187,10 +187,10 @@ export class AdminController {
   //   return await this.adminService.deleteProject(id)
   // }
 
-  @Get('/dashboard/projects/:id')
+  @Get('/dashboard/projects/:slug')
   @HttpCode(HttpStatus.OK)
-  async getSingleProject(@Param('id') id: string): Promise<Project> {
-    return await this.adminService.getSingleProject(id)
+  async getSingleProject(@Param('slug') slug: string): Promise<Project> {
+    return await this.adminService.getSingleProject(slug)
   }
 
   @Get('/dashboard/projects')
@@ -234,17 +234,19 @@ export class AdminController {
   @Post('/dashboard/subproducts')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('cover_photo', MulterOptionsCloudinary))
   @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
-  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Subproduct> {
-    return await this.adminService.createSubProduct(CreateSubproductDto, files)
+  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFile() file: Express.Multer.File, @UploadedFiles() files: Express.Multer.File[]): Promise<Subproduct> {
+    return await this.adminService.createSubProduct(CreateSubproductDto, file, files)
   }
 
   @Put('/dashboard/subproducts/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
   @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
-  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Subproduct> {
-    return await this.adminService.updateSubProduct(id, UpdateSubproductDto, files)
+  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto,@UploadedFile() file: Express.Multer.File, @UploadedFiles() files: Express.Multer.File[]): Promise<Subproduct> {
+    return await this.adminService.updateSubProduct(id, UpdateSubproductDto, file,files)
   }
 
   @Delete('/dashboard/subproducts/:id')

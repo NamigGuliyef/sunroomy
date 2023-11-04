@@ -10,7 +10,7 @@ import { GuestService } from './guest.service';
 
 @Controller('')
 export class GuestController {
-  constructor(private guestService: GuestService){}
+  constructor(private guestService: GuestService) { }
 
   @Get('/products/:slug')
   @HttpCode(HttpStatus.OK)
@@ -36,10 +36,10 @@ export class GuestController {
     return await this.guestService.getSingleSubProduct(slug)
   }
 
-  @Get('/projects/:id')
+  @Get('/projects/:slug')
   @HttpCode(HttpStatus.OK)
-  async getSingleProject(@Param('id') id: string): Promise<Project> {
-    return await this.guestService.getSingleProject(id)
+  async getSingleProject(@Param('slug') slug: string): Promise<Project> {
+    return await this.guestService.getSingleProject(slug)
   }
 
   @Get('/projects')
@@ -66,7 +66,7 @@ export class GuestController {
   async getAllContact(): Promise<Contact[]> {
     return await this.guestService.getAllContact()
   }
-  
+
   @Get('/contacts/:id')
   @HttpCode(HttpStatus.OK)
   async getSingleContact(@Param('id') id: string): Promise<Contact> {

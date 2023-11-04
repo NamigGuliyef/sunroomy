@@ -260,7 +260,7 @@ export class AdminService {
       const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
       fileUrls.push(fileUrl.url)
     }
-    const project = await this.projectModel.create({ ...CreateProjectDto, photos: fileUrls })
+    const project = await this.projectModel.create({ ...CreateProjectDto, slug: slug(CreateProjectDto.title, { lower: true }), photos: fileUrls })
     return project
   }
 
@@ -275,7 +275,7 @@ export class AdminService {
         const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
         fileUrls.push(fileUrl.url)
       }
-      const updateProject = await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, photos: fileUrls } }, { new: true })
+      const updateProject = await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }), photos: fileUrls } }, { new: true })
       return updateProject
     }
   }
@@ -293,8 +293,8 @@ export class AdminService {
 
 
   // get single project - test edildi
-  async getSingleProject(id: string): Promise<Project> {
-    const project = await this.projectModel.findById(id).populate([
+  async getSingleProject(slug: string): Promise<Project> {
+    const project = await this.projectModel.findOne({ slug }).populate([
       { path: 'featuresId' }, { path: 'needsId' }, { path: 'usedProductsId' }
     ])
     if (!project) {
@@ -366,7 +366,7 @@ export class AdminService {
       throw new HttpException('The product is already available', HttpStatus.CONFLICT)
     }
     const fileuRL = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
-    return await this.productModel.create({ ...CreateProductDto,slug: slug(CreateProductDto.title,{ lower:true }), photo: fileuRL.url })
+    return await this.productModel.create({ ...CreateProductDto, slug: slug(CreateProductDto.title, { lower: true }), photo: fileuRL.url })
   }
 
   // update product - test edildi
@@ -380,7 +380,7 @@ export class AdminService {
       throw new HttpException('The product is already available', HttpStatus.CONFLICT)
     }
     const fileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
-    return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, photo: fileUrl.url } }, { new: true })
+    return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }), photo: fileUrl.url } }, { new: true })
   }
 
   // delete product - test edildi
@@ -395,7 +395,7 @@ export class AdminService {
 
   // // get single product - test edildi
   async getSingleProduct(slug: string): Promise<Product> {
-    const product = await this.productModel.findOne({slug}).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
+    const product = await this.productModel.findOne({ slug }).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND)
     }
@@ -408,34 +408,36 @@ export class AdminService {
   }
 
   // create sub product  - test edildi
-  async createSubProduct(CreateSubProductDto: createSubProductDto, files: Express.Multer.File[]): Promise<Subproduct> {
+  async createSubProduct(CreateSubProductDto: createSubProductDto, file: Express.Multer.File, files: Express.Multer.File[]): Promise<Subproduct> {
     const { title } = CreateSubProductDto
     const subProductExist = await this.subProductModel.findOne({ title })
     if (subProductExist) {
       throw new HttpException('Sub product already created', HttpStatus.CONFLICT)
     }
+    const coverFileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
     const fileUrls = []
     for (let i = 0; i < files.length; i++) {
       const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
       fileUrls.push(fileUrl.url)
     }
-    const subProduct = await this.subProductModel.create({ ...CreateSubProductDto,slug: slug(CreateSubProductDto.title,{lower:true}), photos: fileUrls })
+    const subProduct = await this.subProductModel.create({ ...CreateSubProductDto, slug: slug(CreateSubProductDto.title, { lower: true }), cover_photo: coverFileUrl, photos: fileUrls })
     await this.productModel.findOneAndUpdate({ _id: subProduct.productId }, { $push: { subProductIds: subProduct.id } }, { new: true })
     return subProduct
   }
 
   // update sub product - test edildi
-  async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto, files: Express.Multer.File[]): Promise<Subproduct> {
+  async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto, file: Express.Multer.File, files: Express.Multer.File[]): Promise<Subproduct> {
     const subProductExist = await this.subProductModel.findById(id)
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND)
     }
+    const coverFileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
     const fileUrls = []
     for (let i = 0; i < files.length; i++) {
       const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
       fileUrls.push(fileUrl.url)
     }
-    return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, photos: fileUrls } }, { new: true })
+    return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }), cover_photo: coverFileUrl, photos: fileUrls } }, { new: true })
   }
 
   // delete sub product - test edildi
@@ -451,7 +453,7 @@ export class AdminService {
 
   // get single sub product - test edildi
   async getSingleSubProduct(slug: string): Promise<Subproduct> {
-    const subProductExist = await this.subProductModel.findOne({slug}).populate([{ path: 'featuresIds' }, { path: 'specifications' }])
+    const subProductExist = await this.subProductModel.findOne({ slug }).populate([{ path: 'featuresIds' }, { path: 'specifications' }])
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND)
     }

@@ -10,16 +10,18 @@ export class Subproduct {
   @Prop({ required: true })
   description_2: string
   @Prop()
+  cover_photo: string
+  @Prop()
   photos: string[]
   @Prop()
-  slug:string
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'feature'})
+  slug: string
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'feature' })
   featuresIds: Types.ObjectId
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'specification'})
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'specification' })
   specifications: Types.ObjectId
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'product', required: true })
   productId: Types.ObjectId
-  
+
 }
 
 export const subProductModel = SchemaFactory.createForClass(Subproduct)

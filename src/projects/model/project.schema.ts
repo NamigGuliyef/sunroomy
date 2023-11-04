@@ -15,6 +15,8 @@ export class Project {
   description: string;
   @Prop({ required: true })
   photos: string[];
+  @Prop()
+  slug: string
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'projectneed' })
   needsId: Types.ObjectId;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'feature' })

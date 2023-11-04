@@ -26,7 +26,7 @@ export class GuestService {
 
   // get single product - test edildi
   async getSingleProduct(slug: string): Promise<Product> {
-    const product = await this.productModel.findOne({slug}).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
+    const product = await this.productModel.findOne({ slug }).populate({ path: 'subProductIds', select: ['title', 'description', 'photos'] })
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND)
     }
@@ -40,7 +40,7 @@ export class GuestService {
 
   // get single sub product - test edildi
   async getSingleSubProduct(slug: string): Promise<Subproduct> {
-    const subProductExist = await this.subProductModel.findOne({slug}).populate([{ path: 'featuresIds' }, { path: 'specifications' }])
+    const subProductExist = await this.subProductModel.findOne({ slug }).populate([{ path: 'featuresIds' }, { path: 'specifications' }])
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND)
     }
@@ -55,8 +55,8 @@ export class GuestService {
   }
 
   // get single project - test edildi
-  async getSingleProject(id: string): Promise<Project> {
-    const project = await this.projectModel.findById(id).populate([
+  async getSingleProject(slug: string): Promise<Project> {
+    const project = await this.projectModel.findOne({ slug }).populate([
       { path: 'featuresId' }, { path: 'needsId' }, { path: 'usedProductsId' }
     ])
     if (!project) {
