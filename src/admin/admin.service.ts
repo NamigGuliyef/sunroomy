@@ -601,6 +601,9 @@ export class AdminService {
         HttpStatus.CONFLICT,
       );
     }
+    if (!file) {
+      return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }) } }, { new: true })
+    }
     const fileUrl = await cloudinary.uploader.upload(file.path, {
       public_id: file.originalname,
     });
