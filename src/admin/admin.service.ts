@@ -90,9 +90,12 @@ export class AdminService {
       const { title, description } = CreateFeatureDto;
       return await this.featureModel.create({ title, description });
     } else {
+      const iconUrl = await cloudinary.uploader.upload(file.path, {
+        public_id: file.originalname,
+      });
       const feature = await this.featureModel.create({
         ...CreateFeatureDto,
-        icon: file.path,
+        icon: iconUrl.url,
       });
       await this.subProductModel.findOneAndUpdate(
         { _id: feature.subProductId },
@@ -122,9 +125,12 @@ export class AdminService {
         { new: true },
       );
     } else {
+      const iconUrl = await cloudinary.uploader.upload(file.path, {
+        public_id: file.originalname,
+      });
       const updateFeature = await this.featureModel.findByIdAndUpdate(
         id,
-        { $set: { ...UpdateFeatureDto, icon: file.originalname } },
+        { $set: { ...UpdateFeatureDto, icon: iconUrl.url } },
         { new: true },
       );
       return updateFeature;
@@ -602,7 +608,16 @@ export class AdminService {
       );
     }
     if (!file) {
-      return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }) } }, { new: true })
+      return await this.productModel.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            ...UpdateProductDto,
+            slug: slug(UpdateProductDto.title, { lower: true }),
+          },
+        },
+        { new: true },
+      );
     }
     const fileUrl = await cloudinary.uploader.upload(file.path, {
       public_id: file.originalname,
@@ -632,12 +647,10 @@ export class AdminService {
 
   // // get single product - test edildi
   async getSingleProduct(slug: string): Promise<Product> {
-    const product = await this.productModel
-      .findOne({ slug })
-      .populate({
-        path: 'subProductIds',
-        select: ['title', 'description', 'photos', 'cover_photo', 'slug'],
-      });
+    const product = await this.productModel.findOne({ slug }).populate({
+      path: 'subProductIds',
+      select: ['title', 'description', 'photos', 'cover_photo', 'slug'],
+    });
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
     }

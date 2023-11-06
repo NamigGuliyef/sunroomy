@@ -34,7 +34,7 @@ export class AdminController {
   @Post('/dashboard/features')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('icon', MulterOptions))
+  @UseInterceptors(FileInterceptor('icon', MulterOptionsCloudinary))
   async createFeature(@Body() CreateFeatureDto: createFeatureDto, @UploadedFile() file: Express.Multer.File): Promise<Feature> {
     return await this.adminService.createFeature(CreateFeatureDto, file);
   }
