@@ -689,7 +689,7 @@ export class AdminService {
     const subProduct = await this.subProductModel.create({
       ...CreateSubProductDto,
       slug: slug(CreateSubProductDto.title, { lower: true }),
-      cover_photo: coverFileUrl,
+      cover_photo: coverFileUrl.url,
       photos: fileUrls,
     });
     await this.productModel.findOneAndUpdate(
@@ -727,7 +727,7 @@ export class AdminService {
         $set: {
           ...UpdateSubproductDto,
           slug: slug(UpdateSubproductDto.title, { lower: true }),
-          cover_photo: coverFileUrl,
+          cover_photo: coverFileUrl.url,
           photos: fileUrls,
         },
       },
