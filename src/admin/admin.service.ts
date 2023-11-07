@@ -663,39 +663,25 @@ export class AdminService {
   }
 
   // create sub product  - test edildi
-  async createSubProduct(
-    CreateSubProductDto: createSubProductDto,
-    file: Express.Multer.File,
-    files: Express.Multer.File[],
-  ): Promise<Subproduct> {
+  async createSubProduct(CreateSubProductDto: createSubProductDto, files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]}): Promise<Subproduct> {
     const { title } = CreateSubProductDto;
     const subProductExist = await this.subProductModel.findOne({ title });
     if (subProductExist) {
-      throw new HttpException(
-        'Sub product already created',
-        HttpStatus.CONFLICT,
+      throw new HttpException('Sub product already created',HttpStatus.CONFLICT
       );
     }
-    const coverFileUrl = await cloudinary.uploader.upload(file.path, {
-      public_id: file.originalname,
+    const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, {
+      public_id: files.cover_photo[0].originalname,
     });
     const fileUrls = [];
-    for (let i = 0; i < files.length; i++) {
-      const fileUrl = await cloudinary.uploader.upload(files[i].path, {
-        public_id: files[i].originalname,
+    for (let i = 0; i < files.photos.length; i++) {
+      const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, {
+        public_id: files.photos[i].originalname,
       });
       fileUrls.push(fileUrl.url);
     }
-    const subProduct = await this.subProductModel.create({
-      ...CreateSubProductDto,
-      slug: slug(CreateSubProductDto.title, { lower: true }),
-      cover_photo: coverFileUrl.url,
-      photos: fileUrls,
-    });
-    await this.productModel.findOneAndUpdate(
-      { _id: subProduct.productId },
-      { $push: { subProductIds: subProduct.id } },
-      { new: true },
+    const subProduct = await this.subProductModel.create({...CreateSubProductDto,cover_photo:coverFileUrl.url,photos:fileUrls,slug:slug(CreateSubProductDto.title)});
+    await this.productModel.findOneAndUpdate({ _id: subProduct.productId },{ $push: { subProductIds: subProduct.id } },{ new: true },
     );
     return subProduct;
   }

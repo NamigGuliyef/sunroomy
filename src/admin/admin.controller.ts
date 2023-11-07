@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UploadedFile, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { createAboutOutdorrDto, updateAboutOutdorrDto } from 'src/about-outdorr/dto/aboutoutdorr.dto';
 import { AboutOutdorr } from 'src/about-outdorr/model/aboutoutdorr.schema';
 import { createApplicationDto, updateApplicationDto } from 'src/applications/dto/application.dto';
 import { Application } from 'src/applications/model/application.schema';
-import { MulterOptions, MulterOptionsCloudinary } from 'src/config/multer/multer';
+import { MulterOptionsCloudinary } from 'src/config/multer/multer';
 import { createContactDto, updateContactDto } from 'src/contact/dto/contact.dto';
 import { Contact } from 'src/contact/model/contact.schema';
 import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto';
@@ -42,7 +42,7 @@ export class AdminController {
   @Put('/dashboard/features/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('icon', MulterOptions))
+  @UseInterceptors(FileInterceptor('icon', MulterOptionsCloudinary))
   async updateFeature(@Param('id') id: string, @Body() UpdateFeatureDto: updateFeatureDto, @UploadedFile() file: Express.Multer.File): Promise<Feature> {
     return await this.adminService.updateFeature(id, UpdateFeatureDto, file)
   }
@@ -234,10 +234,10 @@ export class AdminController {
   @Post('/dashboard/subproducts')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('cover_photo', MulterOptionsCloudinary))
-  @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
-  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFile() file: Express.Multer.File, @UploadedFiles() files: Express.Multer.File[]): Promise<Subproduct> {
-    return await this.adminService.createSubProduct(CreateSubproductDto, file, files)
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'cover_photo', maxCount: 1 },{ name: 'photos', maxCount: 10 }], MulterOptionsCloudinary))
+  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFiles() files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]
+  }): Promise<Subproduct> {
+    return await this.adminService.createSubProduct(CreateSubproductDto, files)
   }
 
   @Put('/dashboard/subproducts/:id')
@@ -245,7 +245,7 @@ export class AdminController {
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
   @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
-  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto,@UploadedFile() file: Express.Multer.File, @UploadedFiles() files: Express.Multer.File[]): Promise<Subproduct> {
+  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto, @UploadedFile() file: Express.Multer.File, @UploadedFiles() files: Express.Multer.File[]): Promise<Subproduct> {
     return await this.adminService.updateSubProduct(id, UpdateSubproductDto, file,files)
   }
 
