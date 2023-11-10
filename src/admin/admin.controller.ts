@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UploadedFile, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, UploadedFile, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { createAboutOutdorrDto, updateAboutOutdorrDto } from 'src/about-outdorr/dto/aboutoutdorr.dto';
 import { AboutOutdorr } from 'src/about-outdorr/model/aboutoutdorr.schema';
@@ -352,7 +352,7 @@ export class AdminController {
     return await this.adminService.createWhyOutdorr(CreateWhyOutdorrDto)
   }
 
-  @Put('/dashboard/why-outdorr/:id')
+  @Patch('/dashboard/why-outdorr/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   async updateWhyOutdorr(@Param('id') id: string, @Body() UpdateWhyOutdorrDto: updateWhyOutdorrDto): Promise<WhyOutdorr> {

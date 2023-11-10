@@ -79,7 +79,7 @@ export class AdminService {
     @InjectModel('subscribe') private subscribeModel: Model<Subscribe>,
     @InjectModel('whyoutdorr') private whyOutdorrModel: Model<WhyOutdorr>,
     @InjectModel('aboutoutdorr') private aboutOutdorrModel: Model<AboutOutdorr>,
-  ) {}
+  ) { }
 
   // create feature - test edildi
   async createFeature(
@@ -663,11 +663,11 @@ export class AdminService {
   }
 
   // create sub product  - test edildi
-  async createSubProduct(CreateSubProductDto: createSubProductDto, files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]}): Promise<Subproduct> {
+  async createSubProduct(CreateSubProductDto: createSubProductDto, files: { cover_photo: Express.Multer.File[], photos: Express.Multer.File[] }): Promise<Subproduct> {
     const { title } = CreateSubProductDto;
     const subProductExist = await this.subProductModel.findOne({ title });
     if (subProductExist) {
-      throw new HttpException('Sub product already created',HttpStatus.CONFLICT
+      throw new HttpException('Sub product already created', HttpStatus.CONFLICT
       );
     }
     const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, {
@@ -680,8 +680,8 @@ export class AdminService {
       });
       fileUrls.push(fileUrl.url);
     }
-    const subProduct = await this.subProductModel.create({...CreateSubProductDto,cover_photo:coverFileUrl.url,photos:fileUrls,slug:slug(CreateSubProductDto.title)});
-    await this.productModel.findOneAndUpdate({ _id: subProduct.productId },{ $push: { subProductIds: subProduct.id } },{ new: true },
+    const subProduct = await this.subProductModel.create({ ...CreateSubProductDto, cover_photo: coverFileUrl.url, photos: fileUrls, slug: slug(CreateSubProductDto.title) });
+    await this.productModel.findOneAndUpdate({ _id: subProduct.productId }, { $push: { subProductIds: subProduct.id } }, { new: true },
     );
     return subProduct;
   }
@@ -851,16 +851,10 @@ export class AdminService {
   }
 
   // update why-outdorr - test edildi
-  async updateWhyOutdorr(
-    id: string,
-    UpdateOutdorrDto: updateWhyOutdorrDto,
-  ): Promise<WhyOutdorr> {
+  async updateWhyOutdorr(id: string, UpdateOutdorrDto: updateWhyOutdorrDto): Promise<WhyOutdorr> {
     const whyoutdorrExist = await this.whyOutdorrModel.findById(id);
     if (!whyoutdorrExist) {
-      throw new HttpException(
-        'No information found to change',
-        HttpStatus.NOT_FOUND,
-      );
+      throw new HttpException('No information found to change', HttpStatus.NOT_FOUND);
     }
     const { title, description } = UpdateOutdorrDto;
     const whyoutdorr = await this.whyOutdorrModel.findOne({
