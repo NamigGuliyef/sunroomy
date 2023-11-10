@@ -832,23 +832,23 @@ export class AdminService {
   }
 
   // create why-outdorr - test edildi
-  async createWhyOutdorr(
-    CreateWhyOutdorrDto: createWhyOutdorrDto,
-  ): Promise<WhyOutdorr> {
-    const { title, description } = CreateWhyOutdorrDto;
-    const whyOutdorrExist = await this.whyOutdorrModel.findOne({
-      title,
-      description,
-    });
-    if (whyOutdorrExist) {
-      throw new HttpException(
-        'Title and description are already created',
-        HttpStatus.CONFLICT,
-      );
-    } else {
-      return await this.whyOutdorrModel.create(CreateWhyOutdorrDto);
-    }
-  }
+  // async createWhyOutdorr(
+  //   CreateWhyOutdorrDto: createWhyOutdorrDto,
+  // ): Promise<WhyOutdorr> {
+  //   const { title, description } = CreateWhyOutdorrDto;
+  //   const whyOutdorrExist = await this.whyOutdorrModel.findOne({
+  //     title,
+  //     description,
+  //   });
+  //   if (whyOutdorrExist) {
+  //     throw new HttpException(
+  //       'Title and description are already created',
+  //       HttpStatus.CONFLICT,
+  //     );
+  //   } else {
+  //     return await this.whyOutdorrModel.create(CreateWhyOutdorrDto);
+  //   }
+  // }
 
   // update why-outdorr - test edildi
   async updateWhyOutdorr(id: string, UpdateOutdorrDto: updateWhyOutdorrDto): Promise<WhyOutdorr> {
@@ -856,17 +856,17 @@ export class AdminService {
     if (!whyoutdorrExist) {
       throw new HttpException('No information found to change', HttpStatus.NOT_FOUND);
     }
-    const { title, description } = UpdateOutdorrDto;
-    const whyoutdorr = await this.whyOutdorrModel.findOne({
-      title,
-      description,
-    });
-    if (whyoutdorr) {
-      throw new HttpException(
-        'Title and description are already created',
-        HttpStatus.CONFLICT,
-      );
-    }
+    // const { title, description } = UpdateOutdorrDto;
+    // const whyoutdorr = await this.whyOutdorrModel.findOne({
+    //   title,
+    //   description,
+    // });
+    // if (whyoutdorr) {
+    //   throw new HttpException(
+    //     'Title and description are already created',
+    //     HttpStatus.CONFLICT,
+    //   );
+    // }
     return await this.whyOutdorrModel.findByIdAndUpdate(
       id,
       { $set: UpdateOutdorrDto },

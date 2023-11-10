@@ -345,12 +345,12 @@ export class AdminController {
     return await this.adminService.sendEmail(text)
   }
 
-  @Post('/dashboard/why-outdorr')
-  @HttpCode(HttpStatus.CREATED)
-  @UsePipes(new ValidationPipe())
-  async createWhyOutdorr(@Body() CreateWhyOutdorrDto: createWhyOutdorrDto): Promise<WhyOutdorr> {
-    return await this.adminService.createWhyOutdorr(CreateWhyOutdorrDto)
-  }
+  // @Post('/dashboard/why-outdorr')
+  // @HttpCode(HttpStatus.CREATED)
+  // @UsePipes(new ValidationPipe())
+  // async createWhyOutdorr(@Body() CreateWhyOutdorrDto: createWhyOutdorrDto): Promise<WhyOutdorr> {
+  //   return await this.adminService.createWhyOutdorr(CreateWhyOutdorrDto)
+  // }
 
   @Patch('/dashboard/why-outdorr/:id')
   @HttpCode(HttpStatus.OK)
