@@ -687,34 +687,23 @@ export class AdminService {
   }
 
   // update sub product - test edildi
-  async updateSubProduct(
-    id: string,
-    UpdateSubproductDto: updateSubProductDto,
-    file: Express.Multer.File,
-    files: Express.Multer.File[],
-  ): Promise<Subproduct> {
+  async updateSubProduct(id: string,UpdateSubproductDto: updateSubProductDto,files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]}): Promise<Subproduct> {
     const subProductExist = await this.subProductModel.findById(id);
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
     }
-    const coverFileUrl = await cloudinary.uploader.upload(file.path, {
-      public_id: file.originalname,
-    });
+    const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, {public_id: files.cover_photo[0].originalname});
     const fileUrls = [];
-    for (let i = 0; i < files.length; i++) {
+    for (let i = 0; i < files.photos.length; i++) {
       const fileUrl = await cloudinary.uploader.upload(files[i].path, {
-        public_id: files[i].originalname,
+        public_id: files.photos[i].originalname,
       });
       fileUrls.push(fileUrl.url);
     }
     return await this.subProductModel.findByIdAndUpdate(
       id,
       {
-        $set: {
-          ...UpdateSubproductDto,
-          slug: slug(UpdateSubproductDto.title, { lower: true }),
-          cover_photo: coverFileUrl.url,
-          photos: fileUrls,
+        $set: {...UpdateSubproductDto,slug: slug(UpdateSubproductDto.title, { lower: true }),cover_photo: coverFileUrl.url,photos: fileUrls
         },
       },
       { new: true },
