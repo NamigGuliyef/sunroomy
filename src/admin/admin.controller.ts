@@ -173,7 +173,7 @@ export class AdminController {
     return await this.adminService.createProject(CreateProjectDto, files)
   }
 
-  @Put('/dashboard/projects/:id')
+  @Patch('/dashboard/projects/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
@@ -235,8 +235,7 @@ export class AdminController {
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FileFieldsInterceptor([{ name: 'cover_photo', maxCount: 1 },{ name: 'photos', maxCount: 10 }], MulterOptionsCloudinary))
-  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFiles() files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]
-  }): Promise<Subproduct> {
+  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFiles() files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]}): Promise<Subproduct> {
     return await this.adminService.createSubProduct(CreateSubproductDto, files)
   }
 
@@ -244,7 +243,7 @@ export class AdminController {
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FileFieldsInterceptor([{ name: 'cover_photo', maxCount: 1 },{ name: 'photos', maxCount: 10 }], MulterOptionsCloudinary))
-  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto, @UploadedFile() files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]}): Promise<Subproduct> {
+  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto, @UploadedFiles() files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]}): Promise<Subproduct> {
     return await this.adminService.updateSubProduct(id, UpdateSubproductDto, files)
   }
 

@@ -399,14 +399,10 @@ export class AdminService {
   }
 
   // create project - test edildi
-  async createProject(
-    CreateProjectDto: createProjectDto,
-    files: Express.Multer.File[],
-  ): Promise<Project> {
+  async createProject(CreateProjectDto: createProjectDto,files: Express.Multer.File[]): Promise<Project> {
     const fileUrls = [];
     for (let i = 0; i < files.length; i++) {
-      const fileUrl = await cloudinary.uploader.upload(files[i].path, {
-        public_id: files[i].originalname,
+      const fileUrl = await cloudinary.uploader.upload(files[i].path, {public_id: files[i].originalname
       });
       fileUrls.push(fileUrl.url);
     }
@@ -419,17 +415,10 @@ export class AdminService {
   }
 
   // update project - test edildi
-  async updateProject(
-    id: string,
-    UpdateProjectDto: updateProjectDto,
-    files: Express.Multer.File[],
-  ): Promise<Project> {
+  async updateProject(id: string,UpdateProjectDto: updateProjectDto,files: Express.Multer.File[]): Promise<Project> {
     const project = await this.projectModel.findById(id);
     if (!project) {
-      throw new HttpException(
-        'The project to be change was not found',
-        HttpStatus.NOT_FOUND,
-      );
+      throw new HttpException('The project to be change was not found',HttpStatus.NOT_FOUND);
     } else {
       const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
@@ -695,9 +684,7 @@ export class AdminService {
     const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, {public_id: files.cover_photo[0].originalname});
     const fileUrls = [];
     for (let i = 0; i < files.photos.length; i++) {
-      const fileUrl = await cloudinary.uploader.upload(files[i].path, {
-        public_id: files.photos[i].originalname,
-      });
+      const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, {public_id: files.photos[i].originalname});
       fileUrls.push(fileUrl.url);
     }
     return await this.subProductModel.findByIdAndUpdate(
