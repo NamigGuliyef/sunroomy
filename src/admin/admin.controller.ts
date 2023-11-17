@@ -273,7 +273,7 @@ export class AdminController {
     return await this.adminService.createProduct(CreateProductDto, file)
   }
 
-  @Put('/dashboard/products/:id')
+  @Patch('/dashboard/products/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
