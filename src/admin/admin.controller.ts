@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, UploadedFile, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, UploadedFile, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { createAboutOutdorrDto, updateAboutOutdorrDto } from 'src/about-outdorr/dto/aboutoutdorr.dto';
 import { AboutOutdorr } from 'src/about-outdorr/model/aboutoutdorr.schema';
@@ -23,7 +23,7 @@ import { sendEmailText } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedproduct.schema';
-import { createWhyOutdorrDto, updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
+import { updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { AdminService } from './admin.service';
 
@@ -39,7 +39,7 @@ export class AdminController {
     return await this.adminService.createFeature(CreateFeatureDto, file);
   }
 
-  @Put('/dashboard/features/:id')
+  @Patch('/dashboard/features/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FileInterceptor('icon', MulterOptionsCloudinary))
@@ -72,7 +72,7 @@ export class AdminController {
     return await this.adminService.createProjectNeed(CreateProjectNeedDto)
   }
 
-  @Put('/dashboard/projectneeds/:id')
+  @Patch('/dashboard/projectneeds/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   async updateProjectNeed(@Param('id') id: string, @Body() UpdateProjectNeedDto: updateProjectNeedDto): Promise<ProjectNeed> {
@@ -105,7 +105,7 @@ export class AdminController {
     return await this.adminService.createUsedProducts(CreateUsedProductsDto, files)
   }
 
-  @Put('/dashboard/usedproducts/:id')
+  @Patch('/dashboard/usedproducts/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FilesInterceptor('photos', 5, MulterOptionsCloudinary))
@@ -139,7 +139,7 @@ export class AdminController {
     return await this.adminService.createApplication(CreateApplicationDto, files)
   }
 
-  @Put('/dashboard/applications/:id')
+  @Patch('/dashboard/applications/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
@@ -206,7 +206,7 @@ export class AdminController {
     return await this.adminService.createSpecification(CreateSpecificationDto)
   }
 
-  @Put('/dashboard/specifications/:id')
+  @Patch('/dashboard/specifications/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   async updateSpecification(@Param('id') id: string, @Body() UpdateSpecificationDto: updateSpecificationDto): Promise<Specification> {
@@ -306,7 +306,7 @@ export class AdminController {
     return await this.adminService.createContact(CreateContactDto)
   }
 
-  @Put('/dashboard/contacts/:id')
+  @Patch('/dashboard/contacts/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   async updateContact(@Param('id') id: string, @Body() UpdateContactDto: updateContactDto): Promise<Contact> {
@@ -382,7 +382,7 @@ export class AdminController {
     return await this.adminService.createAboutOutdorr(CreateAboutOutdorrDto)
   }
 
-  @Put('/dashboard/about-outdorr/:id')
+  @Patch('/dashboard/about-outdorr/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
   async updateAboutOutdorr(@Param('id') id: string, @Body() UpdateAboutOutdorrDto: updateAboutOutdorrDto): Promise<AboutOutdorr> {
