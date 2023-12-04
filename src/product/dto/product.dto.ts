@@ -1,16 +1,13 @@
-import { IsNotEmpty } from "class-validator"
+import { IsNotEmpty } from 'class-validator';
 
 export class createProductDto {
   @IsNotEmpty({ message: 'Title is empty' })
-  title: string
+  title: string;
   @IsNotEmpty({ message: 'Description is empty' })
-  description: string
+  description: string;
 }
 
-
 export class updateProductDto {
-  @IsNotEmpty({ message: 'Title is empty' })
-  title: string
-  @IsNotEmpty({ message: 'Description is empty' })
-  description: string
+  title: string;
+  description: string;
 }

@@ -11,8 +11,6 @@ export class createAboutOutdorrDto {
 }
 
 export class updateAboutOutdorrDto {
-  @IsNotEmpty({ message: 'Key is empty' })
   key: string;
-  @IsNotEmpty({ message: 'Value is empty' })
   value: string;
 }

@@ -1,18 +1,15 @@
-import { IsNotEmpty, Matches } from "class-validator";
+import { IsNotEmpty, Matches } from 'class-validator';
 
 export class createProjectNeedDto {
   @IsNotEmpty({ message: 'Title is empty' })
-  @Matches(new RegExp("^[A-Z a-z-]{3,50}$"))
-  title: string
+  @Matches(new RegExp('^[A-Z a-z-]{3,50}$'))
+  title: string;
   @IsNotEmpty({ message: 'Description is empty' })
-  description: string
+  description: string;
 }
 
-
 export class updateProjectNeedDto {
-  @IsNotEmpty({ message: 'Title is empty' })
-  @Matches(new RegExp("^[A-Z a-z-]{3,50}$"))
-  title: string
-  @IsNotEmpty({ message: 'Description is empty' })
-  description: string
+  @Matches(new RegExp('^[A-Z a-z-]{3,50}$'))
+  title: string;
+  description: string;
 }

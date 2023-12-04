@@ -7,6 +7,5 @@ export class createSubscribeDto {
 }
 
 export class sendEmailText {
-  @IsNotEmpty()
-  text: string
+  text: string;
 }
