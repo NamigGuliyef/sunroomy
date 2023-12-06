@@ -404,10 +404,11 @@ export class AdminService {
   }
 
   // create project - test edildi
-  async createProject(CreateProjectDto: createProjectDto,files: Express.Multer.File[]): Promise<Project> {
+  async createProject(CreateProjectDto: createProjectDto, files: Express.Multer.File[]): Promise<Project> {
     const fileUrls = [];
     for (let i = 0; i < files.length; i++) {
-      const fileUrl = await cloudinary.uploader.upload(files[i].path, {public_id: files[i].originalname
+      const fileUrl = await cloudinary.uploader.upload(files[i].path, {
+        public_id: files[i].originalname
       });
       fileUrls.push(fileUrl.url);
     }
@@ -420,10 +421,10 @@ export class AdminService {
   }
 
   // update project - test edildi
-  async updateProject(id: string,UpdateProjectDto: updateProjectDto,files: Express.Multer.File[]): Promise<Project> {
+  async updateProject(id: string, UpdateProjectDto: updateProjectDto, files: Express.Multer.File[]): Promise<Project> {
     const project = await this.projectModel.findById(id);
     if (!project) {
-      throw new HttpException('The project to be change was not found',HttpStatus.NOT_FOUND);
+      throw new HttpException('The project to be change was not found', HttpStatus.NOT_FOUND);
     } else {
       const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
@@ -681,21 +682,22 @@ export class AdminService {
   }
 
   // update sub product - test edildi
-  async updateSubProduct(id: string,UpdateSubproductDto: updateSubProductDto,files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]}): Promise<Subproduct> {
+  async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto, files: { cover_photo: Express.Multer.File[], photos: Express.Multer.File[] }): Promise<Subproduct> {
     const subProductExist = await this.subProductModel.findById(id);
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
     }
-    const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, {public_id: files.cover_photo[0].originalname});
+    const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, { public_id: files.cover_photo[0].originalname });
     const fileUrls = [];
     for (let i = 0; i < files.photos.length; i++) {
-      const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, {public_id: files.photos[i].originalname});
+      const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, { public_id: files.photos[i].originalname });
       fileUrls.push(fileUrl.url);
     }
     return await this.subProductModel.findByIdAndUpdate(
       id,
       {
-        $set: {...UpdateSubproductDto,slug: slug(UpdateSubproductDto.title, { lower: true }),cover_photo: coverFileUrl.url,photos: fileUrls
+        $set: {
+          ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }), cover_photo: coverFileUrl.url, photos: fileUrls
         },
       },
       { new: true },
@@ -972,100 +974,103 @@ export class AdminService {
 
 
   // create project design
-  async createProjectDesign(createProjectDesignDto:CreateProjectDesignDto):Promise<ProjectDesign>{
-    const{ title,description }=createProjectDesignDto
-    const projectDesign=await this.projectDesignModel.find({title,description})
-  if(projectDesign){
-    throw new HttpException('The data is already available in the database.',HttpStatus.CONFLICT)
-  }
-    return await this.projectDesignModel.create(createProjectDesignDto)
+  async createProjectDesign(createProjectDesignDto: CreateProjectDesignDto): Promise<ProjectDesign> {
+    const { title, description } = createProjectDesignDto
+    const projectDesign = await this.projectDesignModel.findOne({ title, description })
+    if (projectDesign) {
+      throw new HttpException('The data is already available in the database.', HttpStatus.CONFLICT)
+    } else {
+      return await this.projectDesignModel.create(createProjectDesignDto)
+    }
   }
 
 
   // update project design
-  async updateProjectDesign(id:string,updateProjectDesignDto:UpdateProjectDesignDto):Promise<ProjectDesign>{
-  const projectDesignExist=await this.projectDesignModel.findById(id)
-  if(!projectDesignExist){
-    throw new HttpException('Information about the design of the project was not found',HttpStatus.NOT_FOUND)
-  }
-    return await this.projectDesignModel.findByIdAndUpdate(id,{$set:updateProjectDesignDto})
+  async updateProjectDesign(id: string, updateProjectDesignDto: UpdateProjectDesignDto): Promise<ProjectDesign> {
+    const projectDesignExist = await this.projectDesignModel.findById(id)
+    if (!projectDesignExist) {
+      throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
+    }
+    return await this.projectDesignModel.findByIdAndUpdate(id, { $set: updateProjectDesignDto }, { new: true })
   }
 
 
   // delete project design
-  async deleteProjectDesign(id:string):Promise<string>{
-    const projectDesignExist=await this.projectDesignModel.findById(id)
-    if(!projectDesignExist){
-      throw new HttpException('Information about the design of the project was not found',HttpStatus.NOT_FOUND)
+  async deleteProjectDesign(id: string): Promise<string> {
+    const projectDesignExist = await this.projectDesignModel.findById(id)
+    if (!projectDesignExist) {
+      throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
     }
-      await this.projectDesignModel.findByIdAndDelete(id)
-      return 'The data has been deleted'
-    }
+    await this.projectDesignModel.findByIdAndDelete(id)
+    return 'The data has been deleted'
+  }
 
-  
+
   // get all project design
-  async getAllProjectDesign():Promise<ProjectDesign[]>{
-    return await this.projectDesignModel.find().populate({path:'design_details', select:['title','description']})
+  async getAllProjectDesign(): Promise<ProjectDesign[]> {
+    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description'] })
   }
 
 
   // get single project design
-  async getSingleProjectDesign(id:string):Promise<ProjectDesign>{
-    const projectDesignExist=await this.projectDesignModel.findById(id)
-    if(!projectDesignExist){
+  async getSingleProjectDesign(id: string): Promise<ProjectDesign> {
+    const projectDesignExist = await this.projectDesignModel.findById(id)
+    if (!projectDesignExist) {
       throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
     }
-    return (await this.projectDesignModel.findById(id)).populate({path:'design_details', select:['title','description']})
+    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['title', 'description'] })
   }
 
 
   // create project design details
-  async createProjectDesignDetails(createProjectDesignDetailsDto:CreateProjectDesignDetailsDto, file:Express.Multer.File):Promise<ProjectDesignDetails>{
-    const{ step,title,description }=createProjectDesignDetailsDto
-    const projectDesignDetails=await this.projectDesignDetailsModel.find({  step,title,description  })
-  if(projectDesignDetails){
-    throw new HttpException('The data is already available in the database.',HttpStatus.CONFLICT)
-  }
-    const data=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})
-    const newProjectDesignDetails = await this.projectDesignDetailsModel.create({...createProjectDesignDetailsDto,photo:data.url})
-    return await this.projectDesignModel.findOneAndUpdate({ _id:newProjectDesignDetails.project_design},{ $push:{ design_details:newProjectDesignDetails._id }})
+  async createProjectDesignDetails(createProjectDesignDetailsDto: CreateProjectDesignDetailsDto, file: Express.Multer.File): Promise<ProjectDesignDetails> {
+    const { step, title, description } = createProjectDesignDetailsDto
+    const projectDesignDetails = await this.projectDesignDetailsModel.findOne({ step, title, description })
+    if (projectDesignDetails) {
+      throw new HttpException('The data is already available in the database.', HttpStatus.CONFLICT)
+    }
+    const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
+    const newProjectDesignDetails = await this.projectDesignDetailsModel.create({ ...createProjectDesignDetailsDto, photo: data.url })
+    return await this.projectDesignModel.findOneAndUpdate({ _id: newProjectDesignDetails.project_design }, { $push: { design_details: newProjectDesignDetails._id } }, { new: true })
   }
 
 
   // update project design details
-  async updateProjectDesignDetails(id:string, updateProjectDesignDetailsDto:UpdateProjectDesignDetailsDto, file:Express.Multer.File):Promise<ProjectDesignDetails>{
-    const projectDesignDetailsExist=await this.projectDesignDetailsModel.findById(id)
-  if(!projectDesignDetailsExist){
-    throw new HttpException('Information about the design details of the project was not found',HttpStatus.NOT_FOUND)
-  }
-  if(file && file.path){
-    const data=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})
-    return await this.projectDesignDetailsModel.findById(id,{...updateProjectDesignDetailsDto,photo:data.url})
-  }
-    return await this.projectDesignDetailsModel.findById(id,{...updateProjectDesignDetailsDto})
+  async updateProjectDesignDetails(id: string, updateProjectDesignDetailsDto: UpdateProjectDesignDetailsDto, file: Express.Multer.File): Promise<ProjectDesignDetails> {
+    const projectDesignDetailsExist = await this.projectDesignDetailsModel.findById(id)
+    if (!projectDesignDetailsExist) {
+      throw new HttpException('Information about the design details of the project was not found', HttpStatus.NOT_FOUND)
+    }
+    if (file && file.path) {
+      const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
+      return await this.projectDesignDetailsModel.findByIdAndUpdate(id, { $set: { ...updateProjectDesignDetailsDto, photo: data.url } }, { new: true })
+    }
+    return await this.projectDesignDetailsModel.findByIdAndUpdate(id, { $set: { ...updateProjectDesignDetailsDto } }, { new: true })
   }
 
 
   // delete project design details
-  async deleteProjectDesignDetails(id:string):Promise<string>{
-    const projectDesignDetailsExist=await this.projectDesignDetailsModel.findById(id)
-    if(!projectDesignDetailsExist){
-      throw new HttpException('Information about the design details of the project was not found',HttpStatus.NOT_FOUND)
+  async deleteProjectDesignDetails(id: string): Promise<string> {
+    const projectDesignDetailsExist = await this.projectDesignDetailsModel.findById(id)
+    if (!projectDesignDetailsExist) {
+      throw new HttpException('Information about the design details of the project was not found', HttpStatus.NOT_FOUND)
     }
-      await this.projectDesignDetailsModel.findByIdAndDelete(id)
-      return 'The data has been deleted'
+    const DeleteProjectDesignDetails = await this.projectDesignDetailsModel.findByIdAndDelete(id)
+    await this.projectDesignModel.findOneAndUpdate({ _id: DeleteProjectDesignDetails.project_design }, { $pull: { design_details: DeleteProjectDesignDetails._id } })
+    return 'The data has been deleted'
   }
 
 
   // get All project design details
-  async getAllProjectDesignDetails():Promise<ProjectDesignDetails[]>{
+  async getAllProjectDesignDetails(): Promise<ProjectDesignDetails[]> {
     return this.projectDesignDetailsModel.find()
   }
 
 
   // get single project design detail
-  async getSingleProjectDesignDetails(id:string):Promise<ProjectDesignDetails>{
-    return  this.projectDesignDetailsModel.findById(id)
+  async getSingleProjectDesignDetails(id: string): Promise<ProjectDesignDetails> {
+    return this.projectDesignDetailsModel.findById(id)
   }
+
 
 }

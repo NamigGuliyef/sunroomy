@@ -9,9 +9,10 @@ export class ProjectDesignDetails {
   title: string;
   @Prop({ required: true })
   description: string;
+  @Prop({ required: true })
   photo: string;
-  @Prop({type:mongoose.Schema.Types.ObjectId, ref:'projectdesign'})
-  project_design:Types.ObjectId
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'projectdesign' })
+  project_design: Types.ObjectId
 }
 
 export const ProjectDesignDetailsModel = SchemaFactory.createForClass(ProjectDesignDetails)
