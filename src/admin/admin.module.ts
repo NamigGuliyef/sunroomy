@@ -14,6 +14,8 @@ import { usedProductsModel } from 'src/used-products/model/usedproduct.schema';
 import { whyOutdorrModel } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
+import { ProjectDesignModel } from 'src/project-design/model/projectdesign.schema';
+import { ProjectDesignDetailsModel } from 'src/project-design-details/model/projectdesigndetails.schema';
 
 @Module({
   imports: [
@@ -29,7 +31,9 @@ import { AdminService } from './admin.service';
       { name: 'contact', schema: contactModel },
       { name: 'subscribe', schema: subscribeModel },
       { name: 'whyoutdorr', schema: whyOutdorrModel },
-      { name: 'aboutoutdorr', schema: aboutOutdorrModel }
+      { name: 'aboutoutdorr', schema: aboutOutdorrModel },
+      { name: 'projectdesign', schema: ProjectDesignModel },
+      { name: 'projectdesigndetail', schema: ProjectDesignDetailsModel }
     ]),
   ],
   providers: [AdminService],

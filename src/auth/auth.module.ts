@@ -15,6 +15,8 @@ import { usedProductsModel } from 'src/used-products/model/usedproduct.schema';
 import { whyOutdorrModel } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { ProjectDesignModel } from 'src/project-design/model/projectdesign.schema';
+import { ProjectDesignDetailsModel } from 'src/project-design-details/model/projectdesigndetails.schema';
 
 @Module({
   imports: [
@@ -31,7 +33,9 @@ import { AuthService } from './auth.service';
       { name: 'contact', schema: contactModel },
       { name: 'subscribe', schema: subscribeModel },
       { name: 'whyoutdorr', schema: whyOutdorrModel },
-      { name: 'aboutoutdorr', schema: aboutOutdorrModel }
+      { name: 'aboutoutdorr', schema: aboutOutdorrModel },
+      { name: 'projectdesign', schema: ProjectDesignModel },
+      { name: 'projectdesigndetail', schema: ProjectDesignDetailsModel }
     ]),
   ],
   controllers: [AuthController],

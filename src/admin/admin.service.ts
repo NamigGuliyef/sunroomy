@@ -2,6 +2,7 @@ import { MailerService } from '@nestjs-modules/mailer/dist';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import slug from 'slugify';
 import {
   createAboutOutdorrDto,
   updateAboutOutdorrDto,
@@ -33,6 +34,10 @@ import {
   updateProductDto,
 } from 'src/product/dto/product.dto';
 import { Product } from 'src/product/model/product.schema';
+import { CreateProjectDesignDetailsDto, UpdateProjectDesignDetailsDto } from 'src/project-design-details/dto/projectdesigndetails.dto';
+import { ProjectDesignDetails } from 'src/project-design-details/model/projectdesigndetails.schema';
+import { CreateProjectDesignDto, UpdateProjectDesignDto } from 'src/project-design/dto/projectdesign.dto';
+import { ProjectDesign } from 'src/project-design/model/projectdesign.schema';
 import {
   createProjectDto,
   updateProjectDto,
@@ -56,11 +61,9 @@ import {
 } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedproduct.schema';
 import {
-  createWhyOutdorrDto,
-  updateWhyOutdorrDto,
+  updateWhyOutdorrDto
 } from 'src/why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
-import slug from 'slugify';
 
 @Injectable()
 export class AdminService {
@@ -71,14 +74,16 @@ export class AdminService {
     @InjectModel('usedproducts') private usedProductsModel: Model<UsedProducts>,
     @InjectModel('application') private applicationModel: Model<Application>,
     @InjectModel('project') private projectModel: Model<Project>,
-    @InjectModel('specification')
-    private specificationModel: Model<Specification>,
+    @InjectModel('specification') private specificationModel: Model<Specification>,
     @InjectModel('subproduct') private subProductModel: Model<Subproduct>,
     @InjectModel('product') private productModel: Model<Product>,
     @InjectModel('contact') private contactModel: Model<Contact>,
     @InjectModel('subscribe') private subscribeModel: Model<Subscribe>,
     @InjectModel('whyoutdorr') private whyOutdorrModel: Model<WhyOutdorr>,
     @InjectModel('aboutoutdorr') private aboutOutdorrModel: Model<AboutOutdorr>,
+    @InjectModel('projectdesign') private projectDesignModel: Model<ProjectDesign>,
+    @InjectModel('projectdesigndetail') private projectDesignDetailsModel: Model<ProjectDesignDetails>,
+
   ) { }
 
   // create feature - test edildi
@@ -964,4 +969,103 @@ export class AdminService {
   async getAllAboutOutdorr(): Promise<AboutOutdorr[]> {
     return await this.aboutOutdorrModel.find();
   }
+
+
+  // create project design
+  async createProjectDesign(createProjectDesignDto:CreateProjectDesignDto):Promise<ProjectDesign>{
+    const{ title,description }=createProjectDesignDto
+    const projectDesign=await this.projectDesignModel.find({title,description})
+  if(projectDesign){
+    throw new HttpException('The data is already available in the database.',HttpStatus.CONFLICT)
+  }
+    return await this.projectDesignModel.create(createProjectDesignDto)
+  }
+
+
+  // update project design
+  async updateProjectDesign(id:string,updateProjectDesignDto:UpdateProjectDesignDto):Promise<ProjectDesign>{
+  const projectDesignExist=await this.projectDesignModel.findById(id)
+  if(!projectDesignExist){
+    throw new HttpException('Information about the design of the project was not found',HttpStatus.NOT_FOUND)
+  }
+    return await this.projectDesignModel.findByIdAndUpdate(id,{$set:updateProjectDesignDto})
+  }
+
+
+  // delete project design
+  async deleteProjectDesign(id:string):Promise<string>{
+    const projectDesignExist=await this.projectDesignModel.findById(id)
+    if(!projectDesignExist){
+      throw new HttpException('Information about the design of the project was not found',HttpStatus.NOT_FOUND)
+    }
+      await this.projectDesignModel.findByIdAndDelete(id)
+      return 'The data has been deleted'
+    }
+
+  
+  // get all project design
+  async getAllProjectDesign():Promise<ProjectDesign[]>{
+    return await this.projectDesignModel.find().populate({path:'design_details', select:['title','description']})
+  }
+
+
+  // get single project design
+  async getSingleProjectDesign(id:string):Promise<ProjectDesign>{
+    const projectDesignExist=await this.projectDesignModel.findById(id)
+    if(!projectDesignExist){
+      throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
+    }
+    return (await this.projectDesignModel.findById(id)).populate({path:'design_details', select:['title','description']})
+  }
+
+
+  // create project design details
+  async createProjectDesignDetails(createProjectDesignDetailsDto:CreateProjectDesignDetailsDto, file:Express.Multer.File):Promise<ProjectDesignDetails>{
+    const{ step,title,description }=createProjectDesignDetailsDto
+    const projectDesignDetails=await this.projectDesignDetailsModel.find({  step,title,description  })
+  if(projectDesignDetails){
+    throw new HttpException('The data is already available in the database.',HttpStatus.CONFLICT)
+  }
+    const data=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})
+    const newProjectDesignDetails = await this.projectDesignDetailsModel.create({...createProjectDesignDetailsDto,photo:data.url})
+    return await this.projectDesignModel.findOneAndUpdate({ _id:newProjectDesignDetails.project_design},{ $push:{ design_details:newProjectDesignDetails._id }})
+  }
+
+
+  // update project design details
+  async updateProjectDesignDetails(id:string, updateProjectDesignDetailsDto:UpdateProjectDesignDetailsDto, file:Express.Multer.File):Promise<ProjectDesignDetails>{
+    const projectDesignDetailsExist=await this.projectDesignDetailsModel.findById(id)
+  if(!projectDesignDetailsExist){
+    throw new HttpException('Information about the design details of the project was not found',HttpStatus.NOT_FOUND)
+  }
+  if(file && file.path){
+    const data=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})
+    return await this.projectDesignDetailsModel.findById(id,{...updateProjectDesignDetailsDto,photo:data.url})
+  }
+    return await this.projectDesignDetailsModel.findById(id,{...updateProjectDesignDetailsDto})
+  }
+
+
+  // delete project design details
+  async deleteProjectDesignDetails(id:string):Promise<string>{
+    const projectDesignDetailsExist=await this.projectDesignDetailsModel.findById(id)
+    if(!projectDesignDetailsExist){
+      throw new HttpException('Information about the design details of the project was not found',HttpStatus.NOT_FOUND)
+    }
+      await this.projectDesignDetailsModel.findByIdAndDelete(id)
+      return 'The data has been deleted'
+  }
+
+
+  // get All project design details
+  async getAllProjectDesignDetails():Promise<ProjectDesignDetails[]>{
+    return this.projectDesignDetailsModel.find()
+  }
+
+
+  // get single project design detail
+  async getSingleProjectDesignDetails(id:string):Promise<ProjectDesignDetails>{
+    return  this.projectDesignDetailsModel.findById(id)
+  }
+
 }

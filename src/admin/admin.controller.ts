@@ -13,6 +13,10 @@ import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.d
 import { ProjectNeed } from 'src/needs/model/need.schema';
 import { createProductDto, updateProductDto } from 'src/product/dto/product.dto';
 import { Product } from 'src/product/model/product.schema';
+import { CreateProjectDesignDetailsDto, UpdateProjectDesignDetailsDto } from 'src/project-design-details/dto/projectdesigndetails.dto';
+import { ProjectDesignDetails } from 'src/project-design-details/model/projectdesigndetails.schema';
+import { CreateProjectDesignDto, UpdateProjectDesignDto } from 'src/project-design/dto/projectdesign.dto';
+import { ProjectDesign } from 'src/project-design/model/projectdesign.schema';
 import { createProjectDto, updateProjectDto } from 'src/projects/dto/project.dto';
 import { Project } from 'src/projects/model/project.schema';
 import { createSpecificationDto, updateSpecificationDto } from 'src/specifications/dto/specification.dto';
@@ -407,6 +411,75 @@ export class AdminController {
     return await this.adminService.getAllAboutOutdorr()
   }
 
-}
+  @Post('/dashboard/project-design')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createProjectDesign(@Body() createProjectDesignDto:CreateProjectDesignDto):Promise<ProjectDesign>{
+    return await this.adminService.createProjectDesign(createProjectDesignDto)
+  }
 
+  @Patch('/dashboard/project-design/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateProjectDesign(@Param('id') id:string, @Body() updateProjectDesignDto:UpdateProjectDesignDto):Promise<ProjectDesign>{
+    return await this.adminService.updateProjectDesign(id,updateProjectDesignDto)
+  }
+
+  @Delete('/dashboard/project-design/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteProjectDesign(@Param('id') id:string){
+    return await this.adminService.deleteProjectDesign(id)
+  }
+
+  @Get('/dashboard/project-design')
+  @HttpCode(HttpStatus.OK)
+  async getAllProjectDesign():Promise<ProjectDesign[]>{
+    return await this.adminService.getAllProjectDesign()
+  }
+
+  @Get('/dashboard/project-design/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleProjectDesign(@Param('id') id:string):Promise<ProjectDesign>{
+    return await this.adminService.getSingleProjectDesign(id)
+  }
+
+  @Post('/dashboard/project-design-details')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('photo',MulterOptionsCloudinary))
+  async createProjectDesignDetails(@Body() createProjectDesignDetailsDto:CreateProjectDesignDetailsDto, @UploadedFile() file:Express.Multer.File):Promise<ProjectDesignDetails>{
+    return await this.adminService.createProjectDesignDetails(createProjectDesignDetailsDto,file)
+  }
+ 
+
+  @Patch('/dashboard/project-design-details/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('photo',MulterOptionsCloudinary))
+  async updateProjectDesignDetails(@Param('id') id:string, @Body() updateProjectDesignDetailsDto:UpdateProjectDesignDetailsDto,@UploadedFile() file:Express.Multer.File ):Promise<ProjectDesignDetails>{
+    return await this.adminService.updateProjectDesignDetails(id,updateProjectDesignDetailsDto,file)
+  }
+
+
+  @Delete('/dashboard/project-design-details/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteProjectDesignDetails(@Param('id') id:string):Promise<string>{
+    return await this.adminService.deleteProjectDesignDetails(id)
+  }
+
+
+  @Get('/dashboard/project-design-details')
+  @HttpCode(HttpStatus.OK)
+  async getAllProjectDesignDetails():Promise<ProjectDesignDetails[]>{
+    return await this.adminService.getAllProjectDesignDetails()
+  }
+  
+
+  @Get('/dashboard/project-design-details/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleProjectDesignDetails(@Param('id') id:string):Promise<ProjectDesignDetails>{
+    return await this.adminService.getSingleProjectDesignDetails(id)
+  }
+
+}
 
