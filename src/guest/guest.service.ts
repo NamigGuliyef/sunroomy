@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Contact } from 'src/contact/model/contact.schema';
 import { Product } from 'src/product/model/product.schema';
+import { ProjectDesignDetails } from 'src/project-design-details/model/projectdesigndetails.schema';
+import { ProjectDesign } from 'src/project-design/model/projectdesign.schema';
 import { Project } from 'src/projects/model/project.schema';
 import { Subproduct } from 'src/subproduct/model/subproduct.schema';
 import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
@@ -18,6 +20,8 @@ export class GuestService {
     @InjectModel('subproduct') private subProductModel: Model<Subproduct>,
     @InjectModel('project') private projectModel: Model<Project>,
     @InjectModel('contact') private contactModel: Model<Contact>,
+    @InjectModel('projectdesign') private projectDesignModel: Model<ProjectDesign>,
+    @InjectModel('projectdesigndetail') private projectDesignDetailsModel: Model<ProjectDesignDetails>
   ) {}
 
   // get all product - test edildi
@@ -127,4 +131,32 @@ export class GuestService {
     }
     return contactExist;
   }
+
+   // get All project design detailsv - test ok
+   async getAllProjectDesignDetails(): Promise<ProjectDesignDetails[]> {
+     return this.projectDesignDetailsModel.find()
+   }
+
+
+   // get single project design detail - test ok
+   async getSingleProjectDesignDetails(id: string): Promise<ProjectDesignDetails> {
+     return this.projectDesignDetailsModel.findById(id)
+   }
+
+
+    // get all project design - test ok
+  async getAllProjectDesign(): Promise<ProjectDesign[]> {
+    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description', 'photo'] })
+  }
+
+
+  // get single project design - test ok
+  async getSingleProjectDesign(id: string): Promise<ProjectDesign> {
+    const projectDesignExist = await this.projectDesignModel.findById(id)
+    if (!projectDesignExist) {
+      throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
+    }
+    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['title', 'description', 'photo'] })
+  }
+
 }

@@ -7,6 +7,8 @@ import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { GuestService } from './guest.service';
+import { ProjectDesignDetails } from 'src/project-design-details/model/projectdesigndetails.schema';
+import { ProjectDesign } from 'src/project-design/model/projectdesign.schema';
 
 @Controller('')
 export class GuestController {
@@ -72,6 +74,36 @@ export class GuestController {
   async getSingleContact(@Param('id') id: string): Promise<Contact> {
     return await this.guestService.getSingleContact(id)
   }
+
+  @Get('/project-design-details')
+  @HttpCode(HttpStatus.OK)
+  async getAllProjectDesignDetails():Promise<ProjectDesignDetails[]>{
+    return await this.guestService.getAllProjectDesignDetails()
+  }
+  
+
+  @Get('/project-design-details/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleProjectDesignDetails(@Param('id') id:string):Promise<ProjectDesignDetails>{
+    return await this.guestService.getSingleProjectDesignDetails(id)
+  }
+
+  @Get('/project-design')
+  @HttpCode(HttpStatus.OK)
+  async getAllProjectDesign():Promise<ProjectDesign[]>{
+    return await this.guestService.getAllProjectDesign()
+  }
+
+  @Get('/project-design/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleProjectDesign(@Param('id') id:string):Promise<ProjectDesign>{
+    return await this.guestService.getSingleProjectDesign(id)
+  }
+
+
+
+
+
 
 }
 
