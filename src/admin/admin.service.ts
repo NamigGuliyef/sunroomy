@@ -233,48 +233,30 @@ export class AdminService {
   }
 
   // create used Products - test edildi
-  async createUsedProducts(
-    CreateUsedProductsDto: createUsedProductsDto,
-    files: Express.Multer.File[],
-  ): Promise<UsedProducts> {
+  async createUsedProducts( CreateUsedProductsDto: createUsedProductsDto, files: Express.Multer.File[] ): Promise<UsedProducts> {
     const fileUrls = [];
     for (let i = 0; i < files.length; i++) {
-      const fileUrl = await cloudinary.uploader.upload(files[i].path, {
-        public_id: files[i].originalname,
-      });
+      const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
       fileUrls.push(fileUrl.url);
     }
-    return await this.usedProductsModel.create({
-      ...CreateUsedProductsDto,
-      photos: fileUrls,
-    });
+    return await this.usedProductsModel.create({ ...CreateUsedProductsDto, photos: fileUrls });
   }
 
   // update used Products - test edildi
-  async updateUsedProducts(
-    id: string,
-    UpdateUsedProducts: updateUsedProductsDto,
-    files: Express.Multer.File[],
-  ): Promise<UsedProducts> {
+  async updateUsedProducts(id: string,UpdateUsedProducts: updateUsedProductsDto,files: Express.Multer.File[] ): Promise<UsedProducts> {
     const usedProductsExist = await this.usedProductsModel.findById(id);
     if (!usedProductsExist) {
-      throw new HttpException(
-        'The used products you want to change were not found',
-        HttpStatus.NOT_FOUND,
-      );
+      throw new HttpException( 'The used products you want to change were not found', HttpStatus.NOT_FOUND);
+    } 
+    if(files){
+      return await this.usedProductsModel.findByIdAndUpdate( id, { $set: UpdateUsedProducts }, { new: true } );
     } else {
       const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
-        const fileUrl = await cloudinary.uploader.upload(files[i].path, {
-          public_id: files[i].originalname,
-        });
+        const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
         fileUrls.push(fileUrl.url);
       }
-      const updateUsedProduct = await this.usedProductsModel.findByIdAndUpdate(
-        id,
-        { $set: UpdateUsedProducts },
-        { new: true },
-      );
+      const updateUsedProduct = await this.usedProductsModel.findByIdAndUpdate( id, { $set: UpdateUsedProducts }, { new: true } );
       return updateUsedProduct;
     }
   }
@@ -973,7 +955,7 @@ export class AdminService {
   }
 
 
-  // create project design
+  // create project design - test ok
   async createProjectDesign(createProjectDesignDto: CreateProjectDesignDto): Promise<ProjectDesign> {
     const { title, description } = createProjectDesignDto
     const projectDesign = await this.projectDesignModel.findOne({ title, description })
@@ -985,17 +967,17 @@ export class AdminService {
   }
 
 
-  // update project design
+  // update project design  - test ok
   async updateProjectDesign(id: string, updateProjectDesignDto: UpdateProjectDesignDto): Promise<ProjectDesign> {
     const projectDesignExist = await this.projectDesignModel.findById(id)
     if (!projectDesignExist) {
       throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
     }
-    return await this.projectDesignModel.findByIdAndUpdate(id, { $set: updateProjectDesignDto }, { new: true })
+    return await this.projectDesignModel.findByIdAndUpdate(id, { $set: {...updateProjectDesignDto} }, { new: true })
   }
 
 
-  // delete project design
+  // delete project design - test ok
   async deleteProjectDesign(id: string): Promise<string> {
     const projectDesignExist = await this.projectDesignModel.findById(id)
     if (!projectDesignExist) {
@@ -1006,13 +988,13 @@ export class AdminService {
   }
 
 
-  // get all project design
+  // get all project design - test ok
   async getAllProjectDesign(): Promise<ProjectDesign[]> {
     return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description'] })
   }
 
 
-  // get single project design
+  // get single project design - test ok
   async getSingleProjectDesign(id: string): Promise<ProjectDesign> {
     const projectDesignExist = await this.projectDesignModel.findById(id)
     if (!projectDesignExist) {
@@ -1022,7 +1004,7 @@ export class AdminService {
   }
 
 
-  // create project design details
+  // create project design details - test ok
   async createProjectDesignDetails(createProjectDesignDetailsDto: CreateProjectDesignDetailsDto, file: Express.Multer.File): Promise<ProjectDesignDetails> {
     const { step, title, description } = createProjectDesignDetailsDto
     const projectDesignDetails = await this.projectDesignDetailsModel.findOne({ step, title, description })
@@ -1035,7 +1017,7 @@ export class AdminService {
   }
 
 
-  // update project design details
+  // update project design details - test ok
   async updateProjectDesignDetails(id: string, updateProjectDesignDetailsDto: UpdateProjectDesignDetailsDto, file: Express.Multer.File): Promise<ProjectDesignDetails> {
     const projectDesignDetailsExist = await this.projectDesignDetailsModel.findById(id)
     if (!projectDesignDetailsExist) {
@@ -1049,7 +1031,7 @@ export class AdminService {
   }
 
 
-  // delete project design details
+  // delete project design details - test ok
   async deleteProjectDesignDetails(id: string): Promise<string> {
     const projectDesignDetailsExist = await this.projectDesignDetailsModel.findById(id)
     if (!projectDesignDetailsExist) {
@@ -1061,16 +1043,15 @@ export class AdminService {
   }
 
 
-  // get All project design details
+  // get All project design detailsv - test ok
   async getAllProjectDesignDetails(): Promise<ProjectDesignDetails[]> {
     return this.projectDesignDetailsModel.find()
   }
 
 
-  // get single project design detail
+  // get single project design detail - test ok
   async getSingleProjectDesignDetails(id: string): Promise<ProjectDesignDetails> {
     return this.projectDesignDetailsModel.findById(id)
   }
-
 
 }
