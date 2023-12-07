@@ -543,51 +543,18 @@ export class AdminService {
   }
 
   // update product - test edildi
-  async updateProduct(
-    id: string,
-    UpdateProductDto: updateProductDto,
-    file: Express.Multer.File,
-  ): Promise<Product> {
+  async updateProduct(id: string,UpdateProductDto: updateProductDto,file: Express.Multer.File ): Promise<Product> {
     const product = await this.productModel.findById(id);
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
     }
-    const productTitleExist = await this.productModel.findOne({
-      title: UpdateProductDto.title,
-    });
-    if (productTitleExist) {
-      throw new HttpException(
-        'The product is already available',
-        HttpStatus.CONFLICT,
-      );
+    if (file && file.path) {
+      const fileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname });
+      return await this.productModel.findByIdAndUpdate(id,{$set: {...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }), photo: fileUrl.url }},{ new: true });
     }
-    if (!file) {
-      return await this.productModel.findByIdAndUpdate(
-        id,
-        {
-          $set: {
-            ...UpdateProductDto,
-            slug: slug(UpdateProductDto.title, { lower: true }),
-          },
-        },
-        { new: true },
-      );
-    }
-    const fileUrl = await cloudinary.uploader.upload(file.path, {
-      public_id: file.originalname,
-    });
-    return await this.productModel.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          ...UpdateProductDto,
-          slug: slug(UpdateProductDto.title, { lower: true }),
-          photo: fileUrl.url,
-        },
-      },
-      { new: true },
-    );
+    return await this.productModel.findByIdAndUpdate(id,{$set: {...UpdateProductDto,slug: slug(UpdateProductDto.title, { lower: true })}},{ new: true });
   }
+
 
   // delete product - test edildi
   async deleteProduct(id: string): Promise<string> {
@@ -613,7 +580,10 @@ export class AdminService {
 
   // get all product - test edildi
   async getAllProduct(): Promise<Product[]> {
-    return await this.productModel.find();
+    return await this.productModel.find().populate({
+      path: 'subProductIds',
+      select: ['title', 'description', 'photos', 'cover_photo', 'slug'],
+    });
   }
 
   // create sub product  - test edildi
