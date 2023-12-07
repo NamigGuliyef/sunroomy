@@ -242,7 +242,7 @@ export class AdminService {
     return await this.usedProductsModel.create({ ...CreateUsedProductsDto, photos: fileUrls });
   }
 
-  // update used Products - test edildi
+  // update used Products - duzelisler ve test edildi
   async updateUsedProducts(id: string,UpdateUsedProducts: updateUsedProductsDto,files: Express.Multer.File[] ): Promise<UsedProducts> {
     const usedProductsExist = await this.usedProductsModel.findById(id);
     if (!usedProductsExist) {
@@ -317,7 +317,7 @@ export class AdminService {
     return application;
   }
 
-  // update product application - test edildi
+  // update product application - duzelis ve test edildi
   async updateApplication( id: string, UpdateApplicationDto: updateApplicationDto, files: Express.Multer.File[] ): Promise<Application> {
     const application = await this.applicationModel.findById(id);
     if (!application) {
@@ -326,31 +326,15 @@ export class AdminService {
         HttpStatus.NOT_FOUND,
       );
     }
-    const applicationExist = await this.applicationModel.findOne({
-      title: UpdateApplicationDto.title,
-    });
-    if (applicationExist) {
-      throw new HttpException(
-        'Application already exists',
-        HttpStatus.CONFLICT,
-      );
-    }
-    if(files){
-
-
-
-    }
-    
-    
-    
-    
-    else {
+    if(files && files[0] &&  files[0].path){
       const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
         const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
         fileUrls.push(fileUrl.url);
       }
       return await this.applicationModel.findByIdAndUpdate( id, { $set: { ...UpdateApplicationDto, photos: fileUrls } }, { new: true } );
+    } else {
+      return await this.applicationModel.findByIdAndUpdate( id, { $set: { ...UpdateApplicationDto } }, { new: true } );
     }
   }
 
@@ -405,7 +389,8 @@ export class AdminService {
     const project = await this.projectModel.findById(id);
     if (!project) {
       throw new HttpException('The project to be change was not found', HttpStatus.NOT_FOUND);
-    } else {
+    }
+    if(files && files[0] &&files[0].path){
       const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
         const fileUrl = await cloudinary.uploader.upload(files[i].path, {
@@ -413,18 +398,12 @@ export class AdminService {
         });
         fileUrls.push(fileUrl.url);
       }
-      const updateProject = await this.projectModel.findByIdAndUpdate(
-        id,
-        {
-          $set: {
-            ...UpdateProjectDto,
-            slug: slug(UpdateProjectDto.title, { lower: true }),
-            photos: fileUrls,
-          },
-        },
-        { new: true },
+        const updateProject = await this.projectModel.findByIdAndUpdate(id,{ $set: {...UpdateProjectDto,slug: slug(UpdateProjectDto.title, { lower: true }), photos: fileUrls },
+        },{ new: true },
       );
       return updateProject;
+    } else {
+      return await this.projectModel.findByIdAndUpdate(id,{ $set: {...UpdateProjectDto,slug: slug(UpdateProjectDto.title, { lower: true }) } },{ new: true });
     }
   }
 
