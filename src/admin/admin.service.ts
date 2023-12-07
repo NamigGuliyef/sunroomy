@@ -616,21 +616,18 @@ export class AdminService {
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
     }
-    const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, { public_id: files.cover_photo[0].originalname });
-    const fileUrls = [];
-    for (let i = 0; i < files.photos.length; i++) {
-      const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, { public_id: files.photos[i].originalname });
-      fileUrls.push(fileUrl.url);
+    if(files && files[0] && files[0].path){
+      const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, { public_id: files.cover_photo[0].originalname });
+      const fileUrls = [];
+      for (let i = 0; i < files.photos.length; i++) {
+        const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, { public_id: files.photos[i].originalname });
+        fileUrls.push(fileUrl.url);
+      }
+      return await this.subProductModel.findByIdAndUpdate(id,{ $set: {...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }), cover_photo: coverFileUrl.url, photos: fileUrls },},
+        { new: true });
+    } else {
+      return await this.subProductModel.findByIdAndUpdate(id,{ $set: {...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true })}}, { new: true });
     }
-    return await this.subProductModel.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }), cover_photo: coverFileUrl.url, photos: fileUrls
-        },
-      },
-      { new: true },
-    );
   }
 
   // delete sub product - test edildi
