@@ -248,16 +248,15 @@ export class AdminService {
     if (!usedProductsExist) {
       throw new HttpException( 'The used products you want to change were not found', HttpStatus.NOT_FOUND);
     } 
-    if(files){
-      return await this.usedProductsModel.findByIdAndUpdate( id, { $set: UpdateUsedProducts }, { new: true } );
-    } else {
+    if(files && files[0] && files[0].path){
       const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
         const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
         fileUrls.push(fileUrl.url);
       }
-      const updateUsedProduct = await this.usedProductsModel.findByIdAndUpdate( id, { $set: UpdateUsedProducts }, { new: true } );
-      return updateUsedProduct;
+      return await this.usedProductsModel.findByIdAndUpdate( id, { $set: {...UpdateUsedProducts, photos:fileUrls } }, { new: true } );
+    } else {
+      return await this.usedProductsModel.findByIdAndUpdate( id, { $set: {...UpdateUsedProducts } }, { new: true } );
     }
   }
 
@@ -319,11 +318,7 @@ export class AdminService {
   }
 
   // update product application - test edildi
-  async updateApplication(
-    id: string,
-    UpdateApplicationDto: updateApplicationDto,
-    files: Express.Multer.File[],
-  ): Promise<Application> {
+  async updateApplication( id: string, UpdateApplicationDto: updateApplicationDto, files: Express.Multer.File[] ): Promise<Application> {
     const application = await this.applicationModel.findById(id);
     if (!application) {
       throw new HttpException(
@@ -339,20 +334,23 @@ export class AdminService {
         'Application already exists',
         HttpStatus.CONFLICT,
       );
-    } else {
+    }
+    if(files){
+
+
+
+    }
+    
+    
+    
+    
+    else {
       const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
-        const fileUrl = await cloudinary.uploader.upload(files[i].path, {
-          public_id: files[i].originalname,
-        });
+        const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
         fileUrls.push(fileUrl.url);
       }
-      const updateApplication = await this.applicationModel.findByIdAndUpdate(
-        id,
-        { $set: { ...UpdateApplicationDto, photos: fileUrls } },
-        { new: true },
-      );
-      return updateApplication;
+      return await this.applicationModel.findByIdAndUpdate( id, { $set: { ...UpdateApplicationDto, photos: fileUrls } }, { new: true } );
     }
   }
 
