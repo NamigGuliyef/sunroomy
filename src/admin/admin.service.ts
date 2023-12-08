@@ -934,7 +934,7 @@ export class AdminService {
 
   // get all project design - test ok
   async getAllProjectDesign(): Promise<ProjectDesign[]> {
-    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['step', 'title', 'description','photo'] })
+    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description','photo','step'] })
   }
 
 
@@ -944,7 +944,7 @@ export class AdminService {
     if (!projectDesignExist) {
       throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
     }
-    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['step', 'title', 'description','photo'] })
+    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['title', 'description','photo','step'] })
   }
 
 

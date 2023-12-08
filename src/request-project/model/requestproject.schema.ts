@@ -1,35 +1,43 @@
-import { Prop, Schema } from "@nestjs/mongoose";
+import { Prop, Schema } from '@nestjs/mongoose';
 
 @Schema({ versionKey: false, timestamps: true })
-
 export class RequestProject {
   @Prop({ required: true })
-  first_name: string
+  first_name: string;
   @Prop({ required: true })
-  last_name: string
+  last_name: string;
   @Prop({ required: true })
-  phone_number: string
+  phone_number: string;
   @Prop({ required: true })
-  email: string
+  email: string;
   @Prop({ required: true })
-  country: string
+  country: string;
   @Prop({ required: true })
-  state: string
+  state: string;
   @Prop({ required: true })
-  city: string
+  city: string;
   @Prop({ required: true })
-  zipcode: number
+  zipcode: number;
   @Prop({ required: true })
-  main_structure_model: string
+  main_structure_model: string;
   @Prop({ required: true })
-  width_in_feet: number
+  width_in_feet: number;
   @Prop({ required: true })
-  projection_in_feet: number
+  projection_in_feet: number;
   @Prop({ required: true })
-  height_in_feet: number
+  height_in_feet: number;
   @Prop({ required: true })
-  structure_situation: string
+  structure_situation: string;
   @Prop({ required: true })
-  structure_color: string
-
+  structure_color: string;
+  @Prop({ required: true }) // Note: Give them only 3 chosen products below
+  window_and_doors: [string];
+  @Prop({ required: true }) // Note: They can choose all products below
+  sunscreens: [string];
+  @Prop()
+  files: [string];
+  @Prop({ required: true })
+  project_details: string;
+  @Prop({ required: true })
+  about_us: string;
 }
