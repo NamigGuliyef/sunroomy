@@ -146,7 +146,7 @@ export class GuestService {
 
     // get all project design - test ok
   async getAllProjectDesign(): Promise<ProjectDesign[]> {
-    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description', 'photo'] })
+    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description', 'photo','step'] })
   }
 
 
@@ -156,7 +156,10 @@ export class GuestService {
     if (!projectDesignExist) {
       throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
     }
-    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['title', 'description', 'photo'] })
+    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['title', 'description', 'photo','step'] })
   }
 
+
+
+  
 }
