@@ -19,6 +19,8 @@ export class Subproduct {
   featuresIds: Types.ObjectId
   @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'specification' })
   specifications: Types.ObjectId
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'application' })
+  applicationIds: Types.ObjectId
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'product', required: true })
   productId: Types.ObjectId
 

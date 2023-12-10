@@ -1,11 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import cloudinary from 'src/config/cloudinary/cloudinary';
 import { Contact } from 'src/contact/model/contact.schema';
 import { Product } from 'src/product/model/product.schema';
 import { ProjectDesignDetails } from 'src/project-design-details/model/projectdesigndetails.schema';
 import { ProjectDesign } from 'src/project-design/model/projectdesign.schema';
 import { Project } from 'src/projects/model/project.schema';
+import { CreateRequestProjectDto } from 'src/request-project/dto/requestproject.dto';
+import { RequestProject } from 'src/request-project/model/requestproject.schema';
 import { Subproduct } from 'src/subproduct/model/subproduct.schema';
 import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
@@ -21,8 +24,9 @@ export class GuestService {
     @InjectModel('project') private projectModel: Model<Project>,
     @InjectModel('contact') private contactModel: Model<Contact>,
     @InjectModel('projectdesign') private projectDesignModel: Model<ProjectDesign>,
-    @InjectModel('projectdesigndetail') private projectDesignDetailsModel: Model<ProjectDesignDetails>
-  ) {}
+    @InjectModel('projectdesigndetail') private projectDesignDetailsModel: Model<ProjectDesignDetails>,
+    @InjectModel('requestproject') private requestProjectModel: Model<RequestProject>
+  ) { }
 
   // get all product - test edildi
   async getAllProduct(): Promise<Product[]> {
@@ -40,7 +44,7 @@ export class GuestService {
       .findOne({ slug })
       .populate({
         path: 'subProductIds',
-        select: ['title', 'description', 'photos', 'cover_photo','slug'],
+        select: ['title', 'description', 'photos', 'cover_photo', 'slug'],
       });
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
@@ -132,21 +136,21 @@ export class GuestService {
     return contactExist;
   }
 
-   // get All project design detailsv - test ok
-   async getAllProjectDesignDetails(): Promise<ProjectDesignDetails[]> {
-     return this.projectDesignDetailsModel.find()
-   }
+  // get All project design detailsv - test ok
+  async getAllProjectDesignDetails(): Promise<ProjectDesignDetails[]> {
+    return this.projectDesignDetailsModel.find()
+  }
 
 
-   // get single project design detail - test ok
-   async getSingleProjectDesignDetails(id: string): Promise<ProjectDesignDetails> {
-     return this.projectDesignDetailsModel.findById(id)
-   }
+  // get single project design detail - test ok
+  async getSingleProjectDesignDetails(id: string): Promise<ProjectDesignDetails> {
+    return this.projectDesignDetailsModel.findById(id)
+  }
 
 
-    // get all project design - test ok
+  // get all project design - test ok
   async getAllProjectDesign(): Promise<ProjectDesign[]> {
-    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description', 'photo','step'] })
+    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description', 'photo', 'step'] })
   }
 
 
@@ -156,10 +160,28 @@ export class GuestService {
     if (!projectDesignExist) {
       throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
     }
-    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['title', 'description', 'photo','step'] })
+    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['title', 'description', 'photo', 'step'] })
   }
 
 
+  // request project
+  async createRequestProject(createRequestProjectDto: CreateRequestProjectDto, files: Express.Multer.File[]): Promise<RequestProject> {
+    const selected_window_and_doors = []
+    selected_window_and_doors.push(createRequestProjectDto.window_and_doors)
+    const window_and_doors = selected_window_and_doors.join().split(',')
+    const selected_sunscreens = []
+    selected_sunscreens.push(createRequestProjectDto.sunscreens)
+    const sunscreens = selected_sunscreens.join().split(',')
+    if (window_and_doors.length === 3) {
+      const fileUrls = []
+      for (let i = 0; i < files.length; i++) {
+        const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
+        fileUrls.push(fileUrl.url)
+      }
+      return await this.requestProjectModel.create({ ...createRequestProjectDto, window_and_doors, sunscreens, files: fileUrls })
+    } else {
+      throw new HttpException('Select only 3 products from the window_and_doors section.', HttpStatus.BAD_REQUEST)
+    }
+  }
 
-  
 }

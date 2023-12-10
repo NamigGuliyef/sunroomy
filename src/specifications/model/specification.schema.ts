@@ -8,8 +8,8 @@ export class Specification {
   key: string
   @Prop({ required: true })
   value: string
-  @Prop({type:mongoose.Schema.Types.ObjectId,ref:'subproduct',required:true})
-  subProductId:Types.ObjectId
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'subproduct', required: true })
+  subProductId: Types.ObjectId
 }
 
-export const specificationModel=SchemaFactory.createForClass(Specification)
+export const specificationModel = SchemaFactory.createForClass(Specification)

@@ -1,6 +1,6 @@
 import { IsEmail, IsMobilePhone, IsNotEmpty, IsPhoneNumber, Matches } from 'class-validator';
 
-export class CreateRequestProject {
+export class CreateRequestProjectDto {
   @IsNotEmpty()
   @Matches(new RegExp('^[A-Za-züöğıəçşÜÖĞIƏÇŞ]{3,30}$'))
   first_name: string;
@@ -25,7 +25,7 @@ export class CreateRequestProject {
   city: string;
   @IsNotEmpty()
   @Matches(new RegExp('^[A-Za-z0-9 ]{3,50}$'))
-  zipcode: number;
+  zipcode: string;
   @IsNotEmpty()
   main_structure_model: string;
   @IsNotEmpty()

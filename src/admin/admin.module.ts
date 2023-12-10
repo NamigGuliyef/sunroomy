@@ -16,6 +16,7 @@ import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { ProjectDesignModel } from 'src/project-design/model/projectdesign.schema';
 import { ProjectDesignDetailsModel } from 'src/project-design-details/model/projectdesigndetails.schema';
+import { requestProjectModel } from 'src/request-project/model/requestproject.schema';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { ProjectDesignDetailsModel } from 'src/project-design-details/model/proj
       { name: 'whyoutdorr', schema: whyOutdorrModel },
       { name: 'aboutoutdorr', schema: aboutOutdorrModel },
       { name: 'projectdesign', schema: ProjectDesignModel },
-      { name: 'projectdesigndetail', schema: ProjectDesignDetailsModel }
+      { name: 'projectdesigndetail', schema: ProjectDesignDetailsModel },
+      { name: 'requestproject', schema: requestProjectModel }
     ]),
   ],
   providers: [AdminService],

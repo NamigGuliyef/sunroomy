@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ versionKey: false, timestamps: true })
 export class RequestProject {
@@ -17,7 +17,7 @@ export class RequestProject {
   @Prop({ required: true })
   city: string;
   @Prop({ required: true })
-  zipcode: number;
+  zipcode: string;
   @Prop({ required: true })
   main_structure_model: string;
   @Prop({ required: true })
@@ -41,3 +41,6 @@ export class RequestProject {
   @Prop({ required: true })
   about_us: string;
 }
+
+
+export const requestProjectModel = SchemaFactory.createForClass(RequestProject)

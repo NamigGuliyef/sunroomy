@@ -4,6 +4,8 @@ import mongoose, { Types } from 'mongoose';
 @Schema({ timestamps: true, versionKey: false })
 export class Feature {
   @Prop({ required: true })
+  type: string;
+  @Prop({ required: true })
   title: string;
   @Prop({ required: true })
   description: string;

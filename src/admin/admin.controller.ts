@@ -19,6 +19,7 @@ import { CreateProjectDesignDto, UpdateProjectDesignDto } from 'src/project-desi
 import { ProjectDesign } from 'src/project-design/model/projectdesign.schema';
 import { createProjectDto, updateProjectDto } from 'src/projects/dto/project.dto';
 import { Project } from 'src/projects/model/project.schema';
+import { RequestProject } from 'src/request-project/model/requestproject.schema';
 import { createSpecificationDto, updateSpecificationDto } from 'src/specifications/dto/specification.dto';
 import { Specification } from 'src/specifications/model/specification.schema';
 import { createSubProductDto, updateSubProductDto } from 'src/subproduct/dto/subproduct.dto';
@@ -176,7 +177,7 @@ export class AdminController {
   async createProject(@Body() CreateProjectDto: createProjectDto, @UploadedFiles() files: Express.Multer.File[]): Promise<Project> {
     return await this.adminService.createProject(CreateProjectDto, files)
   }
-  
+
   @Patch('/dashboard/projects/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
@@ -238,16 +239,16 @@ export class AdminController {
   @Post('/dashboard/subproducts')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'cover_photo', maxCount: 1 },{ name: 'photos', maxCount: 10 }], MulterOptionsCloudinary))
-  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFiles() files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]}): Promise<Subproduct> {
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'cover_photo', maxCount: 1 }, { name: 'photos', maxCount: 10 }], MulterOptionsCloudinary))
+  async createSubProduct(@Body() CreateSubproductDto: createSubProductDto, @UploadedFiles() files: { cover_photo: Express.Multer.File[], photos: Express.Multer.File[] }): Promise<Subproduct> {
     return await this.adminService.createSubProduct(CreateSubproductDto, files)
   }
 
   @Patch('/dashboard/subproducts/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'cover_photo', maxCount: 1 },{ name: 'photos', maxCount: 10 }], MulterOptionsCloudinary))
-  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto, @UploadedFiles() files: {cover_photo: Express.Multer.File[], photos: Express.Multer.File[]}): Promise<Subproduct> {
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'cover_photo', maxCount: 1 }, { name: 'photos', maxCount: 10 }], MulterOptionsCloudinary))
+  async updateSubProduct(@Param('id') id: string, @Body() UpdateSubproductDto: updateSubProductDto, @UploadedFiles() files: { cover_photo: Express.Multer.File[], photos: Express.Multer.File[] }): Promise<Subproduct> {
     return await this.adminService.updateSubProduct(id, UpdateSubproductDto, files)
   }
 
@@ -414,72 +415,86 @@ export class AdminController {
   @Post('/dashboard/project-design')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async createProjectDesign(@Body() createProjectDesignDto:CreateProjectDesignDto):Promise<ProjectDesign>{
+  async createProjectDesign(@Body() createProjectDesignDto: CreateProjectDesignDto): Promise<ProjectDesign> {
     return await this.adminService.createProjectDesign(createProjectDesignDto)
   }
 
   @Patch('/dashboard/project-design/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  async updateProjectDesign(@Param('id') id:string, @Body() updateProjectDesignDto:UpdateProjectDesignDto):Promise<ProjectDesign>{
-    return await this.adminService.updateProjectDesign(id,updateProjectDesignDto)
+  async updateProjectDesign(@Param('id') id: string, @Body() updateProjectDesignDto: UpdateProjectDesignDto): Promise<ProjectDesign> {
+    return await this.adminService.updateProjectDesign(id, updateProjectDesignDto)
   }
 
   @Delete('/dashboard/project-design/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteProjectDesign(@Param('id') id:string){
+  async deleteProjectDesign(@Param('id') id: string) {
     return await this.adminService.deleteProjectDesign(id)
   }
 
   @Get('/dashboard/project-design')
   @HttpCode(HttpStatus.OK)
-  async getAllProjectDesign():Promise<ProjectDesign[]>{
+  async getAllProjectDesign(): Promise<ProjectDesign[]> {
     return await this.adminService.getAllProjectDesign()
   }
 
   @Get('/dashboard/project-design/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleProjectDesign(@Param('id') id:string):Promise<ProjectDesign>{
+  async getSingleProjectDesign(@Param('id') id: string): Promise<ProjectDesign> {
     return await this.adminService.getSingleProjectDesign(id)
   }
 
   @Post('/dashboard/project-design-details')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('photo',MulterOptionsCloudinary))
-  async createProjectDesignDetails(@Body() createProjectDesignDetailsDto:CreateProjectDesignDetailsDto, @UploadedFile() file:Express.Multer.File):Promise<ProjectDesignDetails>{
-    return await this.adminService.createProjectDesignDetails(createProjectDesignDetailsDto,file)
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async createProjectDesignDetails(@Body() createProjectDesignDetailsDto: CreateProjectDesignDetailsDto, @UploadedFile() file: Express.Multer.File): Promise<ProjectDesignDetails> {
+    return await this.adminService.createProjectDesignDetails(createProjectDesignDetailsDto, file)
   }
- 
+
 
   @Patch('/dashboard/project-design-details/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('photo',MulterOptionsCloudinary))
-  async updateProjectDesignDetails(@Param('id') id:string, @Body() updateProjectDesignDetailsDto:UpdateProjectDesignDetailsDto,@UploadedFile() file:Express.Multer.File ):Promise<ProjectDesignDetails>{
-    return await this.adminService.updateProjectDesignDetails(id,updateProjectDesignDetailsDto,file)
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async updateProjectDesignDetails(@Param('id') id: string, @Body() updateProjectDesignDetailsDto: UpdateProjectDesignDetailsDto, @UploadedFile() file: Express.Multer.File): Promise<ProjectDesignDetails> {
+    return await this.adminService.updateProjectDesignDetails(id, updateProjectDesignDetailsDto, file)
   }
 
 
   @Delete('/dashboard/project-design-details/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteProjectDesignDetails(@Param('id') id:string):Promise<string>{
+  async deleteProjectDesignDetails(@Param('id') id: string): Promise<string> {
     return await this.adminService.deleteProjectDesignDetails(id)
   }
 
 
   @Get('/dashboard/project-design-details')
   @HttpCode(HttpStatus.OK)
-  async getAllProjectDesignDetails():Promise<ProjectDesignDetails[]>{
+  async getAllProjectDesignDetails(): Promise<ProjectDesignDetails[]> {
     return await this.adminService.getAllProjectDesignDetails()
   }
-  
+
 
   @Get('/dashboard/project-design-details/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleProjectDesignDetails(@Param('id') id:string):Promise<ProjectDesignDetails>{
+  async getSingleProjectDesignDetails(@Param('id') id: string): Promise<ProjectDesignDetails> {
     return await this.adminService.getSingleProjectDesignDetails(id)
   }
 
+
+  @Get('/dashboard/request-project')
+  @HttpCode(HttpStatus.OK)
+  async getAllRequestProject(): Promise<RequestProject[]> {
+    return await this.adminService.getAllRequestProject()
+  }
+
+
+  @Get('/dashboard/request-project/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleRequestProject(@Param('id') id: string): Promise<RequestProject> {
+    return await this.adminService.getSingleRequestProject(id)
+  }
+  
 }
 
