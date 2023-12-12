@@ -13,6 +13,8 @@ export class Feature {
   icon: string;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'subproduct' })
   subProductId: Types.ObjectId
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'project' })
+  projectId: Types.ObjectId
 }
 
 export const featureModel = SchemaFactory.createForClass(Feature);

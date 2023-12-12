@@ -11,6 +11,8 @@ export class createFeatureDto {
   description: string;
   @IsOptional()
   subProductId: mongoose.Schema.Types.ObjectId;
+  @IsOptional()
+  projectId: mongoose.Schema.Types.ObjectId;
 }
 
 export class updateFeatureDto {
@@ -20,4 +22,6 @@ export class updateFeatureDto {
   description: string;
   @IsOptional()
   subProductId: mongoose.Schema.Types.ObjectId;
+  @IsOptional()
+  projectId: mongoose.Schema.Types.ObjectId;
 }

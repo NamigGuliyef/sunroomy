@@ -367,6 +367,10 @@ export class AdminService {
 
   // create project - test edildi
   async createProject(CreateProjectDto: createProjectDto, files: Express.Multer.File[]): Promise<Project> {
+    const projectExist = await this.projectModel.findOne({ title: CreateProjectDto.title })
+    if (projectExist) {
+      throw new HttpException('The project already exists', HttpStatus.CONFLICT);
+    }
     const fileUrls = [];
     for (let i = 0; i < files.length; i++) {
       const fileUrl = await cloudinary.uploader.upload(files[i].path, {
