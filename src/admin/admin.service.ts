@@ -94,31 +94,21 @@ export class AdminService {
     CreateFeatureDto: createFeatureDto,
     file: Express.Multer.File,
   ): Promise<Feature> {
+    const { title, description, subProductId, projectId } = CreateFeatureDto;
     if (!file) {
-      const { type, title, description } = CreateFeatureDto;
-      return await this.featureModel.create({ type, title, description });
+      const feature = await this.featureModel.create({ title, description, projectId });      
+      await this.projectModel.findOneAndUpdate({ _id:feature.projectId },{ $push: { featuresId:feature._id }})
+      return feature
     } else {
-      const iconUrl = await cloudinary.uploader.upload(file.path, {
-        public_id: file.originalname,
-      });
-      const feature = await this.featureModel.create({
-        ...CreateFeatureDto,
-        icon: iconUrl.url,
-      });
-      await this.subProductModel.findOneAndUpdate(
-        { _id: feature.subProductId },
-        { $push: { featuresIds: feature._id } },
-      );
+      const iconUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname });
+      const feature = await this.featureModel.create({ title,description,subProductId,icon: iconUrl.url });
+      await this.subProductModel.findOneAndUpdate({ _id: feature.subProductId },{ $push: { featuresIds: feature._id } } );
       return feature;
     }
   }
 
   // update feature - test edildi
-  async updateFeature(
-    id: string,
-    UpdateFeatureDto: updateFeatureDto,
-    file: Express.Multer.File,
-  ): Promise<Feature> {
+  async updateFeature(id: string,UpdateFeatureDto: updateFeatureDto,file: Express.Multer.File ): Promise<Feature> {
     const feature = await this.featureModel.findById(id);
     if (!feature) {
       throw new HttpException(
@@ -153,14 +143,13 @@ export class AdminService {
         'The feature you want to remove was not found',
         HttpStatus.NOT_FOUND,
       );
-    } else {
-      const deleteFeature = await this.featureModel.findByIdAndDelete(id);
-      await this.subProductModel.findOneAndUpdate(
-        { _id: deleteFeature.subProductId },
-        { $pull: { featuresIds: deleteFeature._id } },
-      );
-      return 'Project feature removed';
     }
+     const deleteFeature = await this.featureModel.findByIdAndDelete(id);  
+     const updateSubProduct = await this.subProductModel.findOneAndUpdate( { _id: deleteFeature.subProductId }, { $pull: { featuresIds: deleteFeature._id } } );
+     if(!updateSubProduct){
+      await this.projectModel.findOneAndUpdate( { _id: deleteFeature.projectId }, { $pull: { featuresId: deleteFeature._id } } );
+     }
+     return 'Project feature removed';
   }
 
   // get single feature - test edildi
