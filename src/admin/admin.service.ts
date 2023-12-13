@@ -377,27 +377,33 @@ export class AdminService {
 
   // update project - test edildi
   async updateProject(id: string, UpdateProjectDto: updateProjectDto, files: Express.Multer.File[]): Promise<Project> {
-    const project = await this.projectModel.findById(id);
-    if (!project) {
-      throw new HttpException('The project to be change was not found', HttpStatus.NOT_FOUND);
+    const projectExist = await this.projectModel.findById(id);
+    const fileUrls = [];
+    // eger proyekt yoxdursa
+    if (!projectExist) throw new HttpException('The project to be changed was not found', HttpStatus.NOT_FOUND);
+    const project = await this.projectModel.findOne({ title: UpdateProjectDto.title });
+    // eger databazada eyni adda proyekt varsa
+    if (project) throw new HttpException('The project already exists', HttpStatus.CONFLICT);
+    // eger proyekt adi ve sekili varsa - ok
+    if (UpdateProjectDto.title || (files && files[0] && files[0].path)) {
+        if (files && files[0] && files[0].path) {
+            for (let i = 0; i < files.length; i++) {
+                const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
+                fileUrls.push(fileUrl.url);
+            }
+            if (UpdateProjectDto.title) {
+                return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }), photos: fileUrls } }, { new: true });
+             // eger proyekt adi yox ve fayl varsa
+              } else {
+                return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, photos: fileUrls } }, { new: true });
+            }
+        }
+         // eger proyekt adi var ve fayl yoxsa
+        return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }) } }, { new: true });
     }
-    if (files && files[0] && files[0].path) {
-      const fileUrls = [];
-      for (let i = 0; i < files.length; i++) {
-        const fileUrl = await cloudinary.uploader.upload(files[i].path, {
-          public_id: files[i].originalname,
-        });
-        fileUrls.push(fileUrl.url);
-      }
-      const updateProject = await this.projectModel.findByIdAndUpdate(id, {
-        $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }), photos: fileUrls },
-      }, { new: true },
-      );
-      return updateProject;
-    } else {
-      return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }) } }, { new: true });
-    }
-  }
+    // Title və fayl yoxdursa
+    return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto } }, { new: true });
+}
 
   // delete project - sorusmaq
   // async deleteProject(id: string): Promise<string> {
@@ -536,15 +542,24 @@ export class AdminService {
 
   // update product - test edildi
   async updateProduct(id: string, UpdateProductDto: updateProductDto, file: Express.Multer.File): Promise<Product> {
-    const product = await this.productModel.findById(id);
-    if (!product) {
-      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    const productExist = await this.productModel.findById(id);
+    // eger product yoxdursa
+    if (!productExist) throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    const product=await this.productModel.findOne({title:UpdateProductDto.title})
+    // eger bazada eyni product varsa
+    if(product) throw new HttpException("The product is already available in the database",HttpStatus.CONFLICT)
+    // fayl ve title varsa
+     if (UpdateProductDto.title ||  (file && file.path)) {
+      if(file && file.path){
+        const fileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname });
+        return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, photo: fileUrl.url } }, { new: true });
+      }
+       if(UpdateProductDto.title){
+        return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }) } }, { new: true });
+      } 
     }
-    if (file && file.path) {
-      const fileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname });
-      return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }), photo: fileUrl.url } }, { new: true });
-    }
-    return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }) } }, { new: true });
+    // fayl ve title yoxsa
+    return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto} }, { new: true });
   }
 
 
