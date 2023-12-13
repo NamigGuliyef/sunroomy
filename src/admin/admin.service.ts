@@ -96,19 +96,19 @@ export class AdminService {
   ): Promise<Feature> {
     const { title, description, subProductId, projectId } = CreateFeatureDto;
     if (!file) {
-      const feature = await this.featureModel.create({ title, description, projectId });      
-      await this.projectModel.findOneAndUpdate({ _id:feature.projectId },{ $push: { featuresId:feature._id }})
+      const feature = await this.featureModel.create({ title, description, projectId });
+      await this.projectModel.findOneAndUpdate({ _id: feature.projectId }, { $push: { featuresId: feature._id } })
       return feature
     } else {
       const iconUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname });
-      const feature = await this.featureModel.create({ title,description,subProductId,icon: iconUrl.url });
-      await this.subProductModel.findOneAndUpdate({ _id: feature.subProductId },{ $push: { featuresIds: feature._id } } );
+      const feature = await this.featureModel.create({ title, description, subProductId, icon: iconUrl.url });
+      await this.subProductModel.findOneAndUpdate({ _id: feature.subProductId }, { $push: { featuresIds: feature._id } });
       return feature;
     }
   }
 
   // update feature - test edildi
-  async updateFeature(id: string,UpdateFeatureDto: updateFeatureDto,file: Express.Multer.File ): Promise<Feature> {
+  async updateFeature(id: string, UpdateFeatureDto: updateFeatureDto, file: Express.Multer.File): Promise<Feature> {
     const feature = await this.featureModel.findById(id);
     if (!feature) {
       throw new HttpException(
@@ -144,12 +144,12 @@ export class AdminService {
         HttpStatus.NOT_FOUND,
       );
     }
-     const deleteFeature = await this.featureModel.findByIdAndDelete(id);  
-     const updateSubProduct = await this.subProductModel.findOneAndUpdate( { _id: deleteFeature.subProductId }, { $pull: { featuresIds: deleteFeature._id } } );
-     if(!updateSubProduct){
-      await this.projectModel.findOneAndUpdate( { _id: deleteFeature.projectId }, { $pull: { featuresId: deleteFeature._id } } );
-     }
-     return 'Project feature removed';
+    const deleteFeature = await this.featureModel.findByIdAndDelete(id);
+    const updateSubProduct = await this.subProductModel.findOneAndUpdate({ _id: deleteFeature.subProductId }, { $pull: { featuresIds: deleteFeature._id } });
+    if (!updateSubProduct) {
+      await this.projectModel.findOneAndUpdate({ _id: deleteFeature.projectId }, { $pull: { featuresId: deleteFeature._id } });
+    }
+    return 'Project feature removed';
   }
 
   // get single feature - test edildi
@@ -386,24 +386,24 @@ export class AdminService {
     if (project) throw new HttpException('The project already exists', HttpStatus.CONFLICT);
     // eger proyekt adi ve sekili varsa - ok
     if (UpdateProjectDto.title || (files && files[0] && files[0].path)) {
-        if (files && files[0] && files[0].path) {
-            for (let i = 0; i < files.length; i++) {
-                const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
-                fileUrls.push(fileUrl.url);
-            }
-            if (UpdateProjectDto.title) {
-                return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }), photos: fileUrls } }, { new: true });
-             // eger proyekt adi yox ve fayl varsa
-              } else {
-                return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, photos: fileUrls } }, { new: true });
-            }
+      if (files && files[0] && files[0].path) {
+        for (let i = 0; i < files.length; i++) {
+          const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
+          fileUrls.push(fileUrl.url);
         }
-         // eger proyekt adi var ve fayl yoxsa
-        return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }) } }, { new: true });
+        if (UpdateProjectDto.title) {
+          return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }), photos: fileUrls } }, { new: true });
+          // eger proyekt adi yox ve fayl varsa
+        } else {
+          return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, photos: fileUrls } }, { new: true });
+        }
+      }
+      // eger proyekt adi var ve fayl yoxsa
+      return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }) } }, { new: true });
     }
     // Title və fayl yoxdursa
     return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto } }, { new: true });
-}
+  }
 
   // delete project - sorusmaq
   // async deleteProject(id: string): Promise<string> {
@@ -545,22 +545,22 @@ export class AdminService {
     const productExist = await this.productModel.findById(id);
     // eger product yoxdursa
     if (!productExist) throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
-    const product=await this.productModel.findOne({title:UpdateProductDto.title})
+    const product = await this.productModel.findOne({ title: UpdateProductDto.title })
     // eger bazada eyni product varsa
-    if(product) throw new HttpException("The product is already available in the database",HttpStatus.CONFLICT)
-     if (UpdateProductDto.title ||  (file && file.path)) {
+    if (product) throw new HttpException("The product is already available in the database", HttpStatus.CONFLICT)
+    if (UpdateProductDto.title || (file && file.path)) {
       // fayl varsa title yoxsa
-      if(file && file.path){
+      if (file && file.path) {
         const fileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname });
         return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, photo: fileUrl.url } }, { new: true });
       }
       // title varsa fayl yoxsa
-       if(UpdateProductDto.title){
+      if (UpdateProductDto.title) {
         return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }) } }, { new: true });
-      } 
+      }
     }
     // fayl ve title yoxsa
-    return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto} }, { new: true });
+    return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto } }, { new: true });
   }
 
 
@@ -621,23 +621,32 @@ export class AdminService {
   // update sub product - test edildi
   async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto, files: { cover_photo: Express.Multer.File[], photos: Express.Multer.File[] }): Promise<Subproduct> {
     const subProductExist = await this.subProductModel.findById(id);
-    if (!subProductExist) {
-      throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
-    }
-    
-    if (files && files[0] && files[0].path) {
-      const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, { public_id: files.cover_photo[0].originalname });
-      const fileUrls = [];
-      for (let i = 0; i < files.photos.length; i++) {
-        const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, { public_id: files.photos[i].originalname });
-        fileUrls.push(fileUrl.url);
+    // subproduct bazada olub - olmadigi yoxlanilir
+    if (!subProductExist) throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
+    const subProduct = await this.subProductModel.findOne({ title: UpdateSubproductDto.title })
+    // subproduct artıq bazada var yoxlanılır
+    if (subProduct) throw new HttpException("Subproduct already exists in the database", HttpStatus.CONFLICT)
+    const fileUrls = [];
+    // title ve ya file varsa
+    if (UpdateSubproductDto.title || (files && files[0] && files[0].path)) {
+      // eger file varsa
+      if (files && files[0] && files[0].path) {
+        const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, { public_id: files.cover_photo[0].originalname });
+        for (let i = 0; i < files.photos.length; i++) {
+          const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, { public_id: files.photos[i].originalname });
+          fileUrls.push(fileUrl.url);
+          return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, cover_photo: coverFileUrl.url, photos: fileUrls }, }, { new: true });
+        }
       }
-      return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }), cover_photo: coverFileUrl.url, photos: fileUrls }, },
-        { new: true });
-    } else {
-      return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }) } }, { new: true });
+      // eger title varsa
+      if (UpdateSubproductDto.title) {
+        return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }) } }, { new: true });
+      }
     }
+    // hec biri yoxsa
+    return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto } }, { new: true });
   }
+
 
   // delete sub product - test edildi
   async deleteSubProduct(id: string): Promise<string> {
