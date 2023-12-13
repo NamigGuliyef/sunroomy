@@ -548,12 +548,13 @@ export class AdminService {
     const product=await this.productModel.findOne({title:UpdateProductDto.title})
     // eger bazada eyni product varsa
     if(product) throw new HttpException("The product is already available in the database",HttpStatus.CONFLICT)
-    // fayl ve title varsa
      if (UpdateProductDto.title ||  (file && file.path)) {
+      // fayl varsa title yoxsa
       if(file && file.path){
         const fileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname });
         return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, photo: fileUrl.url } }, { new: true });
       }
+      // title varsa fayl yoxsa
        if(UpdateProductDto.title){
         return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }) } }, { new: true });
       } 
@@ -623,6 +624,7 @@ export class AdminService {
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
     }
+    
     if (files && files[0] && files[0].path) {
       const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, { public_id: files.cover_photo[0].originalname });
       const fileUrls = [];
