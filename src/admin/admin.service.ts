@@ -626,23 +626,27 @@ export class AdminService {
     const subProduct = await this.subProductModel.findOne({ title: UpdateSubproductDto.title })
     // subproduct artıq bazada var yoxlanılır
     if (subProduct) throw new HttpException("Subproduct already exists in the database", HttpStatus.CONFLICT)
-    const fileUrls = [];
-    // title ve ya file varsa
-    if (UpdateSubproductDto.title || (files && files[0] && files[0].path)) {
-      // eger file varsa
-      if (files && files[0] && files[0].path) {
+    // title ve ya file-lardan her hansi biri varsa  
+    if (UpdateSubproductDto.title || (files.cover_photo && files.cover_photo[0] && files.cover_photo[0].path) ||  (files.photos && files.photos[0] && files.photos[0].path)) {
+      // eger cover file varsa
+      if (files.cover_photo && files.cover_photo[0] && files.cover_photo[0].path)  {
         const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, { public_id: files.cover_photo[0].originalname });
+        return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, cover_photo: coverFileUrl.url } }, { new: true });
+      }
+      // eger photos varsa
+      if(files.photos && files.photos[0] && files.photos[0].path){
+        const fileUrls = [];
         for (let i = 0; i < files.photos.length; i++) {
           const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, { public_id: files.photos[i].originalname });
           fileUrls.push(fileUrl.url);
-          return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, cover_photo: coverFileUrl.url, photos: fileUrls }, }, { new: true });
         }
-      }
+            return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, photos: fileUrls }, }, { new: true });
+        }
+      } 
       // eger title varsa
       if (UpdateSubproductDto.title) {
         return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }) } }, { new: true });
       }
-    }
     // hec biri yoxsa
     return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto } }, { new: true });
   }
