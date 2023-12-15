@@ -13,6 +13,7 @@ import { Subproduct } from 'src/subproduct/model/subproduct.schema';
 import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
+import { Filter } from './guest.filter';
 
 @Injectable()
 export class GuestService {
@@ -184,4 +185,26 @@ export class GuestService {
     }
   }
 
+  // all filter
+  async getAllFilter(filter:Filter){
+    const {title} = filter
+    const search : any= {}
+    if(title) search.title = title
+
+    const product = await this.productModel.find(filter)
+    const subProduct = await this.subProductModel.find(filter)
+    const project = await this.projectModel.find(filter)
+    if(product.length> 0){
+      return product
+    }
+    if(subProduct.length> 0){
+      return subProduct
+    }
+    if(project.length> 0){
+      return project
+    }
+    
+  }
 }
+
+

@@ -43,7 +43,6 @@ import {
   updateProjectDto
 } from 'src/projects/dto/project.dto';
 import { Project } from 'src/projects/model/project.schema';
-import { CreateRequestProjectDto } from 'src/request-project/dto/requestproject.dto';
 import { RequestProject } from 'src/request-project/model/requestproject.schema';
 import {
   createSpecificationDto,
@@ -640,12 +639,12 @@ export class AdminService {
           const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, { public_id: files.photos[i].originalname });
           fileUrls.push(fileUrl.url);
         }
-            return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, photos: fileUrls }, }, { new: true });
+          return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, photos: fileUrls }, }, { new: true });
         }
       } 
       // eger title varsa
       if (UpdateSubproductDto.title) {
-        return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }) } }, { new: true });
+        return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title,{ lower:true }) } }, { new: true });
       }
     // hec biri yoxsa
     return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto } }, { new: true });

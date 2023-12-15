@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { MulterOptionsCloudinary } from 'src/config/multer/multer';
 import { Contact } from 'src/contact/model/contact.schema';
@@ -13,6 +13,7 @@ import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { GuestService } from './guest.service';
+import { Filter } from './guest.filter';
 
 @Controller('')
 export class GuestController {
@@ -113,6 +114,12 @@ export class GuestController {
     return await this.guestService.createRequestProject(createRequestProjectDto, files)
   }
 
+
+  @Get('/q')
+  @HttpCode(HttpStatus.OK)
+  async getAllFilter(@Query() filter:Filter){
+    return await this.guestService.getAllFilter(filter)
+  }
 
 }
 
