@@ -442,24 +442,13 @@ export class AdminService {
   async createSpecification(
     CreateSpecificationDto: createSpecificationDto,
   ): Promise<Specification> {
-    const { key, value } = CreateSpecificationDto;
-    const specificationExist = await this.specificationModel.findOne({
-      key,
-      value,
-    });
+    const { key, value, subProductId } = CreateSpecificationDto;
+    const specificationExist = await this.specificationModel.findOne({ key, value, subProductId });
     if (specificationExist) {
-      throw new HttpException(
-        'The specification has already been created',
-        HttpStatus.CONFLICT,
-      );
+      throw new HttpException('The specification has already been created', HttpStatus.CONFLICT);
     }
-    const specification = await this.specificationModel.create(
-      CreateSpecificationDto,
-    );
-    await this.subProductModel.findOneAndUpdate(
-      { _id: specification.subProductId },
-      { $push: { specifications: specification._id } },
-    );
+    const specification = await this.specificationModel.create(CreateSpecificationDto);
+    await this.subProductModel.findOneAndUpdate({ _id: specification.subProductId }, { $push: { specifications: specification._id } });
     return specification;
   }
 
@@ -626,26 +615,26 @@ export class AdminService {
     // subproduct artıq bazada var yoxlanılır
     if (subProduct) throw new HttpException("Subproduct already exists in the database", HttpStatus.CONFLICT)
     // title ve ya file-lardan her hansi biri varsa  
-    if (UpdateSubproductDto.title || (files.cover_photo && files.cover_photo[0] && files.cover_photo[0].path) ||  (files.photos && files.photos[0] && files.photos[0].path)) {
+    if (UpdateSubproductDto.title || (files.cover_photo && files.cover_photo[0] && files.cover_photo[0].path) || (files.photos && files.photos[0] && files.photos[0].path)) {
       // eger cover file varsa
-      if (files.cover_photo && files.cover_photo[0] && files.cover_photo[0].path)  {
+      if (files.cover_photo && files.cover_photo[0] && files.cover_photo[0].path) {
         const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, { public_id: files.cover_photo[0].originalname });
         return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, cover_photo: coverFileUrl.url } }, { new: true });
       }
       // eger photos varsa
-      if(files.photos && files.photos[0] && files.photos[0].path){
+      if (files.photos && files.photos[0] && files.photos[0].path) {
         const fileUrls = [];
         for (let i = 0; i < files.photos.length; i++) {
           const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, { public_id: files.photos[i].originalname });
           fileUrls.push(fileUrl.url);
         }
-          return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, photos: fileUrls }, }, { new: true });
-        }
-      } 
-      // eger title varsa
-      if (UpdateSubproductDto.title) {
-        return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title,{ lower:true }) } }, { new: true });
+        return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, photos: fileUrls }, }, { new: true });
       }
+    }
+    // eger title varsa
+    if (UpdateSubproductDto.title) {
+      return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }) } }, { new: true });
+    }
     // hec biri yoxsa
     return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto } }, { new: true });
   }

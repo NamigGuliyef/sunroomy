@@ -6,9 +6,12 @@ export class createSpecificationDto {
   key: string;
   @IsNotEmpty({ message: 'Value is empty' })
   value: string;
+  @IsNotEmpty()
+  subProductId: mongoose.Schema.Types.ObjectId;
 }
 
 export class updateSpecificationDto {
   key: string;
   value: string;
+  subProductId: mongoose.Schema.Types.ObjectId;
 }
