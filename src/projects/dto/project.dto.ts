@@ -14,7 +14,7 @@ export class createProjectDto {
   description: string;
   @IsNotEmpty()
   needsId: mongoose.Schema.Types.ObjectId;
-  @IsNotEmpty()
+  // @IsNotEmpty()
   featuresId: mongoose.Schema.Types.ObjectId;
   @IsNotEmpty()
   usedProductsId: mongoose.Schema.Types.ObjectId;
