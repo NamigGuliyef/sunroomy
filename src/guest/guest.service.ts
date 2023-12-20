@@ -35,7 +35,7 @@ export class GuestService {
       .find()
       .populate({
         path: 'subProductIds',
-        select: ['title', 'description', 'photos'],
+        select: ['title', 'description', 'photos', 'slug'], // Rufat A. elave etdim
       });
   }
 

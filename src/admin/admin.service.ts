@@ -5,65 +5,69 @@ import { Model } from 'mongoose';
 import slug from 'slugify';
 import {
   createAboutOutdorrDto,
-  updateAboutOutdorrDto
+  updateAboutOutdorrDto,
 } from 'src/about-outdorr/dto/aboutoutdorr.dto';
 import { AboutOutdorr } from 'src/about-outdorr/model/aboutoutdorr.schema';
 import {
   createApplicationDto,
-  updateApplicationDto
+  updateApplicationDto,
 } from 'src/applications/dto/application.dto';
 import { Application } from 'src/applications/model/application.schema';
 import cloudinary from 'src/config/cloudinary/cloudinary';
 import {
   createContactDto,
-  updateContactDto
+  updateContactDto,
 } from 'src/contact/dto/contact.dto';
 import { Contact } from 'src/contact/model/contact.schema';
 import {
   createFeatureDto,
-  updateFeatureDto
+  updateFeatureDto,
 } from 'src/features/dto/feature.dto';
 import { Feature } from 'src/features/model/feature.schema';
 import {
   createProjectNeedDto,
-  updateProjectNeedDto
+  updateProjectNeedDto,
 } from 'src/needs/dto/need.dto';
 import { ProjectNeed } from 'src/needs/model/need.schema';
 import {
   createProductDto,
-  updateProductDto
+  updateProductDto,
 } from 'src/product/dto/product.dto';
 import { Product } from 'src/product/model/product.schema';
-import { CreateProjectDesignDetailsDto, UpdateProjectDesignDetailsDto } from 'src/project-design-details/dto/projectdesigndetails.dto';
+import {
+  CreateProjectDesignDetailsDto,
+  UpdateProjectDesignDetailsDto,
+} from 'src/project-design-details/dto/projectdesigndetails.dto';
 import { ProjectDesignDetails } from 'src/project-design-details/model/projectdesigndetails.schema';
-import { CreateProjectDesignDto, UpdateProjectDesignDto } from 'src/project-design/dto/projectdesign.dto';
+import {
+  CreateProjectDesignDto,
+  UpdateProjectDesignDto,
+} from 'src/project-design/dto/projectdesign.dto';
 import { ProjectDesign } from 'src/project-design/model/projectdesign.schema';
 import {
   createProjectDto,
-  updateProjectDto
+  updateProjectDto,
 } from 'src/projects/dto/project.dto';
 import { Project } from 'src/projects/model/project.schema';
 import { RequestProject } from 'src/request-project/model/requestproject.schema';
 import {
   createSpecificationDto,
-  updateSpecificationDto
+  updateSpecificationDto,
 } from 'src/specifications/dto/specification.dto';
 import { Specification } from 'src/specifications/model/specification.schema';
 import {
   createSubProductDto,
-  updateSubProductDto
+  updateSubProductDto,
 } from 'src/subproduct/dto/subproduct.dto';
 import { Subproduct } from 'src/subproduct/model/subproduct.schema';
 import { sendEmailText } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import {
   createUsedProductsDto,
-  updateUsedProductsDto
+  updateUsedProductsDto,
 } from 'src/used-products/dto/usedproduct.dto';
 import { UsedProducts } from 'src/used-products/model/usedproduct.schema';
-import {
-  updateWhyOutdorrDto
-} from 'src/why-outdorr/dto/whyoutdorr.dto';
+import { updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 
 @Injectable()
@@ -75,18 +79,21 @@ export class AdminService {
     @InjectModel('usedproducts') private usedProductsModel: Model<UsedProducts>,
     @InjectModel('application') private applicationModel: Model<Application>,
     @InjectModel('project') private projectModel: Model<Project>,
-    @InjectModel('specification') private specificationModel: Model<Specification>,
+    @InjectModel('specification')
+    private specificationModel: Model<Specification>,
     @InjectModel('subproduct') private subProductModel: Model<Subproduct>,
     @InjectModel('product') private productModel: Model<Product>,
     @InjectModel('contact') private contactModel: Model<Contact>,
     @InjectModel('subscribe') private subscribeModel: Model<Subscribe>,
     @InjectModel('whyoutdorr') private whyOutdorrModel: Model<WhyOutdorr>,
     @InjectModel('aboutoutdorr') private aboutOutdorrModel: Model<AboutOutdorr>,
-    @InjectModel('projectdesign') private projectDesignModel: Model<ProjectDesign>,
-    @InjectModel('projectdesigndetail') private projectDesignDetailsModel: Model<ProjectDesignDetails>,
-    @InjectModel('requestproject') private requestProjectModel: Model<RequestProject>
-
-  ) { }
+    @InjectModel('projectdesign')
+    private projectDesignModel: Model<ProjectDesign>,
+    @InjectModel('projectdesigndetail')
+    private projectDesignDetailsModel: Model<ProjectDesignDetails>,
+    @InjectModel('requestproject')
+    private requestProjectModel: Model<RequestProject>,
+  ) {}
 
   // create feature - test edildi
   async createFeature(
@@ -95,19 +102,40 @@ export class AdminService {
   ): Promise<Feature> {
     const { title, description, subProductId, projectId } = CreateFeatureDto;
     if (!file) {
-      const feature = await this.featureModel.create({ title, description, projectId });
-      await this.projectModel.findOneAndUpdate({ _id: feature.projectId }, { $push: { featuresId: feature._id } })
-      return feature
+      const feature = await this.featureModel.create({
+        title,
+        description,
+        projectId,
+      });
+      await this.projectModel.findOneAndUpdate(
+        { _id: feature.projectId },
+        { $push: { featuresId: feature._id } },
+      );
+      return feature;
     } else {
-      const iconUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname });
-      const feature = await this.featureModel.create({ title, description, subProductId, icon: iconUrl.url });
-      await this.subProductModel.findOneAndUpdate({ _id: feature.subProductId }, { $push: { featuresIds: feature._id } });
+      const iconUrl = await cloudinary.uploader.upload(file.path, {
+        public_id: file.originalname,
+      });
+      const feature = await this.featureModel.create({
+        title,
+        description,
+        subProductId,
+        icon: iconUrl.url,
+      });
+      await this.subProductModel.findOneAndUpdate(
+        { _id: feature.subProductId },
+        { $push: { featuresIds: feature._id } },
+      );
       return feature;
     }
   }
 
   // update feature - test edildi
-  async updateFeature(id: string, UpdateFeatureDto: updateFeatureDto, file: Express.Multer.File): Promise<Feature> {
+  async updateFeature(
+    id: string,
+    UpdateFeatureDto: updateFeatureDto,
+    file: Express.Multer.File,
+  ): Promise<Feature> {
     const feature = await this.featureModel.findById(id);
     if (!feature) {
       throw new HttpException(
@@ -144,9 +172,15 @@ export class AdminService {
       );
     }
     const deleteFeature = await this.featureModel.findByIdAndDelete(id);
-    const updateSubProduct = await this.subProductModel.findOneAndUpdate({ _id: deleteFeature.subProductId }, { $pull: { featuresIds: deleteFeature._id } });
+    const updateSubProduct = await this.subProductModel.findOneAndUpdate(
+      { _id: deleteFeature.subProductId },
+      { $pull: { featuresIds: deleteFeature._id } },
+    );
     if (!updateSubProduct) {
-      await this.projectModel.findOneAndUpdate({ _id: deleteFeature.projectId }, { $pull: { featuresId: deleteFeature._id } });
+      await this.projectModel.findOneAndUpdate(
+        { _id: deleteFeature.projectId },
+        { $pull: { featuresId: deleteFeature._id } },
+      );
     }
     return 'Project feature removed';
   }
@@ -224,30 +258,55 @@ export class AdminService {
   }
 
   // create used Products - test edildi
-  async createUsedProducts(CreateUsedProductsDto: createUsedProductsDto, files: Express.Multer.File[]): Promise<UsedProducts> {
+  async createUsedProducts(
+    CreateUsedProductsDto: createUsedProductsDto,
+    files: Express.Multer.File[],
+  ): Promise<UsedProducts> {
     const fileUrls = [];
     for (let i = 0; i < files.length; i++) {
-      const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
+      const fileUrl = await cloudinary.uploader.upload(files[i].path, {
+        public_id: files[i].originalname,
+      });
       fileUrls.push(fileUrl.url);
     }
-    return await this.usedProductsModel.create({ ...CreateUsedProductsDto, photos: fileUrls });
+    return await this.usedProductsModel.create({
+      ...CreateUsedProductsDto,
+      photos: fileUrls,
+    });
   }
 
   // update used Products - duzelisler ve test edildi
-  async updateUsedProducts(id: string, UpdateUsedProducts: updateUsedProductsDto, files: Express.Multer.File[]): Promise<UsedProducts> {
+  async updateUsedProducts(
+    id: string,
+    UpdateUsedProducts: updateUsedProductsDto,
+    files: Express.Multer.File[],
+  ): Promise<UsedProducts> {
     const usedProductsExist = await this.usedProductsModel.findById(id);
     if (!usedProductsExist) {
-      throw new HttpException('The used products you want to change were not found', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        'The used products you want to change were not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
     if (files && files[0] && files[0].path) {
       const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
-        const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
+        const fileUrl = await cloudinary.uploader.upload(files[i].path, {
+          public_id: files[i].originalname,
+        });
         fileUrls.push(fileUrl.url);
       }
-      return await this.usedProductsModel.findByIdAndUpdate(id, { $set: { ...UpdateUsedProducts, photos: fileUrls } }, { new: true });
+      return await this.usedProductsModel.findByIdAndUpdate(
+        id,
+        { $set: { ...UpdateUsedProducts, photos: fileUrls } },
+        { new: true },
+      );
     } else {
-      return await this.usedProductsModel.findByIdAndUpdate(id, { $set: { ...UpdateUsedProducts } }, { new: true });
+      return await this.usedProductsModel.findByIdAndUpdate(
+        id,
+        { $set: { ...UpdateUsedProducts } },
+        { new: true },
+      );
     }
   }
 
@@ -281,26 +340,43 @@ export class AdminService {
   }
 
   // create product application - test edildi
-  async createApplication(CreateApplicationDto: createApplicationDto, files: Express.Multer.File[]): Promise<Application> {
-    const applicationExist = await this.applicationModel.findOne({ title: CreateApplicationDto.title });
+  async createApplication(
+    CreateApplicationDto: createApplicationDto,
+    files: Express.Multer.File[],
+  ): Promise<Application> {
+    const applicationExist = await this.applicationModel.findOne({
+      title: CreateApplicationDto.title,
+    });
     if (applicationExist) {
-      throw new HttpException('Application already exists', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'Application already exists',
+        HttpStatus.CONFLICT,
+      );
     }
     const fileUrls = [];
     for (let i = 0; i < files.length; i++) {
-      const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
+      const fileUrl = await cloudinary.uploader.upload(files[i].path, {
+        public_id: files[i].originalname,
+      });
       fileUrls.push(fileUrl.url);
     }
-    const application = await this.applicationModel.create({ ...CreateApplicationDto, photos: fileUrls });
+    const application = await this.applicationModel.create({
+      ...CreateApplicationDto,
+      photos: fileUrls,
+    });
     await this.subProductModel.findOneAndUpdate(
       { _id: application.subProductId },
       { $push: { applicationIds: application._id } },
     );
-    return application
+    return application;
   }
 
   // update product application - duzelis ve test edildi
-  async updateApplication(id: string, UpdateApplicationDto: updateApplicationDto, files: Express.Multer.File[]): Promise<Application> {
+  async updateApplication(
+    id: string,
+    UpdateApplicationDto: updateApplicationDto,
+    files: Express.Multer.File[],
+  ): Promise<Application> {
     const application = await this.applicationModel.findById(id);
     if (!application) {
       throw new HttpException(
@@ -311,12 +387,22 @@ export class AdminService {
     if (files && files[0] && files[0].path) {
       const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
-        const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
+        const fileUrl = await cloudinary.uploader.upload(files[i].path, {
+          public_id: files[i].originalname,
+        });
         fileUrls.push(fileUrl.url);
       }
-      return await this.applicationModel.findByIdAndUpdate(id, { $set: { ...UpdateApplicationDto, photos: fileUrls } }, { new: true });
+      return await this.applicationModel.findByIdAndUpdate(
+        id,
+        { $set: { ...UpdateApplicationDto, photos: fileUrls } },
+        { new: true },
+      );
     } else {
-      return await this.applicationModel.findByIdAndUpdate(id, { $set: { ...UpdateApplicationDto } }, { new: true });
+      return await this.applicationModel.findByIdAndUpdate(
+        id,
+        { $set: { ...UpdateApplicationDto } },
+        { new: true },
+      );
     }
   }
 
@@ -354,15 +440,23 @@ export class AdminService {
   }
 
   // create project - test edildi
-  async createProject(CreateProjectDto: createProjectDto, files: Express.Multer.File[]): Promise<Project> {
-    const projectExist = await this.projectModel.findOne({ title: CreateProjectDto.title })
+  async createProject(
+    CreateProjectDto: createProjectDto,
+    files: Express.Multer.File[],
+  ): Promise<Project> {
+    const projectExist = await this.projectModel.findOne({
+      title: CreateProjectDto.title,
+    });
     if (projectExist) {
-      throw new HttpException('The project already exists', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'The project already exists',
+        HttpStatus.CONFLICT,
+      );
     }
     const fileUrls = [];
     for (let i = 0; i < files.length; i++) {
       const fileUrl = await cloudinary.uploader.upload(files[i].path, {
-        public_id: files[i].originalname
+        public_id: files[i].originalname,
       });
       fileUrls.push(fileUrl.url);
     }
@@ -375,33 +469,76 @@ export class AdminService {
   }
 
   // update project - test edildi
-  async updateProject(id: string, UpdateProjectDto: updateProjectDto, files: Express.Multer.File[]): Promise<Project> {
+  async updateProject(
+    id: string,
+    UpdateProjectDto: updateProjectDto,
+    files: Express.Multer.File[],
+  ): Promise<Project> {
     const projectExist = await this.projectModel.findById(id);
     const fileUrls = [];
     // eger proyekt yoxdursa
-    if (!projectExist) throw new HttpException('The project to be changed was not found', HttpStatus.NOT_FOUND);
-    const project = await this.projectModel.findOne({ title: UpdateProjectDto.title });
+    if (!projectExist)
+      throw new HttpException(
+        'The project to be changed was not found',
+        HttpStatus.NOT_FOUND,
+      );
+    const project = await this.projectModel.findOne({
+      title: UpdateProjectDto.title,
+    });
     // eger databazada eyni adda proyekt varsa
-    if (project) throw new HttpException('The project already exists', HttpStatus.CONFLICT);
+    if (project)
+      throw new HttpException(
+        'The project already exists',
+        HttpStatus.CONFLICT,
+      );
     // eger proyekt adi ve sekili varsa - ok
     if (UpdateProjectDto.title || (files && files[0] && files[0].path)) {
       if (files && files[0] && files[0].path) {
         for (let i = 0; i < files.length; i++) {
-          const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname });
+          const fileUrl = await cloudinary.uploader.upload(files[i].path, {
+            public_id: files[i].originalname,
+          });
           fileUrls.push(fileUrl.url);
         }
         if (UpdateProjectDto.title) {
-          return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }), photos: fileUrls } }, { new: true });
+          return await this.projectModel.findByIdAndUpdate(
+            id,
+            {
+              $set: {
+                ...UpdateProjectDto,
+                slug: slug(UpdateProjectDto.title, { lower: true }),
+                photos: fileUrls,
+              },
+            },
+            { new: true },
+          );
           // eger proyekt adi yox ve fayl varsa
         } else {
-          return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, photos: fileUrls } }, { new: true });
+          return await this.projectModel.findByIdAndUpdate(
+            id,
+            { $set: { ...UpdateProjectDto, photos: fileUrls } },
+            { new: true },
+          );
         }
       }
       // eger proyekt adi var ve fayl yoxsa
-      return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto, slug: slug(UpdateProjectDto.title, { lower: true }) } }, { new: true });
+      return await this.projectModel.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            ...UpdateProjectDto,
+            slug: slug(UpdateProjectDto.title, { lower: true }),
+          },
+        },
+        { new: true },
+      );
     }
     // Title və fayl yoxdursa
-    return await this.projectModel.findByIdAndUpdate(id, { $set: { ...UpdateProjectDto } }, { new: true });
+    return await this.projectModel.findByIdAndUpdate(
+      id,
+      { $set: { ...UpdateProjectDto } },
+      { new: true },
+    );
   }
 
   // delete project - sorusmaq
@@ -443,12 +580,24 @@ export class AdminService {
     CreateSpecificationDto: createSpecificationDto,
   ): Promise<Specification> {
     const { key, value, subProductId } = CreateSpecificationDto;
-    const specificationExist = await this.specificationModel.findOne({ key, value, subProductId });
+    const specificationExist = await this.specificationModel.findOne({
+      key,
+      value,
+      subProductId,
+    });
     if (specificationExist) {
-      throw new HttpException('The specification has already been created', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'The specification has already been created',
+        HttpStatus.CONFLICT,
+      );
     }
-    const specification = await this.specificationModel.create(CreateSpecificationDto);
-    await this.subProductModel.findOneAndUpdate({ _id: specification.subProductId }, { $push: { specifications: specification._id } });
+    const specification = await this.specificationModel.create(
+      CreateSpecificationDto,
+    );
+    await this.subProductModel.findOneAndUpdate(
+      { _id: specification.subProductId },
+      { $push: { specifications: specification._id } },
+    );
     return specification;
   }
 
@@ -529,28 +678,57 @@ export class AdminService {
   }
 
   // update product - test edildi
-  async updateProduct(id: string, UpdateProductDto: updateProductDto, file: Express.Multer.File): Promise<Product> {
+  async updateProduct(
+    id: string,
+    UpdateProductDto: updateProductDto,
+    file: Express.Multer.File,
+  ): Promise<Product> {
     const productExist = await this.productModel.findById(id);
     // eger product yoxdursa
-    if (!productExist) throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
-    const product = await this.productModel.findOne({ title: UpdateProductDto.title })
+    if (!productExist)
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    const product = await this.productModel.findOne({
+      title: UpdateProductDto.title,
+    });
     // eger bazada eyni product varsa
-    if (product) throw new HttpException("The product is already available in the database", HttpStatus.CONFLICT)
+    if (product)
+      throw new HttpException(
+        'The product is already available in the database',
+        HttpStatus.CONFLICT,
+      );
     if (UpdateProductDto.title || (file && file.path)) {
       // fayl varsa title yoxsa
       if (file && file.path) {
-        const fileUrl = await cloudinary.uploader.upload(file.path, { public_id: file.originalname });
-        return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, photo: fileUrl.url } }, { new: true });
+        const fileUrl = await cloudinary.uploader.upload(file.path, {
+          public_id: file.originalname,
+        });
+        return await this.productModel.findByIdAndUpdate(
+          id,
+          { $set: { ...UpdateProductDto, photo: fileUrl.url } },
+          { new: true },
+        );
       }
       // title varsa fayl yoxsa
       if (UpdateProductDto.title) {
-        return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, slug: slug(UpdateProductDto.title, { lower: true }) } }, { new: true });
+        return await this.productModel.findByIdAndUpdate(
+          id,
+          {
+            $set: {
+              ...UpdateProductDto,
+              slug: slug(UpdateProductDto.title, { lower: true }),
+            },
+          },
+          { new: true },
+        );
       }
     }
     // fayl ve title yoxsa
-    return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto } }, { new: true });
+    return await this.productModel.findByIdAndUpdate(
+      id,
+      { $set: { ...UpdateProductDto } },
+      { new: true },
+    );
   }
-
 
   // delete product - test edildi
   async deleteProduct(id: string): Promise<string> {
@@ -583,16 +761,27 @@ export class AdminService {
   }
 
   // create sub product  - test edildi
-  async createSubProduct(CreateSubProductDto: createSubProductDto, files: { cover_photo: Express.Multer.File[], photos: Express.Multer.File[] }): Promise<Subproduct> {
+  async createSubProduct(
+    CreateSubProductDto: createSubProductDto,
+    files: {
+      cover_photo: Express.Multer.File[];
+      photos: Express.Multer.File[];
+    },
+  ): Promise<Subproduct> {
     const { title } = CreateSubProductDto;
     const subProductExist = await this.subProductModel.findOne({ title });
     if (subProductExist) {
-      throw new HttpException('Sub product already created', HttpStatus.CONFLICT
+      throw new HttpException(
+        'Sub product already created',
+        HttpStatus.CONFLICT,
       );
     }
-    const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, {
-      public_id: files.cover_photo[0].originalname,
-    });
+    const coverFileUrl = await cloudinary.uploader.upload(
+      files.cover_photo[0].path,
+      {
+        public_id: files.cover_photo[0].originalname,
+      },
+    );
     const fileUrls = [];
     for (let i = 0; i < files.photos.length; i++) {
       const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, {
@@ -600,45 +789,103 @@ export class AdminService {
       });
       fileUrls.push(fileUrl.url);
     }
-    const subProduct = await this.subProductModel.create({ ...CreateSubProductDto, cover_photo: coverFileUrl.url, photos: fileUrls, slug: slug(CreateSubProductDto.title) });
-    await this.productModel.findOneAndUpdate({ _id: subProduct.productId }, { $push: { subProductIds: subProduct.id } }, { new: true },
+    const subProduct = await this.subProductModel.create({
+      ...CreateSubProductDto,
+      cover_photo: coverFileUrl.url,
+      photos: fileUrls,
+      slug: slug(CreateSubProductDto.title),
+    });
+    await this.productModel.findOneAndUpdate(
+      { _id: subProduct.productId },
+      { $push: { subProductIds: subProduct.id } },
+      { new: true },
     );
     return subProduct;
   }
 
   // update sub product - test edildi
-  async updateSubProduct(id: string, UpdateSubproductDto: updateSubProductDto, files: { cover_photo: Express.Multer.File[], photos: Express.Multer.File[] }): Promise<Subproduct> {
+  async updateSubProduct(
+    id: string,
+    UpdateSubproductDto: updateSubProductDto,
+    files: {
+      cover_photo: Express.Multer.File[];
+      photos: Express.Multer.File[];
+    },
+  ): Promise<Subproduct> {
     const subProductExist = await this.subProductModel.findById(id);
     // subproduct bazada olub - olmadigi yoxlanilir
-    if (!subProductExist) throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
-    const subProduct = await this.subProductModel.findOne({ title: UpdateSubproductDto.title })
+    if (!subProductExist)
+      throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
+    const subProduct = await this.subProductModel.findOne({
+      title: UpdateSubproductDto.title,
+    });
     // subproduct artıq bazada var yoxlanılır
-    if (subProduct) throw new HttpException("Subproduct already exists in the database", HttpStatus.CONFLICT)
-    // title ve ya file-lardan her hansi biri varsa  
-    if (UpdateSubproductDto.title || (files.cover_photo && files.cover_photo[0] && files.cover_photo[0].path) || (files.photos && files.photos[0] && files.photos[0].path)) {
+    if (subProduct)
+      throw new HttpException(
+        'Subproduct already exists in the database',
+        HttpStatus.CONFLICT,
+      );
+    // title ve ya file-lardan her hansi biri varsa
+    if (
+      UpdateSubproductDto.title ||
+      (files.cover_photo &&
+        files.cover_photo[0] &&
+        files.cover_photo[0].path) ||
+      (files.photos && files.photos[0] && files.photos[0].path)
+    ) {
       // eger cover file varsa
-      if (files.cover_photo && files.cover_photo[0] && files.cover_photo[0].path) {
-        const coverFileUrl = await cloudinary.uploader.upload(files.cover_photo[0].path, { public_id: files.cover_photo[0].originalname });
-        return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, cover_photo: coverFileUrl.url } }, { new: true });
+      if (
+        files.cover_photo &&
+        files.cover_photo[0] &&
+        files.cover_photo[0].path
+      ) {
+        const coverFileUrl = await cloudinary.uploader.upload(
+          files.cover_photo[0].path,
+          { public_id: files.cover_photo[0].originalname },
+        );
+        return await this.subProductModel.findByIdAndUpdate(
+          id,
+          { $set: { ...UpdateSubproductDto, cover_photo: coverFileUrl.url } },
+          { new: true },
+        );
       }
       // eger photos varsa
       if (files.photos && files.photos[0] && files.photos[0].path) {
         const fileUrls = [];
         for (let i = 0; i < files.photos.length; i++) {
-          const fileUrl = await cloudinary.uploader.upload(files.photos[i].path, { public_id: files.photos[i].originalname });
+          const fileUrl = await cloudinary.uploader.upload(
+            files.photos[i].path,
+            { public_id: files.photos[i].originalname },
+          );
           fileUrls.push(fileUrl.url);
         }
-        return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, photos: fileUrls }, }, { new: true });
+        return await this.subProductModel.findByIdAndUpdate(
+          id,
+          { $set: { ...UpdateSubproductDto, photos: fileUrls } },
+          { new: true },
+        );
       }
     }
     // eger title varsa
     if (UpdateSubproductDto.title) {
-      return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto, slug: slug(UpdateSubproductDto.title, { lower: true }) } }, { new: true });
+      return await this.subProductModel.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            ...UpdateSubproductDto,
+            slug: slug(UpdateSubproductDto.title, { lower: true }),
+          },
+        },
+        { new: true },
+      );
     }
     // hec biri yoxsa
-    return await this.subProductModel.findByIdAndUpdate(id, { $set: { ...UpdateSubproductDto } }, { new: true });
+    return await this.subProductModel.findByIdAndUpdate(
+      id,
+      { $set: { ...UpdateSubproductDto } },
+      { new: true },
+    );
   }
-
 
   // delete sub product - test edildi
   async deleteSubProduct(id: string): Promise<string> {
@@ -770,10 +1017,16 @@ export class AdminService {
   // }
 
   // update why-outdorr - test edildi
-  async updateWhyOutdorr(id: string, UpdateOutdorrDto: updateWhyOutdorrDto): Promise<WhyOutdorr> {
+  async updateWhyOutdorr(
+    id: string,
+    UpdateOutdorrDto: updateWhyOutdorrDto,
+  ): Promise<WhyOutdorr> {
     const whyoutdorrExist = await this.whyOutdorrModel.findById(id);
     if (!whyoutdorrExist) {
-      throw new HttpException('No information found to change', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        'No information found to change',
+        HttpStatus.NOT_FOUND,
+      );
     }
     // const { title, description } = UpdateOutdorrDto;
     // const whyoutdorr = await this.whyOutdorrModel.findOne({
@@ -908,114 +1161,180 @@ export class AdminService {
     return await this.aboutOutdorrModel.find();
   }
 
-
   // create project design - test ok
-  async createProjectDesign(createProjectDesignDto: CreateProjectDesignDto): Promise<ProjectDesign> {
-    const { title, description } = createProjectDesignDto
-    const projectDesign = await this.projectDesignModel.findOne({ title, description })
+  async createProjectDesign(
+    createProjectDesignDto: CreateProjectDesignDto,
+  ): Promise<ProjectDesign> {
+    const { title, description } = createProjectDesignDto;
+    const projectDesign = await this.projectDesignModel.findOne({
+      title,
+      description,
+    });
     if (projectDesign) {
-      throw new HttpException('The data is already available in the database.', HttpStatus.CONFLICT)
+      throw new HttpException(
+        'The data is already available in the database.',
+        HttpStatus.CONFLICT,
+      );
     } else {
-      return await this.projectDesignModel.create(createProjectDesignDto)
+      return await this.projectDesignModel.create(createProjectDesignDto);
     }
   }
-
 
   // update project design  - test ok
-  async updateProjectDesign(id: string, updateProjectDesignDto: UpdateProjectDesignDto): Promise<ProjectDesign> {
-    const projectDesignExist = await this.projectDesignModel.findById(id)
+  async updateProjectDesign(
+    id: string,
+    updateProjectDesignDto: UpdateProjectDesignDto,
+  ): Promise<ProjectDesign> {
+    const projectDesignExist = await this.projectDesignModel.findById(id);
     if (!projectDesignExist) {
-      throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        'Information about the design of the project was not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return await this.projectDesignModel.findByIdAndUpdate(id, { $set: { ...updateProjectDesignDto } }, { new: true })
+    return await this.projectDesignModel.findByIdAndUpdate(
+      id,
+      { $set: { ...updateProjectDesignDto } },
+      { new: true },
+    );
   }
-
 
   // delete project design - test ok
   async deleteProjectDesign(id: string): Promise<string> {
-    const projectDesignExist = await this.projectDesignModel.findById(id)
+    const projectDesignExist = await this.projectDesignModel.findById(id);
     if (!projectDesignExist) {
-      throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        'Information about the design of the project was not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    await this.projectDesignModel.findByIdAndDelete(id)
-    return 'The data has been deleted'
+    await this.projectDesignModel.findByIdAndDelete(id);
+    return 'The data has been deleted';
   }
-
 
   // get all project design - test ok
   async getAllProjectDesign(): Promise<ProjectDesign[]> {
-    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description', 'photo', 'step'] })
+    return await this.projectDesignModel
+      .find()
+      .populate({
+        path: 'design_details',
+        select: ['title', 'description', 'photo', 'step'],
+      });
   }
-
 
   // get single project design - test ok
   async getSingleProjectDesign(id: string): Promise<ProjectDesign> {
-    const projectDesignExist = await this.projectDesignModel.findById(id)
+    const projectDesignExist = await this.projectDesignModel.findById(id);
     if (!projectDesignExist) {
-      throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        'Information about the design of the project was not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['title', 'description', 'photo', 'step'] })
+    return (await this.projectDesignModel.findById(id)).populate({
+      path: 'design_details',
+      select: ['title', 'description', 'photo', 'step'],
+    });
   }
-
 
   // create project design details - test ok
-  async createProjectDesignDetails(createProjectDesignDetailsDto: CreateProjectDesignDetailsDto, file: Express.Multer.File): Promise<ProjectDesignDetails> {
-    const { step, title, description } = createProjectDesignDetailsDto
-    const projectDesignDetails = await this.projectDesignDetailsModel.findOne({ step, title, description })
+  async createProjectDesignDetails(
+    createProjectDesignDetailsDto: CreateProjectDesignDetailsDto,
+    file: Express.Multer.File,
+  ): Promise<ProjectDesignDetails> {
+    const { step, title, description } = createProjectDesignDetailsDto;
+    const projectDesignDetails = await this.projectDesignDetailsModel.findOne({
+      step,
+      title,
+      description,
+    });
     if (projectDesignDetails) {
-      throw new HttpException('The data is already available in the database.', HttpStatus.CONFLICT)
+      throw new HttpException(
+        'The data is already available in the database.',
+        HttpStatus.CONFLICT,
+      );
     }
-    const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
-    const newProjectDesignDetails = await this.projectDesignDetailsModel.create({ ...createProjectDesignDetailsDto, photo: data.url })
-    return await this.projectDesignModel.findOneAndUpdate({ _id: newProjectDesignDetails.project_design }, { $push: { design_details: newProjectDesignDetails._id } }, { new: true })
+    const data = await cloudinary.uploader.upload(file.path, {
+      public_id: file.originalname,
+    });
+    const newProjectDesignDetails = await this.projectDesignDetailsModel.create(
+      { ...createProjectDesignDetailsDto, photo: data.url },
+    );
+    return await this.projectDesignModel.findOneAndUpdate(
+      { _id: newProjectDesignDetails.project_design },
+      { $push: { design_details: newProjectDesignDetails._id } },
+      { new: true },
+    );
   }
-
 
   // update project design details - test ok
-  async updateProjectDesignDetails(id: string, updateProjectDesignDetailsDto: UpdateProjectDesignDetailsDto, file: Express.Multer.File): Promise<ProjectDesignDetails> {
-    const projectDesignDetailsExist = await this.projectDesignDetailsModel.findById(id)
+  async updateProjectDesignDetails(
+    id: string,
+    updateProjectDesignDetailsDto: UpdateProjectDesignDetailsDto,
+    file: Express.Multer.File,
+  ): Promise<ProjectDesignDetails> {
+    const projectDesignDetailsExist =
+      await this.projectDesignDetailsModel.findById(id);
     if (!projectDesignDetailsExist) {
-      throw new HttpException('Information about the design details of the project was not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        'Information about the design details of the project was not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
     if (file && file.path) {
-      const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
-      return await this.projectDesignDetailsModel.findByIdAndUpdate(id, { $set: { ...updateProjectDesignDetailsDto, photo: data.url } }, { new: true })
+      const data = await cloudinary.uploader.upload(file.path, {
+        public_id: file.originalname,
+      });
+      return await this.projectDesignDetailsModel.findByIdAndUpdate(
+        id,
+        { $set: { ...updateProjectDesignDetailsDto, photo: data.url } },
+        { new: true },
+      );
     }
-    return await this.projectDesignDetailsModel.findByIdAndUpdate(id, { $set: { ...updateProjectDesignDetailsDto } }, { new: true })
+    return await this.projectDesignDetailsModel.findByIdAndUpdate(
+      id,
+      { $set: { ...updateProjectDesignDetailsDto } },
+      { new: true },
+    );
   }
-
 
   // delete project design details - test ok
   async deleteProjectDesignDetails(id: string): Promise<string> {
-    const projectDesignDetailsExist = await this.projectDesignDetailsModel.findById(id)
+    const projectDesignDetailsExist =
+      await this.projectDesignDetailsModel.findById(id);
     if (!projectDesignDetailsExist) {
-      throw new HttpException('Information about the design details of the project was not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        'Information about the design details of the project was not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    const DeleteProjectDesignDetails = await this.projectDesignDetailsModel.findByIdAndDelete(id)
-    await this.projectDesignModel.findOneAndUpdate({ _id: DeleteProjectDesignDetails.project_design }, { $pull: { design_details: DeleteProjectDesignDetails._id } })
-    return 'The data has been deleted'
+    const DeleteProjectDesignDetails =
+      await this.projectDesignDetailsModel.findByIdAndDelete(id);
+    await this.projectDesignModel.findOneAndUpdate(
+      { _id: DeleteProjectDesignDetails.project_design },
+      { $pull: { design_details: DeleteProjectDesignDetails._id } },
+    );
+    return 'The data has been deleted';
   }
-
 
   // get All project design detailsv - test ok
   async getAllProjectDesignDetails(): Promise<ProjectDesignDetails[]> {
-    return this.projectDesignDetailsModel.find()
+    return this.projectDesignDetailsModel.find();
   }
-
 
   // get single project design detail - test ok
-  async getSingleProjectDesignDetails(id: string): Promise<ProjectDesignDetails> {
-    return this.projectDesignDetailsModel.findById(id)
+  async getSingleProjectDesignDetails(
+    id: string,
+  ): Promise<ProjectDesignDetails> {
+    return this.projectDesignDetailsModel.findById(id);
   }
-
 
   // get all request project
   async getAllRequestProject(): Promise<RequestProject[]> {
-    return await this.requestProjectModel.find()
+    return await this.requestProjectModel.find();
   }
 
   async getSingleRequestProject(id: string): Promise<RequestProject> {
-    return await this.requestProjectModel.findById(id)
+    return await this.requestProjectModel.findById(id);
   }
-
 }
