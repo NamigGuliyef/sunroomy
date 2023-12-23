@@ -93,7 +93,7 @@ export class AdminService {
     private projectDesignDetailsModel: Model<ProjectDesignDetails>,
     @InjectModel('requestproject')
     private requestProjectModel: Model<RequestProject>,
-  ) {}
+  ) { }
 
   // create feature - test edildi
   async createFeature(
@@ -153,12 +153,7 @@ export class AdminService {
       const iconUrl = await cloudinary.uploader.upload(file.path, {
         public_id: file.originalname,
       });
-      const updateFeature = await this.featureModel.findByIdAndUpdate(
-        id,
-        { $set: { ...UpdateFeatureDto, icon: iconUrl.url } },
-        { new: true },
-      );
-      return updateFeature;
+      return await this.featureModel.findByIdAndUpdate(id, { $set: { ...UpdateFeatureDto, icon: iconUrl.url } }, { new: true });
     }
   }
 
@@ -219,12 +214,7 @@ export class AdminService {
         HttpStatus.NOT_FOUND,
       );
     } else {
-      const updateProjectNeed = await this.projectNeedModel.findByIdAndUpdate(
-        id,
-        { $set: UpdateProjectNeedDto },
-        { new: true },
-      );
-      return updateProjectNeed;
+      return await this.projectNeedModel.findByIdAndUpdate(id, { $set: UpdateProjectNeedDto }, { new: true });
     }
   }
 
@@ -460,12 +450,7 @@ export class AdminService {
       });
       fileUrls.push(fileUrl.url);
     }
-    const project = await this.projectModel.create({
-      ...CreateProjectDto,
-      slug: slug(CreateProjectDto.title, { lower: true }),
-      photos: fileUrls,
-    });
-    return project;
+    return await this.projectModel.create({ ...CreateProjectDto, slug: slug(CreateProjectDto.title, { lower: true }), photos: fileUrls });
   }
 
   // update project - test edildi
