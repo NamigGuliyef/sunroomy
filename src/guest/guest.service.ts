@@ -24,29 +24,28 @@ export class GuestService {
     @InjectModel('subproduct') private subProductModel: Model<Subproduct>,
     @InjectModel('project') private projectModel: Model<Project>,
     @InjectModel('contact') private contactModel: Model<Contact>,
-    @InjectModel('projectdesign') private projectDesignModel: Model<ProjectDesign>,
-    @InjectModel('projectdesigndetail') private projectDesignDetailsModel: Model<ProjectDesignDetails>,
-    @InjectModel('requestproject') private requestProjectModel: Model<RequestProject>
-  ) { }
+    @InjectModel('projectdesign')
+    private projectDesignModel: Model<ProjectDesign>,
+    @InjectModel('projectdesigndetail')
+    private projectDesignDetailsModel: Model<ProjectDesignDetails>,
+    @InjectModel('requestproject')
+    private requestProjectModel: Model<RequestProject>,
+  ) {}
 
   // get all product - test edildi
   async getAllProduct(): Promise<Product[]> {
-    return await this.productModel
-      .find()
-      .populate({
-        path: 'subProductIds',
-        select: ['title', 'description', 'photos', 'slug'], // Rufat A. elave etdim
-      });
+    return await this.productModel.find().populate({
+      path: 'subProductIds',
+      select: ['title', 'description', 'photos', 'slug'], // Rufat A. elave etdim
+    });
   }
 
   // get single product - test edildi
   async getSingleProduct(slug: string): Promise<Product> {
-    const product = await this.productModel
-      .findOne({ slug })
-      .populate({
-        path: 'subProductIds',
-        select: ['title', 'description', 'photos', 'cover_photo', 'slug'],
-      });
+    const product = await this.productModel.findOne({ slug }).populate({
+      path: 'subProductIds',
+      select: ['title', 'description', 'photos', 'cover_photo', 'slug'],
+    });
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
     }
@@ -57,7 +56,11 @@ export class GuestService {
   async getAllSubProduct(): Promise<Subproduct[]> {
     return await this.subProductModel
       .find()
-      .populate([{ path: 'featuresIds' }, { path: 'specifications' }]);
+      .populate([
+        { path: 'featuresIds' },
+        { path: 'specifications' },
+        { path: 'applicationIds' }, // populate application (Rufat)
+      ]);
   }
 
   // get single sub product - test edildi
@@ -139,72 +142,91 @@ export class GuestService {
 
   // get All project design detailsv - test ok
   async getAllProjectDesignDetails(): Promise<ProjectDesignDetails[]> {
-    return this.projectDesignDetailsModel.find()
+    return this.projectDesignDetailsModel.find();
   }
-
 
   // get single project design detail - test ok
-  async getSingleProjectDesignDetails(id: string): Promise<ProjectDesignDetails> {
-    return this.projectDesignDetailsModel.findById(id)
+  async getSingleProjectDesignDetails(
+    id: string,
+  ): Promise<ProjectDesignDetails> {
+    return this.projectDesignDetailsModel.findById(id);
   }
-
 
   // get all project design - test ok
   async getAllProjectDesign(): Promise<ProjectDesign[]> {
-    return await this.projectDesignModel.find().populate({ path: 'design_details', select: ['title', 'description', 'photo', 'step'] })
+    return await this.projectDesignModel
+      .find()
+      .populate({
+        path: 'design_details',
+        select: ['title', 'description', 'photo', 'step'],
+      });
   }
-
 
   // get single project design - test ok
   async getSingleProjectDesign(id: string): Promise<ProjectDesign> {
-    const projectDesignExist = await this.projectDesignModel.findById(id)
+    const projectDesignExist = await this.projectDesignModel.findById(id);
     if (!projectDesignExist) {
-      throw new HttpException('Information about the design of the project was not found', HttpStatus.NOT_FOUND)
+      throw new HttpException(
+        'Information about the design of the project was not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return (await this.projectDesignModel.findById(id)).populate({ path: 'design_details', select: ['title', 'description', 'photo', 'step'] })
+    return (await this.projectDesignModel.findById(id)).populate({
+      path: 'design_details',
+      select: ['title', 'description', 'photo', 'step'],
+    });
   }
 
-
   // request project
-  async createRequestProject(createRequestProjectDto: CreateRequestProjectDto, files: Express.Multer.File[]): Promise<RequestProject> {
-    const selected_window_and_doors = []
-    selected_window_and_doors.push(createRequestProjectDto.window_and_doors)
-    const window_and_doors = selected_window_and_doors.join().split(',')
-    const selected_sunscreens = []
-    selected_sunscreens.push(createRequestProjectDto.sunscreens)
-    const sunscreens = selected_sunscreens.join().split(',')
+  async createRequestProject(
+    createRequestProjectDto: CreateRequestProjectDto,
+    files: Express.Multer.File[],
+  ): Promise<RequestProject> {
+    const selected_window_and_doors = [];
+    selected_window_and_doors.push(createRequestProjectDto.window_and_doors);
+    const window_and_doors = selected_window_and_doors.join().split(',');
+    const selected_sunscreens = [];
+    selected_sunscreens.push(createRequestProjectDto.sunscreens);
+    const sunscreens = selected_sunscreens.join().split(',');
     if (window_and_doors.length === 3) {
-      const fileUrls = []
+      const fileUrls = [];
       for (let i = 0; i < files.length; i++) {
-        const fileUrl = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
-        fileUrls.push(fileUrl.url)
+        const fileUrl = await cloudinary.uploader.upload(files[i].path, {
+          public_id: files[i].originalname,
+        });
+        fileUrls.push(fileUrl.url);
       }
-      return await this.requestProjectModel.create({ ...createRequestProjectDto, window_and_doors, sunscreens, files: fileUrls })
+      return await this.requestProjectModel.create({
+        ...createRequestProjectDto,
+        window_and_doors,
+        sunscreens,
+        files: fileUrls,
+      });
     } else {
-      throw new HttpException('Select only 3 products from the window_and_doors section.', HttpStatus.BAD_REQUEST)
+      throw new HttpException(
+        'Select only 3 products from the window_and_doors section.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   // all filter
-  async getAllFilter(filter:Filter){
-    const {title} = filter
-    const search : any= {}
-    if(title) search.title = title
+  async getAllFilter(filter: Filter) {
+    const { title } = filter;
+    const search: any = {};
+    if (title) search.title = title;
 
-    const product = await this.productModel.find(filter)
-    const subProduct = await this.subProductModel.find(filter)
-    const project = await this.projectModel.find(filter)
-    if(product.length> 0){
-      return product
+    const product = await this.productModel.find(filter);
+    const subProduct = await this.subProductModel.find(filter);
+    const project = await this.projectModel.find(filter);
+    if (product.length > 0) {
+      return product;
     }
-    if(subProduct.length> 0){
-      return subProduct
+    if (subProduct.length > 0) {
+      return subProduct;
     }
-    if(project.length> 0){
-      return project
+    if (project.length > 0) {
+      return project;
     }
-    
   }
 }
-
-
