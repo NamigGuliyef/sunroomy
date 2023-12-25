@@ -60,7 +60,7 @@ export class GuestService {
         { path: 'featuresIds' },
         { path: 'specifications' },
         { path: 'applicationIds' }, // populate application (Rufat)💡
-        { path: 'productId', select:'title', populate:{ path:'subProductIds', select:['title','description','cover_photo']}}
+        { path: 'productId', select:'title', populate:{ path:'subProductIds', select:['title','description','cover_photo', 'slug']}}
       ]);
   }
 
@@ -69,7 +69,7 @@ export class GuestService {
     const subProductExist = await this.subProductModel
       .findOne({ slug })
       .populate([{ path: 'featuresIds' }, { path: 'specifications' }, { path: 'applicationIds' },
-      { path: 'productId',select:'title', populate:{ path:'subProductIds', select:['title','description','cover_photo']}}]);
+      { path: 'productId',select:'title', populate:{ path:'subProductIds', select:['title','description','cover_photo', 'slug']}}]);
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
     }
