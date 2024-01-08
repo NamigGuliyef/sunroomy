@@ -59,7 +59,7 @@ export class GuestService {
       .populate([
         { path: 'featuresIds' },
         { path: 'specifications' },
-        { path: 'applicationIds' }, // populate application (Rufat)💡
+        { path: 'applicationIds' },
         { path: 'productId', select:'title', populate:{ path:'subProductIds', select:['title','description','cover_photo', 'slug']}}
       ]);
   }
