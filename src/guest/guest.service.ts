@@ -14,6 +14,7 @@ import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
 import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { Filter } from './guest.filter';
+import { LetUs_Inspire_You } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
 
 @Injectable()
 export class GuestService {
@@ -30,6 +31,9 @@ export class GuestService {
     private projectDesignDetailsModel: Model<ProjectDesignDetails>,
     @InjectModel('requestproject')
     private requestProjectModel: Model<RequestProject>,
+    @InjectModel('letus_inspire_you')
+    private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
+    
   ) {}
 
   // get all product - test edildi
@@ -231,4 +235,17 @@ export class GuestService {
       return project;
     }
   }
+
+
+    // get All let us inspire you - test ok
+    async getAllLetUsInspireYou():Promise<LetUs_Inspire_You[]>{
+      return await this.LetUs_Inspire_YouModel.find()
+    }
+  
+  
+   // get single let us inspire you - test ok
+   async geSingleLetUsInspireYou(id:string):Promise<LetUs_Inspire_You>{
+    return await this.LetUs_Inspire_YouModel.findById(id)
+   }
+
 }

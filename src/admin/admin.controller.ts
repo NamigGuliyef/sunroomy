@@ -31,6 +31,8 @@ import { UsedProducts } from 'src/used-products/model/usedproduct.schema';
 import { updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { AdminService } from './admin.service';
+import { LetUs_Inspire_You_Dto } from 'src/letus-inspire-you/dto/letus_inspire_you.dto';
+import { LetUs_Inspire_You } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -496,5 +498,43 @@ export class AdminController {
     return await this.adminService.getSingleRequestProject(id)
   }
   
+
+  @Post('/dashboard/letUs-inspire-you')
+  @HttpCode(HttpStatus.CREATED)
+  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
+  @UsePipes(new ValidationPipe())
+   async createLetUsInspireYou(@Body() letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,@UploadedFiles() files:Express.Multer.File[]):Promise<LetUs_Inspire_You>{
+    return await this.adminService.createLetUsInspireYou(letUs_Inspire_You_Dto, files)
+  }
+
+
+  @Patch('/dashboard/letUs-inspire-you/:id')
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
+  @UsePipes(new ValidationPipe())
+  async updateLetUsInspireYou(@Param('id') id:string, @Body() letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,@UploadedFiles() files:Express.Multer.File[]):Promise<LetUs_Inspire_You>{
+      return await this.adminService.updateLetUsInspireYou(id,letUs_Inspire_You_Dto,files)
+  }
+
+  
+  @Delete('/dashboard/letUs-inspire-you/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteLetUsInspireYou(@Param('id') id:string){
+    return await this.adminService.deleteLetUsInspireYou(id)
+  }
+
+
+  @Get('/dashboard/letUs-inspire-you')
+  @HttpCode(HttpStatus.OK)
+  async getAllLetUsInspireYou():Promise<LetUs_Inspire_You[]>{
+    return this.adminService.getAllLetUsInspireYou()
+  }
+
+
+  @Get('/dashboard/letUs-inspire-you/:id')
+  @HttpCode(HttpStatus.OK)
+  async geSingleLetUsInspireYou(@Param('id') id:string):Promise<LetUs_Inspire_You>{
+    return this.adminService.geSingleLetUsInspireYou(id)
+  }
 }
 

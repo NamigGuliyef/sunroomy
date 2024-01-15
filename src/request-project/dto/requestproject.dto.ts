@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsMobilePhone,
   IsNotEmpty,
+  IsOptional,
   IsPhoneNumber,
   Matches,
 } from 'class-validator';
@@ -44,7 +45,7 @@ export class CreateRequestProjectDto {
   structure_situation: string;
   @IsNotEmpty()
   structure_color: string;
-  // @IsNotEmpty() // Note: Give them only 3 chosen products below
+  @IsOptional()   // Note: Give them only 3 chosen products below
   window_and_doors: [string];
   @IsNotEmpty() // Note: They can choose all products below
   sunscreens: [string];

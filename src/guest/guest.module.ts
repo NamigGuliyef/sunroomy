@@ -11,12 +11,14 @@ import { GuestService } from './guest.service';
 import { ProjectDesignModel } from 'src/project-design/model/projectdesign.schema';
 import { ProjectDesignDetailsModel } from 'src/project-design-details/model/projectdesigndetails.schema';
 import { requestProjectModel } from 'src/request-project/model/requestproject.schema';
+import { LetUs_Inspire_YouModel } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'whyoutdorr', schema: whyOutdorrModel },
   { name: 'subscribe', schema: subscribeModel }, { name: 'product', schema: productModel },
   { name: 'subproduct', schema: subProductModel }, { name: 'project', schema: projectModel }, { name: 'contact', schema: contactModel },
-  { name: 'projectdesign', schema: ProjectDesignModel }, { name: 'projectdesigndetail', schema: ProjectDesignDetailsModel }, { name: 'requestproject', schema: requestProjectModel }])],
+  { name: 'projectdesign', schema: ProjectDesignModel }, { name: 'projectdesigndetail', schema: ProjectDesignDetailsModel },
+  { name: 'requestproject', schema: requestProjectModel }, { name: 'letus_inspire_you', schema: LetUs_Inspire_YouModel }])],
   providers: [GuestService],
   controllers: [GuestController]
 })

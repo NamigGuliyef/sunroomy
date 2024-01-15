@@ -14,6 +14,7 @@ import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { GuestService } from './guest.service';
 import { Filter } from './guest.filter';
+import { LetUs_Inspire_You } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
 
 @Controller('')
 export class GuestController {
@@ -119,6 +120,20 @@ export class GuestController {
   @HttpCode(HttpStatus.OK)
   async getAllFilter(@Query() filter:Filter){
     return await this.guestService.getAllFilter(filter)
+  }
+
+
+  @Get('/letUs-inspire-you')
+  @HttpCode(HttpStatus.OK)
+  async getAllLetUsInspireYou():Promise<LetUs_Inspire_You[]>{
+    return this.guestService.getAllLetUsInspireYou()
+  }
+
+
+  @Get('/letUs-inspire-you/:id')
+  @HttpCode(HttpStatus.OK)
+  async geSingleLetUsInspireYou(@Param('id') id:string):Promise<LetUs_Inspire_You>{
+    return this.guestService.geSingleLetUsInspireYou(id)
   }
 
 }

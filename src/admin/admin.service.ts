@@ -24,6 +24,8 @@ import {
   updateFeatureDto,
 } from 'src/features/dto/feature.dto';
 import { Feature } from 'src/features/model/feature.schema';
+import { LetUs_Inspire_You_Dto } from 'src/letus-inspire-you/dto/letus_inspire_you.dto';
+import { LetUs_Inspire_You } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
 import {
   createProjectNeedDto,
   updateProjectNeedDto,
@@ -91,8 +93,8 @@ export class AdminService {
     private projectDesignModel: Model<ProjectDesign>,
     @InjectModel('projectdesigndetail')
     private projectDesignDetailsModel: Model<ProjectDesignDetails>,
-    @InjectModel('requestproject')
-    private requestProjectModel: Model<RequestProject>,
+    @InjectModel('requestproject') private requestProjectModel: Model<RequestProject>,
+    @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel : Model<LetUs_Inspire_You>,
   ) { }
 
   // create feature - test edildi
@@ -1322,4 +1324,64 @@ export class AdminService {
   async getSingleRequestProject(id: string): Promise<RequestProject> {
     return await this.requestProjectModel.findById(id);
   }
-}
+
+
+  // create let us inspire you - test ok
+  async createLetUsInspireYou(letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,files:Express.Multer.File[]):Promise<LetUs_Inspire_You>{
+    const letUsInspireYou = await this.LetUs_Inspire_YouModel.findOne({title:letUs_Inspire_You_Dto.title})
+    if(letUsInspireYou){
+        throw new HttpException('Title already exists',HttpStatus.CONFLICT)
+    }
+    let fileUrls=[]
+    for(let i=0;i<files.length;i++){
+      const fileuRL=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
+      fileUrls.push(fileuRL.url)
+    }
+      return await this.LetUs_Inspire_YouModel.create({...letUs_Inspire_You_Dto,photos:fileUrls})
+  }
+
+
+  // update let us inspire you - test ok
+  async updateLetUsInspireYou(id:string, letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,files:Express.Multer.File[]):Promise<LetUs_Inspire_You>{
+    const letUsInspireYouExist=await this.LetUs_Inspire_YouModel.findById(id)
+    if(!letUsInspireYouExist){
+      throw new HttpException('Title not found',HttpStatus.NOT_FOUND)
+    }
+  if(files && files[0] && files[0].path){
+    let fileUrls=[]
+    for(let i=0;i<files.length;i++){
+      const fileuRL=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
+      fileUrls.push(fileuRL.url)
+    }
+       return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(id, { $set: {...letUs_Inspire_You_Dto, photos:fileUrls } },{new:true})
+   } else {
+       return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(id, { $set: {...letUs_Inspire_You_Dto }}, {new:true})
+    }
+  }
+
+
+  // delete let us inspire you - test ok
+  async deleteLetUsInspireYou(id:string):Promise<string>{
+    const letUsInspireYouExist=await this.LetUs_Inspire_YouModel.findById(id)
+    if(!letUsInspireYouExist){
+      throw new HttpException('Title not found', HttpStatus.NOT_FOUND)
+    }
+       await this.LetUs_Inspire_YouModel.findByIdAndDelete(id)
+       return 'The Let us inspire you section has been removed'
+    }
+
+
+  // get All let us inspire you - test ok
+  async getAllLetUsInspireYou():Promise<LetUs_Inspire_You[]>{
+    return await this.LetUs_Inspire_YouModel.find()
+  }
+
+
+ // get single let us inspire you - test ok
+ async geSingleLetUsInspireYou(id:string):Promise<LetUs_Inspire_You>{
+  return await this.LetUs_Inspire_YouModel.findById(id)
+ }
+
+
+} 
+
