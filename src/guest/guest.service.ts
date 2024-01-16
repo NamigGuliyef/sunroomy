@@ -222,10 +222,11 @@ export class GuestService {
     const { title } = filter;
     const search: any = {};
     if (title) search.title = title;
+    const titleRegex = new RegExp(title, 'i')  // 'i' parametresi büyük/küçük harf duyarlılığını kapatır
 
-    const product = await this.productModel.find(filter);
-    const subProduct = await this.subProductModel.find(filter);
-    const project = await this.projectModel.find(filter);
+    const product = await this.productModel.find({filter: titleRegex});
+    const subProduct = await this.subProductModel.find({title: titleRegex})
+    const project = await this.projectModel.find({title: titleRegex})
     if (product.length > 0) {
       return product;
     }
