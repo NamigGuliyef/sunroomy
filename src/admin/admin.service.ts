@@ -926,17 +926,18 @@ export class AdminService {
     const contactExist = await this.contactModel.findById(id);
     if (!contactExist) {
       throw new HttpException('Contact not found', HttpStatus.NOT_FOUND);
-    } else {
-      const contactLocationExist = await this.contactModel.findOne({
-        location: UpdateContactDto.location,
-      });
-      if (contactLocationExist) {
-        throw new HttpException(
-          'Location already created',
-          HttpStatus.CONFLICT,
-        );
-      }
-    }
+    } 
+    // else {
+    //   const contactLocationExist = await this.contactModel.findOne({
+    //     location: UpdateContactDto.location,
+    //   });
+    //   if (contactLocationExist) {
+    //     throw new HttpException(
+    //       'Location already created',
+    //       HttpStatus.CONFLICT,
+    //     );
+    //   }
+    // }
     return await this.contactModel.findByIdAndUpdate(
       id,
       { $set: UpdateContactDto },
