@@ -15,6 +15,7 @@ import { Subscribe } from 'src/subscribe/model/subscribe.schema';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { Filter } from './guest.filter';
 import { LetUs_Inspire_You } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
+import { aboutUs } from 'src/about-us/model/about_us.schema';
 
 @Injectable()
 export class GuestService {
@@ -31,9 +32,9 @@ export class GuestService {
     private projectDesignDetailsModel: Model<ProjectDesignDetails>,
     @InjectModel('requestproject')
     private requestProjectModel: Model<RequestProject>,
-    @InjectModel('letus_inspire_you')
-    private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
-    
+    @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
+    @InjectModel('about_us') private aboutUsModel: Model<aboutUs>
+        
   ) {}
 
   // get all product - test edildi
@@ -247,5 +248,19 @@ export class GuestService {
    async geSingleLetUsInspireYou(id:string):Promise<LetUs_Inspire_You>{
     return await this.LetUs_Inspire_YouModel.findById(id)
    }
+
+
+     // get single about us  - test ok
+  async getSingleAboutUs(id:string):Promise<aboutUs>{
+    const aboutUs=await this.aboutUsModel.findById(id)
+    if(!aboutUs) throw new HttpException('About us not found',HttpStatus.NOT_FOUND)
+    return aboutUs
+  }
+
+  
+  // get all about us  - test ok
+  async getAllAboutUs():Promise<aboutUs[]>{
+    return await this.aboutUsModel.find()
+  }
 
 }

@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post
 import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { createAboutOutdorrDto, updateAboutOutdorrDto } from 'src/about-outdorr/dto/aboutoutdorr.dto';
 import { AboutOutdorr } from 'src/about-outdorr/model/aboutoutdorr.schema';
+import { CreateAboutUsDto, UpdateAboutUsDto } from 'src/about-us/dto/about_us.dto';
+import { aboutUs } from 'src/about-us/model/about_us.schema';
 import { createApplicationDto, updateApplicationDto } from 'src/applications/dto/application.dto';
 import { Application } from 'src/applications/model/application.schema';
 import { MulterOptionsCloudinary } from 'src/config/multer/multer';
@@ -9,6 +11,8 @@ import { createContactDto, updateContactDto } from 'src/contact/dto/contact.dto'
 import { Contact } from 'src/contact/model/contact.schema';
 import { createFeatureDto, updateFeatureDto } from 'src/features/dto/feature.dto';
 import { Feature } from 'src/features/model/feature.schema';
+import { LetUs_Inspire_You_Dto } from 'src/letus-inspire-you/dto/letus_inspire_you.dto';
+import { LetUs_Inspire_You } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
 import { createProjectNeedDto, updateProjectNeedDto } from 'src/needs/dto/need.dto';
 import { ProjectNeed } from 'src/needs/model/need.schema';
 import { createProductDto, updateProductDto } from 'src/product/dto/product.dto';
@@ -31,8 +35,6 @@ import { UsedProducts } from 'src/used-products/model/usedproduct.schema';
 import { updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
 import { AdminService } from './admin.service';
-import { LetUs_Inspire_You_Dto } from 'src/letus-inspire-you/dto/letus_inspire_you.dto';
-import { LetUs_Inspire_You } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -536,5 +538,48 @@ export class AdminController {
   async geSingleLetUsInspireYou(@Param('id') id:string):Promise<LetUs_Inspire_You>{
     return this.adminService.geSingleLetUsInspireYou(id)
   }
-}
 
+  
+  // create about us
+  @Post('/dashboard/about-us')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createAboutUs(@Body() createAboutUsDto:CreateAboutUsDto):Promise<aboutUs>{
+    return await this.adminService.createAboutUs(createAboutUsDto)
+  }
+
+
+  // update about us
+  @Patch('/dashboard/about-us/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateAboutUs(@Param('id') id:string,@Body() updateAboutUsDto:UpdateAboutUsDto):Promise<aboutUs>{
+    return await this.adminService.updateAboutUs(id, updateAboutUsDto)
+  }
+
+
+  // delete about
+  @Delete('/dashboard/about-us/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteAboutUs(@Param('id') id:string):Promise<string>{
+    return await this.adminService.deleteAboutUs(id)
+  }
+
+
+  // get single about us
+  @Get('/dashboard/about-us/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleAboutUs(@Param('id') id:string):Promise<aboutUs>{
+    return await this.adminService.getSingleAboutUs(id)
+  }
+
+
+  // get all about us
+  @Get('/dashboard/about-us')
+  @HttpCode(HttpStatus.OK)
+  async getAllAboutUs():Promise<aboutUs[]>{
+    return await this.adminService.getAllAboutUs()
+  }
+
+
+}

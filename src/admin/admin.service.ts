@@ -8,6 +8,8 @@ import {
   updateAboutOutdorrDto,
 } from 'src/about-outdorr/dto/aboutoutdorr.dto';
 import { AboutOutdorr } from 'src/about-outdorr/model/aboutoutdorr.schema';
+import { CreateAboutUsDto, UpdateAboutUsDto } from 'src/about-us/dto/about_us.dto';
+import { aboutUs } from 'src/about-us/model/about_us.schema';
 import {
   createApplicationDto,
   updateApplicationDto,
@@ -95,6 +97,7 @@ export class AdminService {
     private projectDesignDetailsModel: Model<ProjectDesignDetails>,
     @InjectModel('requestproject') private requestProjectModel: Model<RequestProject>,
     @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel : Model<LetUs_Inspire_You>,
+    @InjectModel('about_us') private aboutUsModel : Model<aboutUs>,
   ) { }
 
   // create feature - test edildi
@@ -1382,6 +1385,45 @@ export class AdminService {
   return await this.LetUs_Inspire_YouModel.findById(id)
  }
 
+
+  // create about us  - test ok
+  async createAboutUs(createAboutUsDto:CreateAboutUsDto):Promise<aboutUs>{
+  const aboutUsExist=await this.aboutUsModel.findOne({description:createAboutUsDto.description})
+  if(aboutUsExist){
+    throw new HttpException('About us description already exists ', HttpStatus.CONFLICT)
+  }
+    return await this.aboutUsModel.create(createAboutUsDto)
+  }
+
+
+  // update about us - test ok
+  async updateAboutUs(id:string,updateAboutUsDto:UpdateAboutUsDto):Promise<aboutUs>{
+    const aboutUs=await this.aboutUsModel.findById(id)
+    if(!aboutUs) throw new HttpException('About us not found',HttpStatus.NOT_FOUND)
+    return await this.aboutUsModel.findByIdAndUpdate(id,{ $set:updateAboutUsDto }, {new:true})
+  }
+
+
+  // delete about us - test ok
+  async deleteAboutUs(id:string):Promise<string>{
+    const aboutUs=await this.aboutUsModel.findById(id)
+    if(!aboutUs) throw new HttpException('About us not found',HttpStatus.NOT_FOUND)
+    return await this.aboutUsModel.findByIdAndDelete(id)
+  }
+
+
+  // get single about us - test ok
+  async getSingleAboutUs(id:string):Promise<aboutUs>{
+    const aboutUs=await this.aboutUsModel.findById(id)
+    if(!aboutUs) throw new HttpException('About us not found',HttpStatus.NOT_FOUND)
+    return aboutUs
+  }
+
+
+  // get all about us - test ok
+  async getAllAboutUs():Promise<aboutUs[]>{
+    return await this.aboutUsModel.find()
+  }
 
 } 
 

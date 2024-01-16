@@ -18,6 +18,7 @@ import { ProjectDesignModel } from 'src/project-design/model/projectdesign.schem
 import { ProjectDesignDetailsModel } from 'src/project-design-details/model/projectdesigndetails.schema';
 import { requestProjectModel } from 'src/request-project/model/requestproject.schema';
 import { LetUs_Inspire_YouModel } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
+import { aboutUsModel } from 'src/about-us/model/about_us.schema';
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { LetUs_Inspire_YouModel } from 'src/letus-inspire-you/model/letus_inspir
       { name: 'projectdesign', schema: ProjectDesignModel },
       { name: 'projectdesigndetail', schema: ProjectDesignDetailsModel },
       { name: 'requestproject', schema: requestProjectModel },
-      { name: 'letus_inspire_you', schema: LetUs_Inspire_YouModel }
+      { name: 'letus_inspire_you', schema: LetUs_Inspire_YouModel },
+      { name: 'about_us', schema: aboutUsModel }
     ]),
   ],
   providers: [AdminService],
