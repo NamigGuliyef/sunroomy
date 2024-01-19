@@ -1346,21 +1346,33 @@ export class AdminService {
 
 
   // update let us inspire you - test ok
-  async updateLetUsInspireYou(id:string, letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,files:Express.Multer.File[]):Promise<LetUs_Inspire_You>{
+  async updateLetUsInspireYou(id:string, letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,files:Express.Multer.File[] | string[]):Promise<LetUs_Inspire_You>{
     const letUsInspireYouExist=await this.LetUs_Inspire_YouModel.findById(id)
     if(!letUsInspireYouExist){
       throw new HttpException('Title not found',HttpStatus.NOT_FOUND)
     }
-  if(files && files[0] && files[0].path){
     let fileUrls=[]
+  if(files && files[0] && (files[0] as Express.Multer.File).path){
     for(let i=0;i<files.length;i++){
-      const fileuRL=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
+      const fileuRL=await cloudinary.uploader.upload((files[i] as Express.Multer.File).path,{public_id: (files[i] as Express.Multer.File).originalname})
       fileUrls.push(fileuRL.url)
     }
        return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(id, { $set: {...letUs_Inspire_You_Dto, photos:fileUrls } },{new:true})
-   } else {
+   } 
+   
+   if (Array.isArray(fileUrls) && typeof fileUrls[0] === 'string') {
+    // If a string array is provided, update the photos array directly
+    return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(
+      id,
+      { $set: { ...letUs_Inspire_You_Dto, photos: fileUrls } },
+      { new: true },
+    );
+  }
+   
+   else {
        return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(id, { $set: {...letUs_Inspire_You_Dto }}, {new:true})
     }
+    
   }
 
 
