@@ -19,8 +19,8 @@ import { tokenCheckMiddleware } from './middleware/tokencheck.middleware';
         port:587,
         service:"gmail",
         auth:{
-          user:"quliyevnamiq8@gmail.com",
-          pass:"kuuozvazyyafntrg"
+          user:"sunroomy.inc@gmail.com",
+          pass:"towxernvhiuqmspo"
         }
       },
       

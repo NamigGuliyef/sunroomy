@@ -979,9 +979,9 @@ export class AdminService {
     const subscribers = await this.subscribeModel.find();
     for (let i = 0; i < subscribers.length; i++) {
       this.mailerService.sendMail({
-        from: 'quliyevnamiq8@gmail.com',
+        from: 'sunroomy.inc@gmail.com',
         to: `${subscribers[i].email}`,
-        subject: 'Outdorr new information',
+        subject: 'Sunroomy new information',
         text: `${text.text}`,
       });
     }
