@@ -96,8 +96,8 @@ export class AdminService {
     @InjectModel('projectdesigndetail')
     private projectDesignDetailsModel: Model<ProjectDesignDetails>,
     @InjectModel('requestproject') private requestProjectModel: Model<RequestProject>,
-    @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel : Model<LetUs_Inspire_You>,
-    @InjectModel('about_us') private aboutUsModel : Model<aboutUs>,
+    @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
+    @InjectModel('about_us') private aboutUsModel: Model<aboutUs>,
   ) { }
 
   // create feature - test edildi
@@ -926,7 +926,7 @@ export class AdminService {
     const contactExist = await this.contactModel.findById(id);
     if (!contactExist) {
       throw new HttpException('Contact not found', HttpStatus.NOT_FOUND);
-    } 
+    }
     // else {
     //   const contactLocationExist = await this.contactModel.findOne({
     //     location: UpdateContactDto.location,
@@ -1331,112 +1331,112 @@ export class AdminService {
 
 
   // create let us inspire you - test ok
-  async createLetUsInspireYou(letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,files:Express.Multer.File[]):Promise<LetUs_Inspire_You>{
-    const letUsInspireYou = await this.LetUs_Inspire_YouModel.findOne({title:letUs_Inspire_You_Dto.title})
-    if(letUsInspireYou){
-        throw new HttpException('Title already exists',HttpStatus.CONFLICT)
+  async createLetUsInspireYou(letUs_Inspire_You_Dto: LetUs_Inspire_You_Dto, files: Express.Multer.File[]): Promise<LetUs_Inspire_You> {
+    const letUsInspireYou = await this.LetUs_Inspire_YouModel.findOne({ title: letUs_Inspire_You_Dto.title })
+    if (letUsInspireYou) {
+      throw new HttpException('Title already exists', HttpStatus.CONFLICT)
     }
-    let fileUrls=[]
-    for(let i=0;i<files.length;i++){
-      const fileuRL=await cloudinary.uploader.upload(files[i].path,{public_id:files[i].originalname})
+    let fileUrls = []
+    for (let i = 0; i < files.length; i++) {
+      const fileuRL = await cloudinary.uploader.upload(files[i].path, { public_id: files[i].originalname })
       fileUrls.push(fileuRL.url)
     }
-      return await this.LetUs_Inspire_YouModel.create({...letUs_Inspire_You_Dto,photos:fileUrls})
+    return await this.LetUs_Inspire_YouModel.create({ ...letUs_Inspire_You_Dto, photos: fileUrls })
   }
 
 
   // update let us inspire you - test ok
-  async updateLetUsInspireYou(id:string, letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,files:Express.Multer.File[] | string[]):Promise<LetUs_Inspire_You>{
-    const letUsInspireYouExist=await this.LetUs_Inspire_YouModel.findById(id)
-    if(!letUsInspireYouExist){
-      throw new HttpException('Title not found',HttpStatus.NOT_FOUND)
+  async updateLetUsInspireYou(id: string, letUs_Inspire_You_Dto: LetUs_Inspire_You_Dto, files: Express.Multer.File[] | string[]): Promise<LetUs_Inspire_You> {
+    const letUsInspireYouExist = await this.LetUs_Inspire_YouModel.findById(id)
+    if (!letUsInspireYouExist) {
+      throw new HttpException('Title not found', HttpStatus.NOT_FOUND)
     }
-    let fileUrls=[]
-  if(files && files[0] && (files[0] as Express.Multer.File).path){
-    for(let i=0;i<files.length;i++){
-      const fileuRL=await cloudinary.uploader.upload((files[i] as Express.Multer.File).path,{public_id: (files[i] as Express.Multer.File).originalname})
-      fileUrls.push(fileuRL.url)
+    let fileUrls = []
+    if (files && files[0] && (files[0] as Express.Multer.File).path) {
+      for (let i = 0; i < files.length; i++) {
+        const fileuRL = await cloudinary.uploader.upload((files[i] as Express.Multer.File).path, { public_id: (files[i] as Express.Multer.File).originalname })
+        fileUrls.push(fileuRL.url)
+      }
+      return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(id, { $set: { ...letUs_Inspire_You_Dto, photos: fileUrls } }, { new: true })
     }
-       return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(id, { $set: {...letUs_Inspire_You_Dto, photos:fileUrls } },{new:true})
-   } 
-   
-   if (Array.isArray(fileUrls) && typeof fileUrls[0] === 'string') {
-    // If a string array is provided, update the photos array directly
-    return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(
-      id,
-      { $set: { ...letUs_Inspire_You_Dto, photos: fileUrls } },
-      { new: true },
-    );
-  }
-   
-   else {
-       return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(id, { $set: {...letUs_Inspire_You_Dto }}, {new:true})
+
+    if (Array.isArray(fileUrls) && typeof fileUrls[0] === 'string') {
+      // If a string array is provided, update the photos array directly
+      return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(
+        id,
+        { $set: { ...letUs_Inspire_You_Dto, photos: fileUrls } },
+        { new: true },
+      );
     }
-    
+
+    else {
+      return await this.LetUs_Inspire_YouModel.findByIdAndUpdate(id, { $set: { ...letUs_Inspire_You_Dto } }, { new: true })
+    }
+
   }
 
 
   // delete let us inspire you - test ok
-  async deleteLetUsInspireYou(id:string):Promise<string>{
-    const letUsInspireYouExist=await this.LetUs_Inspire_YouModel.findById(id)
-    if(!letUsInspireYouExist){
+  async deleteLetUsInspireYou(id: string): Promise<string> {
+    const letUsInspireYouExist = await this.LetUs_Inspire_YouModel.findById(id)
+    if (!letUsInspireYouExist) {
       throw new HttpException('Title not found', HttpStatus.NOT_FOUND)
     }
-       await this.LetUs_Inspire_YouModel.findByIdAndDelete(id)
-       return 'The Let us inspire you section has been removed'
-    }
+    await this.LetUs_Inspire_YouModel.findByIdAndDelete(id)
+    return 'The Let us inspire you section has been removed'
+  }
 
 
   // get All let us inspire you - test ok
-  async getAllLetUsInspireYou():Promise<LetUs_Inspire_You[]>{
+  async getAllLetUsInspireYou(): Promise<LetUs_Inspire_You[]> {
     return await this.LetUs_Inspire_YouModel.find()
   }
 
 
- // get single let us inspire you - test ok
- async geSingleLetUsInspireYou(id:string):Promise<LetUs_Inspire_You>{
-  return await this.LetUs_Inspire_YouModel.findById(id)
- }
+  // get single let us inspire you - test ok
+  async geSingleLetUsInspireYou(id: string): Promise<LetUs_Inspire_You> {
+    return await this.LetUs_Inspire_YouModel.findById(id)
+  }
 
 
   // create about us  - test ok
-  async createAboutUs(createAboutUsDto:CreateAboutUsDto):Promise<aboutUs>{
-  const aboutUsExist=await this.aboutUsModel.findOne({description:createAboutUsDto.description})
-  if(aboutUsExist){
-    throw new HttpException('About us description already exists ', HttpStatus.CONFLICT)
-  }
+  async createAboutUs(createAboutUsDto: CreateAboutUsDto): Promise<aboutUs> {
+    const aboutUsExist = await this.aboutUsModel.findOne({ description: createAboutUsDto.description })
+    if (aboutUsExist) {
+      throw new HttpException('About us description already exists ', HttpStatus.CONFLICT)
+    }
     return await this.aboutUsModel.create(createAboutUsDto)
   }
 
 
   // update about us - test ok
-  async updateAboutUs(id:string,updateAboutUsDto:UpdateAboutUsDto):Promise<aboutUs>{
-    const aboutUs=await this.aboutUsModel.findById(id)
-    if(!aboutUs) throw new HttpException('About us not found',HttpStatus.NOT_FOUND)
-    return await this.aboutUsModel.findByIdAndUpdate(id,{ $set:updateAboutUsDto }, {new:true})
+  async updateAboutUs(id: string, updateAboutUsDto: UpdateAboutUsDto): Promise<aboutUs> {
+    const aboutUs = await this.aboutUsModel.findById(id)
+    if (!aboutUs) throw new HttpException('About us not found', HttpStatus.NOT_FOUND)
+    return await this.aboutUsModel.findByIdAndUpdate(id, { $set: updateAboutUsDto }, { new: true })
   }
 
 
   // delete about us - test ok
-  async deleteAboutUs(id:string):Promise<string>{
-    const aboutUs=await this.aboutUsModel.findById(id)
-    if(!aboutUs) throw new HttpException('About us not found',HttpStatus.NOT_FOUND)
+  async deleteAboutUs(id: string): Promise<string> {
+    const aboutUs = await this.aboutUsModel.findById(id)
+    if (!aboutUs) throw new HttpException('About us not found', HttpStatus.NOT_FOUND)
     return await this.aboutUsModel.findByIdAndDelete(id)
   }
 
 
   // get single about us - test ok
-  async getSingleAboutUs(id:string):Promise<aboutUs>{
-    const aboutUs=await this.aboutUsModel.findById(id)
-    if(!aboutUs) throw new HttpException('About us not found',HttpStatus.NOT_FOUND)
+  async getSingleAboutUs(id: string): Promise<aboutUs> {
+    const aboutUs = await this.aboutUsModel.findById(id)
+    if (!aboutUs) throw new HttpException('About us not found', HttpStatus.NOT_FOUND)
     return aboutUs
   }
 
 
   // get all about us - test ok
-  async getAllAboutUs():Promise<aboutUs[]>{
+  async getAllAboutUs(): Promise<aboutUs[]> {
     return await this.aboutUsModel.find()
   }
 
-} 
+}
 
