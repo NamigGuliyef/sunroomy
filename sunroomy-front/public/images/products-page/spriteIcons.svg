@@ -1,0 +1,41 @@
+<svg width="0" height="0" class="hidden">
+  <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70" id="wifi">
+    <g id="computer-connection-wifi--wireless-wifi-internet-server-network">
+      <g id="Group">
+        <path id="Vector" d="M35.0002 61.25C38.6177 61.25 41.5502 58.3175 41.5502 54.7C41.5502 51.0826 38.6177 48.15 35.0002 48.15C31.3827 48.15 28.4502 51.0826 28.4502 54.7C28.4502 58.3175 31.3827 61.25 35.0002 61.25Z" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_2" d="M22.6504 39.9999C24.2763 38.3308 26.22 37.0042 28.3668 36.0983C30.5137 35.1925 32.8203 34.7258 35.1504 34.7258C37.4805 34.7258 39.7871 35.1925 41.9339 36.0983C44.0808 37.0042 46.0245 38.3308 47.6504 39.9999" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_3" d="M11.7998 31.55C14.8434 28.4886 18.4621 26.0592 22.4479 24.4015C26.4338 22.7437 30.708 21.8903 35.0248 21.8903C39.3416 21.8903 43.6159 22.7437 47.6017 24.4015C51.5875 26.0592 55.2062 28.4886 58.2498 31.55" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_4" d="M2.5 22.25C6.76716 17.9806 11.8337 14.5938 17.4102 12.2831C22.9866 9.9724 28.9638 8.78308 35 8.78308C41.0362 8.78308 47.0134 9.9724 52.5898 12.2831C58.1663 14.5938 63.2328 17.9806 67.5 22.25" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </g>
+    </g>
+  </symbol>
+  <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70" id="light">
+    <g id="interface-lighting-light-bulb-on--lighting-light-shine-incandescent-bulb-lights">
+      <g id="Group">
+        <path id="Vector" d="M52.4999 40.0001C52.5116 36.8797 51.6887 33.813 50.1166 31.1176C48.5444 28.4222 46.2802 26.1961 43.5584 24.6701C40.8366 23.1441 37.7563 22.3735 34.6366 22.4383C31.5169 22.5031 28.4712 23.4009 25.8152 25.0386C23.1591 26.6764 20.9892 28.9945 19.5304 31.7529C18.0715 34.5112 17.3767 37.6095 17.5179 40.7267C17.6592 43.8439 18.6313 46.8666 20.3337 49.4817C22.036 52.0969 24.4066 54.2093 27.1999 55.6001V64.2001C27.2129 64.7085 27.4241 65.1918 27.7884 65.5467C28.1527 65.9017 28.6413 66.1002 29.1499 66.1001H40.8499C41.3585 66.1002 41.8471 65.9017 42.2114 65.5467C42.5756 65.1918 42.7868 64.7085 42.7999 64.2001V55.4501C45.6811 54.0158 48.111 51.8148 49.8223 49.089C51.5336 46.3632 52.4601 43.2183 52.4999 40.0001V40.0001Z" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_2" d="M35 4.05005V11.55" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_3" d="M55.0022 11.2006L49.7021 16.5506" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_4" d="M66.4014 26.7004H58.9014" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_5" d="M15 11.2001L20.3 16.5501" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_6" d="M3.59961 26.7001H11.0996" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </g>
+    </g>
+  </symbol>
+  <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70" id="rain">
+    <g id="interface-weather-lightning-1--cloud-bolt-storm-weather-thunder-meteorology-lightning">
+      <g id="Group">
+        <path id="Vector" d="M42.5 35L30 52.5H45L35 67.5" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_2" d="M54.9996 40C56.7761 40.0052 58.5334 39.6317 60.1542 38.9043C61.775 38.1769 63.2222 37.1123 64.3992 35.7816C65.5762 34.4509 66.4561 32.8846 66.9801 31.1871C67.5041 29.4895 67.6603 27.6998 67.4381 25.9372C67.216 24.1746 66.6207 22.4795 65.692 20.9651C64.7632 19.4507 63.5222 18.1516 62.0519 17.1545C60.5815 16.1574 58.9155 15.4852 57.1649 15.1826C55.4143 14.8801 53.6193 14.9542 51.8996 15.4C50.9001 11.6821 48.7025 8.39751 45.6472 6.05509C42.5919 3.71266 38.8495 2.44312 34.9996 2.44312C31.1497 2.44312 27.4072 3.71266 24.3519 6.05509C21.2966 8.39751 19.099 11.6821 18.0996 15.4C16.3798 14.9542 14.5848 14.8801 12.8342 15.1826C11.0836 15.4852 9.4176 16.1574 7.94724 17.1545C6.47687 18.1516 5.23594 19.4507 4.30716 20.9651C3.37838 22.4795 2.78309 24.1746 2.56098 25.9372C2.33886 27.6998 2.49501 29.4895 3.01903 31.1871C3.54305 32.8846 4.42289 34.4509 5.59991 35.7816C6.77694 37.1123 8.22409 38.1769 9.84492 38.9043C11.4657 39.6317 13.223 40.0052 14.9996 40H22.4996" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </g>
+    </g>
+  </symbol>
+  <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70" id="water">
+    <g id="interface-weather-rain-drop--drops-rain-rainy-meteorology-water-precipitation-weather">
+      <path id="Vector" d="M57.5 45C57.5 32.55 35 2.5 35 2.5C35 2.5 12.5 32.55 12.5 45C12.5 50.9674 14.8705 56.6903 19.0901 60.9099C23.3097 65.1295 29.0326 67.5 35 67.5C40.9674 67.5 46.6903 65.1295 50.9099 60.9099C55.1295 56.6903 57.5 50.9674 57.5 45V45Z" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      <g id="Group">
+        <path id="Vector_2" d="M44.8 35L26 53.8" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path id="Vector_3" d="M26 35L44.8 53.8" stroke="#000001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </g>
+    </g>
+  </symbol>
+</svg>
