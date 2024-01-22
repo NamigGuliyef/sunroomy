@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { sign } from 'jsonwebtoken';
 import { Model } from 'mongoose';
-import { Admin } from 'src/admin/schema/admin.schema';
+import { Admin } from '../admin/schema/admin.schema';
 import { adminSigninResponse, adminTokenResponse } from './auth.types';
 
 @Injectable()

@@ -1,25 +1,25 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { aboutOutdorrModel } from 'src/about-outdorr/model/aboutoutdorr.schema';
-import { adminModel } from 'src/admin/schema/admin.schema';
-import { applicationModel } from 'src/applications/model/application.schema';
-import { contactModel } from 'src/contact/model/contact.schema';
-import { featureModel } from 'src/features/model/feature.schema';
-import { projectNeedModel } from 'src/needs/model/need.schema';
-import { productModel } from 'src/product/model/product.schema';
-import { projectModel } from 'src/projects/model/project.schema';
-import { specificationModel } from 'src/specifications/model/specification.schema';
-import { subProductModel } from 'src/subproduct/model/subproduct.schema';
-import { subscribeModel } from 'src/subscribe/model/subscribe.schema';
-import { usedProductsModel } from 'src/used-products/model/usedproduct.schema';
-import { whyOutdorrModel } from 'src/why-outdorr/model/whyoutdorr.schema';
+import { aboutOutdorrModel } from '../about-outdorr/model/aboutoutdorr.schema';
+import { adminModel } from '../admin/schema/admin.schema';
+import { applicationModel } from '../applications/model/application.schema';
+import { contactModel } from '../contact/model/contact.schema';
+import { featureModel } from '../features/model/feature.schema';
+import { projectNeedModel } from '../needs/model/need.schema';
+import { productModel } from '../product/model/product.schema';
+import { projectModel } from '../projects/model/project.schema';
+import { specificationModel } from '../specifications/model/specification.schema';
+import { subProductModel } from '../subproduct/model/subproduct.schema';
+import { subscribeModel } from '../subscribe/model/subscribe.schema';
+import { usedProductsModel } from '../used-products/model/usedproduct.schema';
+import { whyOutdorrModel } from '../why-outdorr/model/whyoutdorr.schema';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { ProjectDesignModel } from 'src/project-design/model/projectdesign.schema';
-import { ProjectDesignDetailsModel } from 'src/project-design-details/model/projectdesigndetails.schema';
-import { requestProjectModel } from 'src/request-project/model/requestproject.schema';
-import { LetUs_Inspire_YouModel } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
-import { aboutUsModel } from 'src/about-us/model/about_us.schema';
+import { ProjectDesignModel } from '../project-design/model/projectdesign.schema';
+import { ProjectDesignDetailsModel } from '../project-design-details/model/projectdesigndetails.schema';
+import { requestProjectModel } from '../request-project/model/requestproject.schema';
+import { LetUs_Inspire_YouModel } from '../letus-inspire-you/model/letus_inspire_you.schema';
+import { aboutUsModel } from '../about-us/model/about_us.schema';
 
 @Module({
   imports: [

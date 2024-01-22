@@ -6,73 +6,73 @@ import slug from 'slugify';
 import {
   createAboutOutdorrDto,
   updateAboutOutdorrDto,
-} from 'src/about-outdorr/dto/aboutoutdorr.dto';
-import { AboutOutdorr } from 'src/about-outdorr/model/aboutoutdorr.schema';
-import { CreateAboutUsDto, UpdateAboutUsDto } from 'src/about-us/dto/about_us.dto';
-import { aboutUs } from 'src/about-us/model/about_us.schema';
+} from '../about-outdorr/dto/aboutoutdorr.dto';
+import { AboutOutdorr } from '../about-outdorr/model/aboutoutdorr.schema';
+import { CreateAboutUsDto, UpdateAboutUsDto } from '../about-us/dto/about_us.dto';
+import { aboutUs } from '../about-us/model/about_us.schema';
 import {
   createApplicationDto,
   updateApplicationDto,
-} from 'src/applications/dto/application.dto';
-import { Application } from 'src/applications/model/application.schema';
-import cloudinary from 'src/config/cloudinary/cloudinary';
+} from '../applications/dto/application.dto';
+import { Application } from '../applications/model/application.schema';
+import cloudinary from '../config/cloudinary/cloudinary';
 import {
   createContactDto,
   updateContactDto,
-} from 'src/contact/dto/contact.dto';
-import { Contact } from 'src/contact/model/contact.schema';
+} from '../contact/dto/contact.dto';
+import { Contact } from '../contact/model/contact.schema';
 import {
   createFeatureDto,
   updateFeatureDto,
-} from 'src/features/dto/feature.dto';
-import { Feature } from 'src/features/model/feature.schema';
-import { LetUs_Inspire_You_Dto } from 'src/letus-inspire-you/dto/letus_inspire_you.dto';
-import { LetUs_Inspire_You } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
+} from '../features/dto/feature.dto';
+import { Feature } from '../features/model/feature.schema';
+import { LetUs_Inspire_You_Dto } from '../letus-inspire-you/dto/letus_inspire_you.dto';
+import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.schema';
 import {
   createProjectNeedDto,
   updateProjectNeedDto,
-} from 'src/needs/dto/need.dto';
-import { ProjectNeed } from 'src/needs/model/need.schema';
+} from '../needs/dto/need.dto';
+import { ProjectNeed } from '../needs/model/need.schema';
 import {
   createProductDto,
   updateProductDto,
-} from 'src/product/dto/product.dto';
-import { Product } from 'src/product/model/product.schema';
+} from '../product/dto/product.dto';
+import { Product } from '../product/model/product.schema';
 import {
   CreateProjectDesignDetailsDto,
   UpdateProjectDesignDetailsDto,
-} from 'src/project-design-details/dto/projectdesigndetails.dto';
-import { ProjectDesignDetails } from 'src/project-design-details/model/projectdesigndetails.schema';
+} from '../project-design-details/dto/projectdesigndetails.dto';
+import { ProjectDesignDetails } from '../project-design-details/model/projectdesigndetails.schema';
 import {
   CreateProjectDesignDto,
   UpdateProjectDesignDto,
-} from 'src/project-design/dto/projectdesign.dto';
-import { ProjectDesign } from 'src/project-design/model/projectdesign.schema';
+} from '../project-design/dto/projectdesign.dto';
+import { ProjectDesign } from '../project-design/model/projectdesign.schema';
 import {
   createProjectDto,
   updateProjectDto,
-} from 'src/projects/dto/project.dto';
-import { Project } from 'src/projects/model/project.schema';
-import { RequestProject } from 'src/request-project/model/requestproject.schema';
+} from '../projects/dto/project.dto';
+import { Project } from '../projects/model/project.schema';
+import { RequestProject } from '../request-project/model/requestproject.schema';
 import {
   createSpecificationDto,
   updateSpecificationDto,
-} from 'src/specifications/dto/specification.dto';
-import { Specification } from 'src/specifications/model/specification.schema';
+} from '../specifications/dto/specification.dto';
+import { Specification } from '../specifications/model/specification.schema';
 import {
   createSubProductDto,
   updateSubProductDto,
-} from 'src/subproduct/dto/subproduct.dto';
-import { Subproduct } from 'src/subproduct/model/subproduct.schema';
-import { sendEmailText } from 'src/subscribe/dto/subscribe.dto';
-import { Subscribe } from 'src/subscribe/model/subscribe.schema';
+} from '../subproduct/dto/subproduct.dto';
+import { Subproduct } from '../subproduct/model/subproduct.schema';
+import { sendEmailText } from '../subscribe/dto/subscribe.dto';
+import { Subscribe } from '../subscribe/model/subscribe.schema';
 import {
   createUsedProductsDto,
   updateUsedProductsDto,
-} from 'src/used-products/dto/usedproduct.dto';
-import { UsedProducts } from 'src/used-products/model/usedproduct.schema';
-import { updateWhyOutdorrDto } from 'src/why-outdorr/dto/whyoutdorr.dto';
-import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
+} from '../used-products/dto/usedproduct.dto';
+import { UsedProducts } from '../used-products/model/usedproduct.schema';
+import { updateWhyOutdorrDto } from '../why-outdorr/dto/whyoutdorr.dto';
+import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
 
 @Injectable()
 export class AdminService {

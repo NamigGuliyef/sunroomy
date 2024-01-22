@@ -1,21 +1,21 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { MulterOptionsCloudinary } from 'src/config/multer/multer';
-import { Contact } from 'src/contact/model/contact.schema';
-import { Product } from 'src/product/model/product.schema';
-import { ProjectDesignDetails } from 'src/project-design-details/model/projectdesigndetails.schema';
-import { ProjectDesign } from 'src/project-design/model/projectdesign.schema';
-import { Project } from 'src/projects/model/project.schema';
-import { CreateRequestProjectDto } from 'src/request-project/dto/requestproject.dto';
-import { RequestProject } from 'src/request-project/model/requestproject.schema';
-import { Subproduct } from 'src/subproduct/model/subproduct.schema';
-import { createSubscribeDto } from 'src/subscribe/dto/subscribe.dto';
-import { Subscribe } from 'src/subscribe/model/subscribe.schema';
-import { WhyOutdorr } from 'src/why-outdorr/model/whyoutdorr.schema';
+import { MulterOptionsCloudinary } from '../config/multer/multer';
+import { Contact } from '../contact/model/contact.schema';
+import { Product } from '../product/model/product.schema';
+import { ProjectDesignDetails } from '../project-design-details/model/projectdesigndetails.schema';
+import { ProjectDesign } from '../project-design/model/projectdesign.schema';
+import { Project } from '../projects/model/project.schema';
+import { CreateRequestProjectDto } from '../request-project/dto/requestproject.dto';
+import { RequestProject } from '../request-project/model/requestproject.schema';
+import { Subproduct } from '../subproduct/model/subproduct.schema';
+import { createSubscribeDto } from '../subscribe/dto/subscribe.dto';
+import { Subscribe } from '../subscribe/model/subscribe.schema';
+import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
 import { GuestService } from './guest.service';
 import { Filter } from './guest.filter';
-import { LetUs_Inspire_You } from 'src/letus-inspire-you/model/letus_inspire_you.schema';
-import { aboutUs } from 'src/about-us/model/about_us.schema';
+import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.schema';
+import { aboutUs } from '../about-us/model/about_us.schema';
 
 @Controller('')
 export class GuestController {
