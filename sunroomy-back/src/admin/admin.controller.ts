@@ -35,6 +35,8 @@ import { UsedProducts } from '../used-products/model/usedproduct.schema';
 import { updateWhyOutdorrDto } from '../why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
 import { AdminService } from './admin.service';
+import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto/home_about_us.dto';
+import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -579,6 +581,45 @@ export class AdminController {
   @HttpCode(HttpStatus.OK)
   async getAllAboutUs():Promise<aboutUs[]>{
     return await this.adminService.getAllAboutUs()
+  }
+
+
+  // create home about us
+  @Post('/dashboard/home_about_us')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createHomeAboutUs(@Body() CreateHomeAboutUsDto: createHomeAboutUsDto): Promise<HomeAboutUs> {
+    return await this.adminService.createHomeAboutUs(CreateHomeAboutUsDto)
+  }
+
+  // update home about us
+  @Patch('/dashboard/home_about_us/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateHomeAboutUs(@Param('id') id: string, @Body() UpdateHomeAboutUsDto: updateHomeAboutUsDto): Promise<HomeAboutUs> {
+    return await this.adminService.updateHomeAboutUs(id, UpdateHomeAboutUsDto)
+  }
+
+  // delete home about us
+  @Delete('/dashboard/home_about_us/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteHomeAboutUs(@Param('id') id: string): Promise<string> {
+    return await this.adminService.deleteHomeAboutUs(id)
+  }
+
+
+  // get single home about us
+  @Get('/dashboard/home_about_us/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleHomeAboutUs(@Param('id') id: string): Promise<HomeAboutUs> {
+    return await this.adminService.getSingleHomeAboutUs(id)
+  }
+
+  // get all home about us
+  @Get('/dashboard/home_about_us')
+  @HttpCode(HttpStatus.OK)
+  async getAllHomeAboutUs(): Promise<HomeAboutUs[]> {
+    return await this.adminService.getAllhomeAboutUs()
   }
 
 

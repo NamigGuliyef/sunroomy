@@ -112,7 +112,7 @@ export class GuestController {
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FilesInterceptor('files', 20, MulterOptionsCloudinary))
-  async createRequestProject(@Body() createRequestProjectDto: CreateRequestProjectDto, @UploadedFiles() files: Express.Multer.File[]): Promise<RequestProject> {
+  async createRequestProject(@Body() createRequestProjectDto: CreateRequestProjectDto, @UploadedFiles() files: Express.Multer.File[]): Promise<string> {
     return await this.guestService.createRequestProject(createRequestProjectDto, files)
   }
 

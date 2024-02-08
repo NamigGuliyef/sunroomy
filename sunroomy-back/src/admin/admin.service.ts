@@ -73,6 +73,8 @@ import {
 import { UsedProducts } from '../used-products/model/usedproduct.schema';
 import { updateWhyOutdorrDto } from '../why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
+import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
+import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto/home_about_us.dto';
 
 @Injectable()
 export class AdminService {
@@ -98,6 +100,8 @@ export class AdminService {
     @InjectModel('requestproject') private requestProjectModel: Model<RequestProject>,
     @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
     @InjectModel('about_us') private aboutUsModel: Model<aboutUs>,
+    @InjectModel('home_about_us') private homeAboutUsModel: Model<HomeAboutUs>,
+
   ) { }
 
   // create feature - test edildi
@@ -1437,6 +1441,61 @@ export class AdminService {
   async getAllAboutUs(): Promise<aboutUs[]> {
     return await this.aboutUsModel.find()
   }
+
+
+ // create home about us
+  async createHomeAboutUs(
+    CreateHomeAboutUsDto: createHomeAboutUsDto,
+  ): Promise<HomeAboutUs> {
+    return await this.homeAboutUsModel.create(CreateHomeAboutUsDto);
+  }
+
+  // update  home about us
+  async updateHomeAboutUs(
+    id: string,
+    UpdateHomeAboutUsDto: updateHomeAboutUsDto,
+  ): Promise<HomeAboutUs> {
+    const HomeAboutUsExist = await this.homeAboutUsModel.findById(id);
+    if (!HomeAboutUsExist) {
+      throw new HttpException(
+        'No project requirements found to be modified',
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      return await this.homeAboutUsModel.findByIdAndUpdate(id, { $set: UpdateHomeAboutUsDto }, { new: true });
+    }
+  }
+
+  // delete home about us 
+  async deleteHomeAboutUs(id: string): Promise<string> {
+    const homeAbouUs = await this.homeAboutUsModel.findById(id);
+    if (!homeAbouUs) {
+      throw new HttpException(
+        'The home about us you want to delete were not found',
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      await this.homeAboutUsModel.findByIdAndDelete(id);
+      return 'Home about us removed';
+    }
+  }
+
+  // get single home about us
+  async getSingleHomeAboutUs(id: string): Promise<HomeAboutUs> {
+    const homeAboutUs = await this.homeAboutUsModel.findById(id);
+    if (!homeAboutUs) {
+      throw new HttpException('Home about us not found', HttpStatus.NOT_FOUND);
+    } else {
+      return homeAboutUs;
+    }
+  }
+
+  //get All home about us
+  async getAllhomeAboutUs(): Promise<HomeAboutUs[]> {
+    return await this.homeAboutUsModel.find();
+  }
+
+
 
 }
 

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import cloudinary from '../config/cloudinary/cloudinary';
@@ -16,10 +16,12 @@ import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
 import { Filter } from './guest.filter';
 import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.schema';
 import { aboutUs } from '../about-us/model/about_us.schema';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class GuestService {
   constructor(
+    private mailerService:MailerService,
     @InjectModel('whyoutdorr') private whyOutdorrModel: Model<WhyOutdorr>,
     @InjectModel('subscribe') private subscribeModel: Model<Subscribe>,
     @InjectModel('product') private productModel: Model<Product>,
@@ -33,7 +35,8 @@ export class GuestService {
     @InjectModel('requestproject')
     private requestProjectModel: Model<RequestProject>,
     @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
-    @InjectModel('about_us') private aboutUsModel: Model<aboutUs>
+    @InjectModel('about_us') private aboutUsModel: Model<aboutUs>,
+
         
   ) {}
 
@@ -188,7 +191,7 @@ export class GuestService {
   async createRequestProject(
     createRequestProjectDto: CreateRequestProjectDto,
     files: Express.Multer.File[],
-  ): Promise<RequestProject> {
+  ): Promise<string> {
     const selected_window_and_doors = [];
     selected_window_and_doors.push(createRequestProjectDto.window_and_doors);
     const window_and_doors = selected_window_and_doors.join().split(',');
@@ -203,12 +206,20 @@ export class GuestService {
         });
         fileUrls.push(fileUrl.url);
       }
-      return await this.requestProjectModel.create({
+       const newRequestProject = await this.requestProjectModel.create({
         ...createRequestProjectDto,
         window_and_doors,
         sunscreens,
         files: fileUrls,
       });
+
+      this.mailerService.sendMail({
+        from:`${newRequestProject.email}`,
+        to:"sunroomy.inc@gmail.com",
+        subject:`Request a Project - ${newRequestProject.first_name + " " + newRequestProject.last_name}`,
+        html:""
+      })
+      return " Your project request has been successfully sent"
     } else {
       throw new HttpException(
         'Select only 3 products from the window_and_doors section.',
