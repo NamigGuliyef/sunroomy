@@ -17,6 +17,7 @@ import { Filter } from './guest.filter';
 import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.schema';
 import { aboutUs } from '../about-us/model/about_us.schema';
 import { MailerService } from '@nestjs-modules/mailer';
+import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
 
 @Injectable()
 export class GuestService {
@@ -36,8 +37,7 @@ export class GuestService {
     private requestProjectModel: Model<RequestProject>,
     @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
     @InjectModel('about_us') private aboutUsModel: Model<aboutUs>,
-
-        
+    @InjectModel('home_about_us') private homeAboutUsModel: Model<HomeAboutUs>
   ) {}
 
   // get all product - test edildi
@@ -274,5 +274,22 @@ export class GuestService {
   async getAllAboutUs():Promise<aboutUs[]>{
     return await this.aboutUsModel.find()
   }
+
+
+    // get single home about us
+    async getSingleHomeAboutUs(id: string): Promise<HomeAboutUs> {
+      const homeAboutUs = await this.homeAboutUsModel.findById(id);
+      if (!homeAboutUs) {
+        throw new HttpException('Home about us not found', HttpStatus.NOT_FOUND);
+      } else {
+        return homeAboutUs;
+      }
+    }
+  
+    //get All home about us
+    async getAllhomeAboutUs(): Promise<HomeAboutUs[]> {
+      return await this.homeAboutUsModel.find();
+    }
+
 
 }

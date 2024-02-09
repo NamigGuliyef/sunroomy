@@ -16,6 +16,7 @@ import { GuestService } from './guest.service';
 import { Filter } from './guest.filter';
 import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.schema';
 import { aboutUs } from '../about-us/model/about_us.schema';
+import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
 
 @Controller('')
 export class GuestController {
@@ -153,6 +154,21 @@ export class GuestController {
   async getAllAboutUs():Promise<aboutUs[]>{
     return await this.guestService.getAllAboutUs()
   }
+
+
+    // get single home about us
+    @Get('/home_about_us/:id')
+    @HttpCode(HttpStatus.OK)
+    async getSingleHomeAboutUs(@Param('id') id: string): Promise<HomeAboutUs> {
+      return await this.guestService.getSingleHomeAboutUs(id)
+    }
+  
+    // get all home about us
+    @Get('/home_about_us')
+    @HttpCode(HttpStatus.OK)
+    async getAllHomeAboutUs(): Promise<HomeAboutUs[]> {
+      return await this.guestService.getAllhomeAboutUs()
+    }
 
 }
 
