@@ -37,6 +37,8 @@ import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
 import { AdminService } from './admin.service';
 import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto/home_about_us.dto';
 import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
+import { CreateHomepageHeroDto, UpdateHomepageHeroDto } from '../homepage_hero/dto/homepage_hero.dto';
+import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -620,6 +622,48 @@ export class AdminController {
   @HttpCode(HttpStatus.OK)
   async getAllHomeAboutUs(): Promise<HomeAboutUs[]> {
     return await this.adminService.getAllhomeAboutUs()
+  }
+
+
+  // create Homepage Hero
+  @Post('/dashboard/homepage_hero')
+  @UsePipes(new ValidationPipe())
+  @HttpCode(HttpStatus.CREATED)
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary ))
+  async createHomepageHero(@Body() createHomepageHeroDto:CreateHomepageHeroDto, @UploadedFile() photo:Express.Multer.File):Promise<HomepageHero>{
+    return await this.adminService.createHomepageHero(createHomepageHeroDto,photo)
+  }
+
+  // update Homepage Hero
+  @Patch('/dashboard/homepage_hero/:_id')
+  @UsePipes(new ValidationPipe())
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async updateHomepageHero(@Param('_id') _id:string, @Body() updateHomepageHeroDto:UpdateHomepageHeroDto, @UploadedFile() photo:Express.Multer.File):Promise<HomepageHero>{
+    return await this.adminService.updateHomepageHero(_id, updateHomepageHeroDto, photo)
+  }
+
+  // delete homepage hero
+  @Delete('/dashboard/homepage_hero/:_id')
+  @HttpCode(HttpStatus.OK)
+  async deleteHomepageHero(@Param('_id') _id:string):Promise<string>{
+    return await this.adminService.deleteHomepageHero(_id)
+  }
+
+
+  // get single homepage hero
+  @Get('/dashboard/homepage_hero/:_id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleHomepageHero(@Param('_id') _id:string):Promise<HomepageHero>{
+    return await this.adminService.getSingleHomepageHero(_id)
+  }
+
+
+  // get all home page hero
+  @Get('/dashboard/homepage_hero')
+  @HttpCode(HttpStatus.OK)
+  async getAllHomepageHero():Promise<HomepageHero[]>{
+    return await this.adminService.getAllHomepageHero()
   }
 
 

@@ -75,6 +75,8 @@ import { updateWhyOutdorrDto } from '../why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
 import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
 import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto/home_about_us.dto';
+import { HomepageHero, HomepageHeroModel } from '../homepage_hero/model/homepage_hero.schema';
+import { CreateHomepageHeroDto, UpdateHomepageHeroDto } from '../homepage_hero/dto/homepage_hero.dto';
 
 @Injectable()
 export class AdminService {
@@ -101,6 +103,7 @@ export class AdminService {
     @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
     @InjectModel('about_us') private aboutUsModel: Model<aboutUs>,
     @InjectModel('home_about_us') private homeAboutUsModel: Model<HomeAboutUs>,
+    @InjectModel('homepage_hero') private homepage_heroModel: Model<HomepageHero>,
 
   ) { }
 
@@ -1496,6 +1499,46 @@ export class AdminService {
   }
 
 
+  // create homepage hero
+  async createHomepageHero(createHomepageHeroDto:CreateHomepageHeroDto, photo:Express.Multer.File):Promise<HomepageHero>{
+    const homepageHeroTitle=await this.homepage_heroModel.findOne({title:createHomepageHeroDto.title})
+    if(homepageHeroTitle) throw new HttpException("Homepage hero link already exist",HttpStatus.CONFLICT)
+    const photoUrl=await cloudinary.uploader.upload(photo.path,{public_id:photo.originalname})
+    return await this.homepage_heroModel.create({...createHomepageHeroDto, photo:photoUrl})
+  }
+
+
+  // update homepage hero
+  async updateHomepageHero(_id:string, updateHomepageHeroDto:UpdateHomepageHeroDto,photo:Express.Multer.File):Promise<HomepageHero>{
+    const homepageHeroTitle=await this.homepage_heroModel.findOne({title:updateHomepageHeroDto.title})
+    if(homepageHeroTitle) throw new HttpException("Homepage hero link already exist",HttpStatus.CONFLICT)
+    if(photo && photo.path) {
+      const photoUrl=await cloudinary.uploader.upload(photo.path,{public_id:photo.originalname})
+      return await this.homepage_heroModel.findByIdAndUpdate(_id,{ $set:{...updateHomepageHeroDto, photo:photoUrl}})
+    }
+    return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set:{ updateHomepageHeroDto }})
+  }
+
+
+  // delete homepage hero
+  async deleteHomepageHero(_id:string):Promise<string>{
+    const homepageHeroTitle=await this.homepage_heroModel.findById(_id)
+    if(homepageHeroTitle) throw new HttpException("Home page hero not found",HttpStatus.NOT_FOUND)
+    await this.homepage_heroModel.findByIdAndDelete(_id)
+    return " Homepage hero informations deleted "
+  }
+
+
+  // get single homepage hero
+  async getSingleHomepageHero(_id:string):Promise<HomepageHero>{
+    return await this.homepage_heroModel.findById(_id)
+  }
+
+
+  // get all homepage hero
+  async getAllHomepageHero():Promise<HomepageHero[]>{
+    return await this.homepage_heroModel.find()
+  }
 
 }
 
