@@ -21,6 +21,7 @@ import { LetUs_Inspire_YouModel } from '../letus-inspire-you/model/letus_inspire
 import { aboutUsModel } from '../about-us/model/about_us.schema';
 import { homeAboutUsModel } from '../home_about_us/model/home_about_us.schema';
 import { HomepageHeroModel } from '../homepage_hero/model/homepage_hero.schema';
+import { followUsModel } from '../follow_us/model/followus.schema';
 
 @Module({
   imports: [
@@ -43,7 +44,9 @@ import { HomepageHeroModel } from '../homepage_hero/model/homepage_hero.schema';
       { name: 'letus_inspire_you', schema: LetUs_Inspire_YouModel },
       { name: 'about_us', schema: aboutUsModel },
       { name: 'home_about_us', schema: homeAboutUsModel },
-      { name:'homepage_hero', schema:HomepageHeroModel }
+      { name:'homepage_hero', schema:HomepageHeroModel },
+      { name:'follow_us', schema:followUsModel }
+
     ]),
   ],
   providers: [AdminService],

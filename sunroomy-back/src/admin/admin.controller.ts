@@ -39,6 +39,8 @@ import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto
 import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
 import { CreateHomepageHeroDto, UpdateHomepageHeroDto } from '../homepage_hero/dto/homepage_hero.dto';
 import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
+import { createFollowUsDto, updateFollowUsDto } from '../follow_us/dto/followus.dto';
+import { FollowUs } from '../follow_us/model/followus.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -666,5 +668,49 @@ export class AdminController {
     return await this.adminService.getAllHomepageHero()
   }
 
+
+  // create follow us
+  @Post('/dashboard/followUs')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('photo',MulterOptionsCloudinary))
+  async createFollowUs(@Body() CreateFollowUsDto:createFollowUsDto,@UploadedFile() file:Express.Multer.File):Promise<FollowUs>{
+    return await this.adminService.createFollowUs(CreateFollowUsDto,file)
+  }
+
+
+  // update follow us
+  @Patch('/dashboard/followUs/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('photo',MulterOptionsCloudinary))
+  async updateFollowUs(@Param('id') id:string, @Body() UpdateFollowUsDto:updateFollowUsDto,@UploadedFile() file:Express.Multer.File):Promise<FollowUs>{
+    return await this.adminService.updateFollowUs(id,UpdateFollowUsDto,file)
+  }
+
+
+  // delete follow us
+  @Delete('/dashboard/followUs/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteFollowUs(@Param('id') id:string):Promise<string>{
+    return await this.adminService.deleteFollowUs(id)
+  }
+
+
+
+ // get follow us single
+  @Get('/dashboard/followUs/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleFolowUs(@Param('id') id:string):Promise<FollowUs>{
+      return await this.adminService.getSingleFolowUs(id)
+  }
+  
+
+  @Get('/dashboard/followUs')
+  @HttpCode(HttpStatus.OK)
+  async getAllFolowUs():Promise<FollowUs[]>{
+      return await this.adminService.getAllFollowUs()
+  }
+  
 
 }

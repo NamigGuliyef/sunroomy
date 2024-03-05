@@ -18,6 +18,8 @@ import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.
 import { aboutUs } from '../about-us/model/about_us.schema';
 import { MailerService } from '@nestjs-modules/mailer';
 import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
+import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
+import { FollowUs } from '../follow_us/model/followus.schema';
 
 @Injectable()
 export class GuestService {
@@ -37,7 +39,11 @@ export class GuestService {
     private requestProjectModel: Model<RequestProject>,
     @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
     @InjectModel('about_us') private aboutUsModel: Model<aboutUs>,
-    @InjectModel('home_about_us') private homeAboutUsModel: Model<HomeAboutUs>
+    @InjectModel('home_about_us') private homeAboutUsModel: Model<HomeAboutUs>,
+    @InjectModel('homepage_hero') private homepage_heroModel: Model<HomepageHero>,
+    @InjectModel('follow_us') private followUsModel: Model<FollowUs>,
+
+
   ) {}
 
   // get all product - test edildi
@@ -291,5 +297,28 @@ export class GuestService {
       return await this.homeAboutUsModel.find();
     }
 
+
+   // get single homepage hero
+   async getSingleHomepageHero(_id:string):Promise<HomepageHero>{
+     return await this.homepage_heroModel.findById(_id)
+   }
+
+
+   // get all homepage hero
+   async getAllHomepageHero():Promise<HomepageHero[]>{
+     return await this.homepage_heroModel.find()
+   }
+
+
+   // get follow us single
+   async getSingleFolowUs(id:string):Promise<FollowUs>{
+    return await this.followUsModel.findById(id)
+   }
+
+
+   // get all follow us
+   async getAllFollowUs():Promise<FollowUs[]>{
+    return await this.followUsModel.find()
+   }
 
 }

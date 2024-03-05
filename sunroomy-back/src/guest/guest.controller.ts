@@ -17,6 +17,8 @@ import { Filter } from './guest.filter';
 import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.schema';
 import { aboutUs } from '../about-us/model/about_us.schema';
 import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
+import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
+import { FollowUs } from '../follow_us/model/followus.schema';
 
 @Controller('')
 export class GuestController {
@@ -169,6 +171,38 @@ export class GuestController {
     async getAllHomeAboutUs(): Promise<HomeAboutUs[]> {
       return await this.guestService.getAllhomeAboutUs()
     }
+
+    
+    // get single homepage hero
+    @Get('/homepage_hero/:_id')
+    @HttpCode(HttpStatus.OK)
+    async getSingleHomepageHero(@Param('_id') _id:string):Promise<HomepageHero>{
+      return await this.guestService.getSingleHomepageHero(_id)
+    }
+  
+  
+    // get all home page hero
+    @Get('/homepage_hero')
+    @HttpCode(HttpStatus.OK)
+    async getAllHomepageHero():Promise<HomepageHero[]>{
+      return await this.guestService.getAllHomepageHero()
+    }
+
+
+     // get follow us single
+  @Get('/followUs/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleFolowUs(@Param('id') id:string):Promise<FollowUs>{
+      return await this.guestService.getSingleFolowUs(id)
+  }
+  
+
+  @Get('/followUs')
+  @HttpCode(HttpStatus.OK)
+  async getAllFolowUs():Promise<FollowUs[]>{
+      return await this.guestService.getAllFollowUs()
+  }
+  
 
 }
 
