@@ -6,7 +6,7 @@ export class FollowUs {
   name: string;
   @Prop({ required: true })
   link: string;
-  @Prop({ required: true })
+  @Prop()
   photo: string;
 }
 

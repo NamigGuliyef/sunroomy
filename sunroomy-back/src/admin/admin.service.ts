@@ -1449,7 +1449,7 @@ export class AdminService {
   }
 
 
- // create home about us
+  // create home about us
   async createHomeAboutUs(
     CreateHomeAboutUsDto: createHomeAboutUsDto,
   ): Promise<HomeAboutUs> {
@@ -1503,87 +1503,87 @@ export class AdminService {
 
 
   // create homepage hero
-  async createHomepageHero(createHomepageHeroDto:CreateHomepageHeroDto, photo:Express.Multer.File):Promise<HomepageHero>{
-    const homepageHeroTitle=await this.homepage_heroModel.findOne({title:createHomepageHeroDto.title})
-    if(homepageHeroTitle) throw new HttpException("Homepage hero link already exist",HttpStatus.CONFLICT)
-    const photoUrl=await cloudinary.uploader.upload(photo.path,{public_id:photo.originalname})
-    return await this.homepage_heroModel.create({...createHomepageHeroDto, photo:photoUrl.url})
+  async createHomepageHero(createHomepageHeroDto: CreateHomepageHeroDto, photo: Express.Multer.File): Promise<HomepageHero> {
+    const homepageHeroTitle = await this.homepage_heroModel.findOne({ title: createHomepageHeroDto.title })
+    if (homepageHeroTitle) throw new HttpException("Homepage hero link already exist", HttpStatus.CONFLICT)
+    const photoUrl = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
+    return await this.homepage_heroModel.create({ ...createHomepageHeroDto, photo: photoUrl.url })
   }
 
 
   // update homepage hero
-  async updateHomepageHero(_id:string, updateHomepageHeroDto:UpdateHomepageHeroDto,photo:Express.Multer.File):Promise<HomepageHero>{
-    const homepageHeroTitle=await this.homepage_heroModel.findOne({title:updateHomepageHeroDto.title})
-    if(homepageHeroTitle) throw new HttpException("Homepage hero link already exist",HttpStatus.CONFLICT)
-    if(photo && photo.path) {
-      const photoUrl=await cloudinary.uploader.upload(photo.path,{public_id:photo.originalname})
-      return await this.homepage_heroModel.findByIdAndUpdate(_id,{ $set:{...updateHomepageHeroDto, photo:photoUrl.url}})
+  async updateHomepageHero(_id: string, updateHomepageHeroDto: UpdateHomepageHeroDto, photo: Express.Multer.File): Promise<HomepageHero> {
+    const homepageHeroTitle = await this.homepage_heroModel.findOne({ title: updateHomepageHeroDto.title })
+    if (homepageHeroTitle) throw new HttpException("Homepage hero link already exist", HttpStatus.CONFLICT)
+    if (photo && photo.path) {
+      const photoUrl = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
+      return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set: { ...updateHomepageHeroDto, photo: photoUrl.url } })
     }
-    return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set:{ updateHomepageHeroDto }})
+    return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set: { updateHomepageHeroDto } })
   }
 
 
   // delete homepage hero
-  async deleteHomepageHero(_id:string):Promise<string>{
-    const homepageHeroTitle=await this.homepage_heroModel.findById(_id)
-    if(!homepageHeroTitle) throw new HttpException("Home page hero not found",HttpStatus.NOT_FOUND)
+  async deleteHomepageHero(_id: string): Promise<string> {
+    const homepageHeroTitle = await this.homepage_heroModel.findById(_id)
+    if (!homepageHeroTitle) throw new HttpException("Home page hero not found", HttpStatus.NOT_FOUND)
     await this.homepage_heroModel.findByIdAndDelete(_id)
     return " Homepage hero informations deleted "
   }
 
 
   // get single homepage hero
-  async getSingleHomepageHero(_id:string):Promise<HomepageHero>{
+  async getSingleHomepageHero(_id: string): Promise<HomepageHero> {
     return await this.homepage_heroModel.findById(_id)
   }
 
 
   // get all homepage hero
-  async getAllHomepageHero():Promise<HomepageHero[]>{
+  async getAllHomepageHero(): Promise<HomepageHero[]> {
     return await this.homepage_heroModel.find()
   }
 
 
   // create follow us
-  async createFollowUs(CreateFollowUsDto:createFollowUsDto,file:Express.Multer.File):Promise<FollowUs>{
-   const followUsExist=await this.followUsModel.findOne({name:CreateFollowUsDto.name,link:CreateFollowUsDto.link}) 
-   if(followUsExist) throw new HttpException('There is already a name or link in the Follow Us section', HttpStatus.CONFLICT)
-    const data=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})   
-    return await this.followUsModel.create({...createFollowUsDto,photo:data.url})
+  async createFollowUs(CreateFollowUsDto: createFollowUsDto, file: Express.Multer.File): Promise<FollowUs> {
+    const followUsExist = await this.followUsModel.findOne({ name: CreateFollowUsDto.name, link: CreateFollowUsDto.link })
+    if (followUsExist) throw new HttpException('There is already a name or link in the Follow Us section', HttpStatus.CONFLICT)
+    const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
+    return await this.followUsModel.create({ ...CreateFollowUsDto, photo: data.url })
   }
-  
+
 
   // update follow us
-  async updateFollowUs(id:string,UpdateFollowUsDto:updateFollowUsDto,file:Express.Multer.File):Promise<FollowUs>{
-    if(file.path && file) {
-      const data=await cloudinary.uploader.upload(file.path,{public_id:file.originalname})
-      return await this.followUsModel.findByIdAndUpdate(id,{ $set:{...UpdateFollowUsDto,photo:data.url }},{new:true})
+  async updateFollowUs(id: string, UpdateFollowUsDto: updateFollowUsDto, file: Express.Multer.File): Promise<FollowUs> {
+    if (file && file.path) {
+      const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
+      return await this.followUsModel.findByIdAndUpdate(id, { $set: { ...UpdateFollowUsDto, photo: data.url } }, { new: true })
     } else {
-      return await this.followUsModel.findByIdAndUpdate(id,{$set:UpdateFollowUsDto})
+      return await this.followUsModel.findByIdAndUpdate(id, { $set: UpdateFollowUsDto })
     }
 
-   }
+  }
 
 
-   // delete follow us
-   async deleteFollowUs(id:string):Promise<string>{
-    const followUsExist=await this.followUsModel.findById(id)
-    if(!followUsExist) throw new HttpException('Follow us not found', HttpStatus.NOT_FOUND)
-     await this.followUsModel.findByIdAndDelete(id)
+  // delete follow us
+  async deleteFollowUs(id: string): Promise<string> {
+    const followUsExist = await this.followUsModel.findById(id)
+    if (!followUsExist) throw new HttpException('Follow us not found', HttpStatus.NOT_FOUND)
+    await this.followUsModel.findByIdAndDelete(id)
     return " Follow us information deleted "
-   }
+  }
 
 
-   // get follow us single
-   async getSingleFolowUs(id:string):Promise<FollowUs>{
+  // get follow us single
+  async getSingleFolowUs(id: string): Promise<FollowUs> {
     return await this.followUsModel.findById(id)
-   }
+  }
 
 
-   // get all follow us
-   async getAllFollowUs():Promise<FollowUs[]>{
+  // get all follow us
+  async getAllFollowUs(): Promise<FollowUs[]> {
     return await this.followUsModel.find()
-   }
+  }
 
 
 }
