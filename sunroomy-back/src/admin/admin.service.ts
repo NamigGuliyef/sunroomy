@@ -1514,12 +1514,12 @@ export class AdminService {
   // update homepage hero
   async updateHomepageHero(_id:string, updateHomepageHeroDto:UpdateHomepageHeroDto,photo:Express.Multer.File):Promise<HomepageHero>{
     const homepageHeroTitle=await this.homepage_heroModel.findOne({title:updateHomepageHeroDto.title})
-    if(homepageHeroTitle) throw new HttpException("Homepage hero link already exist",HttpStatus.CONFLICT)
+    if(homepageHeroTitle) throw new HttpException("Homepage hero already exist",HttpStatus.CONFLICT)
     if(photo && photo.path) {
       const photoUrl=await cloudinary.uploader.upload(photo.path,{public_id:photo.originalname})
       return await this.homepage_heroModel.findByIdAndUpdate(_id,{ $set:{...updateHomepageHeroDto, photo:photoUrl.url}})
     }
-    return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set:{ updateHomepageHeroDto }})
+    return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set: updateHomepageHeroDto })
   }
 
 

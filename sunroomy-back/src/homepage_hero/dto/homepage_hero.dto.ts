@@ -5,12 +5,15 @@ export class CreateHomepageHeroDto {
   title: string;
   @IsNotEmpty()
   link: string;
+  @IsNotEmpty()
+  subtitle: string;
 }
-
 
 export class UpdateHomepageHeroDto {
   @IsNotEmpty()
   title: string;
   @IsNotEmpty()
   link: string;
+  @IsNotEmpty()
+  subtitle: string;
 }
