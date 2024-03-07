@@ -505,52 +505,52 @@ export class AdminController {
   async getSingleRequestProject(@Param('id') id: string): Promise<RequestProject> {
     return await this.adminService.getSingleRequestProject(id)
   }
-  
+
 
   @Post('/dashboard/letUs-inspire-you')
   @HttpCode(HttpStatus.CREATED)
-  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
+  @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
   @UsePipes(new ValidationPipe())
-   async createLetUsInspireYou(@Body() letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,@UploadedFiles() files:Express.Multer.File[]):Promise<LetUs_Inspire_You>{
+  async createLetUsInspireYou(@Body() letUs_Inspire_You_Dto: LetUs_Inspire_You_Dto, @UploadedFiles() files: Express.Multer.File[]): Promise<LetUs_Inspire_You> {
     return await this.adminService.createLetUsInspireYou(letUs_Inspire_You_Dto, files)
   }
 
 
   @Patch('/dashboard/letUs-inspire-you/:id')
   @HttpCode(HttpStatus.OK)
-  @UseInterceptors(FilesInterceptor('photos',10,MulterOptionsCloudinary))
+  @UseInterceptors(FilesInterceptor('photos', 10, MulterOptionsCloudinary))
   @UsePipes(new ValidationPipe())
-  async updateLetUsInspireYou(@Param('id') id:string, @Body() letUs_Inspire_You_Dto:LetUs_Inspire_You_Dto,@UploadedFiles() files:Express.Multer.File[]):Promise<LetUs_Inspire_You>{
-      return await this.adminService.updateLetUsInspireYou(id,letUs_Inspire_You_Dto,files)
+  async updateLetUsInspireYou(@Param('id') id: string, @Body() letUs_Inspire_You_Dto: LetUs_Inspire_You_Dto, @UploadedFiles() files: Express.Multer.File[]): Promise<LetUs_Inspire_You> {
+    return await this.adminService.updateLetUsInspireYou(id, letUs_Inspire_You_Dto, files)
   }
 
-  
+
   @Delete('/dashboard/letUs-inspire-you/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteLetUsInspireYou(@Param('id') id:string){
+  async deleteLetUsInspireYou(@Param('id') id: string) {
     return await this.adminService.deleteLetUsInspireYou(id)
   }
 
 
   @Get('/dashboard/letUs-inspire-you')
   @HttpCode(HttpStatus.OK)
-  async getAllLetUsInspireYou():Promise<LetUs_Inspire_You[]>{
+  async getAllLetUsInspireYou(): Promise<LetUs_Inspire_You[]> {
     return this.adminService.getAllLetUsInspireYou()
   }
 
 
   @Get('/dashboard/letUs-inspire-you/:id')
   @HttpCode(HttpStatus.OK)
-  async geSingleLetUsInspireYou(@Param('id') id:string):Promise<LetUs_Inspire_You>{
+  async geSingleLetUsInspireYou(@Param('id') id: string): Promise<LetUs_Inspire_You> {
     return this.adminService.geSingleLetUsInspireYou(id)
   }
 
-  
+
   // create about us
   @Post('/dashboard/about-us')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  async createAboutUs(@Body() createAboutUsDto:CreateAboutUsDto):Promise<aboutUs>{
+  async createAboutUs(@Body() createAboutUsDto: CreateAboutUsDto): Promise<aboutUs> {
     return await this.adminService.createAboutUs(createAboutUsDto)
   }
 
@@ -559,7 +559,7 @@ export class AdminController {
   @Patch('/dashboard/about-us/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  async updateAboutUs(@Param('id') id:string,@Body() updateAboutUsDto:UpdateAboutUsDto):Promise<aboutUs>{
+  async updateAboutUs(@Param('id') id: string, @Body() updateAboutUsDto: UpdateAboutUsDto): Promise<aboutUs> {
     return await this.adminService.updateAboutUs(id, updateAboutUsDto)
   }
 
@@ -567,7 +567,7 @@ export class AdminController {
   // delete about
   @Delete('/dashboard/about-us/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteAboutUs(@Param('id') id:string):Promise<string>{
+  async deleteAboutUs(@Param('id') id: string): Promise<string> {
     return await this.adminService.deleteAboutUs(id)
   }
 
@@ -575,7 +575,7 @@ export class AdminController {
   // get single about us
   @Get('/dashboard/about-us/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleAboutUs(@Param('id') id:string):Promise<aboutUs>{
+  async getSingleAboutUs(@Param('id') id: string): Promise<aboutUs> {
     return await this.adminService.getSingleAboutUs(id)
   }
 
@@ -583,7 +583,7 @@ export class AdminController {
   // get all about us
   @Get('/dashboard/about-us')
   @HttpCode(HttpStatus.OK)
-  async getAllAboutUs():Promise<aboutUs[]>{
+  async getAllAboutUs(): Promise<aboutUs[]> {
     return await this.adminService.getAllAboutUs()
   }
 
@@ -631,9 +631,9 @@ export class AdminController {
   @Post('/dashboard/homepage_hero')
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.CREATED)
-  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary ))
-  async createHomepageHero(@Body() createHomepageHeroDto:CreateHomepageHeroDto, @UploadedFile() photo:Express.Multer.File):Promise<HomepageHero>{
-    return await this.adminService.createHomepageHero(createHomepageHeroDto,photo)
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async createHomepageHero(@Body() createHomepageHeroDto: CreateHomepageHeroDto, @UploadedFile() photo: Express.Multer.File): Promise<HomepageHero> {
+    return await this.adminService.createHomepageHero(createHomepageHeroDto, photo)
   }
 
   // update Homepage Hero
@@ -641,14 +641,14 @@ export class AdminController {
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
-  async updateHomepageHero(@Param('_id') _id:string, @Body() updateHomepageHeroDto:UpdateHomepageHeroDto, @UploadedFile() photo:Express.Multer.File):Promise<HomepageHero>{
+  async updateHomepageHero(@Param('_id') _id: string, @Body() updateHomepageHeroDto: UpdateHomepageHeroDto, @UploadedFile() photo: Express.Multer.File): Promise<HomepageHero> {
     return await this.adminService.updateHomepageHero(_id, updateHomepageHeroDto, photo)
   }
 
   // delete homepage hero
   @Delete('/dashboard/homepage_hero/:_id')
   @HttpCode(HttpStatus.OK)
-  async deleteHomepageHero(@Param('_id') _id:string):Promise<string>{
+  async deleteHomepageHero(@Param('_id') _id: string): Promise<string> {
     return await this.adminService.deleteHomepageHero(_id)
   }
 
@@ -656,7 +656,7 @@ export class AdminController {
   // get single homepage hero
   @Get('/dashboard/homepage_hero/:_id')
   @HttpCode(HttpStatus.OK)
-  async getSingleHomepageHero(@Param('_id') _id:string):Promise<HomepageHero>{
+  async getSingleHomepageHero(@Param('_id') _id: string): Promise<HomepageHero> {
     return await this.adminService.getSingleHomepageHero(_id)
   }
 
@@ -664,7 +664,7 @@ export class AdminController {
   // get all home page hero
   @Get('/dashboard/homepage_hero')
   @HttpCode(HttpStatus.OK)
-  async getAllHomepageHero():Promise<HomepageHero[]>{
+  async getAllHomepageHero(): Promise<HomepageHero[]> {
     return await this.adminService.getAllHomepageHero()
   }
 
@@ -673,9 +673,9 @@ export class AdminController {
   @Post('/dashboard/followUs')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('photo',MulterOptionsCloudinary))
-  async createFollowUs(@Body() CreateFollowUsDto:createFollowUsDto,@UploadedFile() file:Express.Multer.File):Promise<FollowUs>{
-    return await this.adminService.createFollowUs(CreateFollowUsDto,file)
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async createFollowUs(@Body() CreateFollowUsDto: createFollowUsDto, @UploadedFile() file: Express.Multer.File): Promise<FollowUs> {
+    return await this.adminService.createFollowUs(CreateFollowUsDto, file)
   }
 
 
@@ -683,34 +683,34 @@ export class AdminController {
   @Patch('/dashboard/followUs/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('photo',MulterOptionsCloudinary))
-  async updateFollowUs(@Param('id') id:string, @Body() UpdateFollowUsDto:updateFollowUsDto,@UploadedFile() file:Express.Multer.File):Promise<FollowUs>{
-    return await this.adminService.updateFollowUs(id,UpdateFollowUsDto,file)
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async updateFollowUs(@Param('id') id: string, @Body() UpdateFollowUsDto: updateFollowUsDto, @UploadedFile() file: Express.Multer.File): Promise<FollowUs> {
+    return await this.adminService.updateFollowUs(id, UpdateFollowUsDto, file)
   }
 
 
   // delete follow us
   @Delete('/dashboard/followUs/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteFollowUs(@Param('id') id:string):Promise<string>{
+  async deleteFollowUs(@Param('id') id: string): Promise<string> {
     return await this.adminService.deleteFollowUs(id)
   }
 
 
 
- // get follow us single
+  // get follow us single
   @Get('/dashboard/followUs/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleFolowUs(@Param('id') id:string):Promise<FollowUs>{
-      return await this.adminService.getSingleFolowUs(id)
+  async getSingleFolowUs(@Param('id') id: string): Promise<FollowUs> {
+    return await this.adminService.getSingleFolowUs(id)
   }
-  
+
 
   @Get('/dashboard/followUs')
   @HttpCode(HttpStatus.OK)
-  async getAllFolowUs():Promise<FollowUs[]>{
-      return await this.adminService.getAllFollowUs()
+  async getAllFolowUs(): Promise<FollowUs[]> {
+    return await this.adminService.getAllFollowUs()
   }
-  
+
 
 }
