@@ -673,9 +673,8 @@ export class AdminController {
   @Post('/dashboard/followUs')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
-  async createFollowUs(@Body() CreateFollowUsDto: createFollowUsDto, @UploadedFile() file: Express.Multer.File): Promise<FollowUs> {
-    return await this.adminService.createFollowUs(CreateFollowUsDto, file)
+  async createFollowUs(@Body() CreateFollowUsDto: createFollowUsDto): Promise<FollowUs> {
+    return await this.adminService.createFollowUs(CreateFollowUsDto)
   }
 
 
@@ -683,9 +682,8 @@ export class AdminController {
   @Patch('/dashboard/followUs/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
-  async updateFollowUs(@Param('id') id: string, @Body() UpdateFollowUsDto: updateFollowUsDto, @UploadedFile() file: Express.Multer.File): Promise<FollowUs> {
-    return await this.adminService.updateFollowUs(id, UpdateFollowUsDto, file)
+  async updateFollowUs(@Param('id') id: string, @Body() UpdateFollowUsDto: updateFollowUsDto): Promise<FollowUs> {
+    return await this.adminService.updateFollowUs(id, UpdateFollowUsDto)
   }
 
 

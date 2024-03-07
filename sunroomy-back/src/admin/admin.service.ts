@@ -1545,24 +1545,17 @@ export class AdminService {
 
 
   // create follow us
-  async createFollowUs(CreateFollowUsDto: createFollowUsDto, file: Express.Multer.File): Promise<FollowUs> {
+  async createFollowUs(CreateFollowUsDto: createFollowUsDto): Promise<FollowUs> {
     const followUsExist = await this.followUsModel.findOne({ name: CreateFollowUsDto.name, link: CreateFollowUsDto.link })
     if (followUsExist) throw new HttpException('There is already a name or link in the Follow Us section', HttpStatus.CONFLICT)
-    const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
-    return await this.followUsModel.create({ ...CreateFollowUsDto, photo: data.url })
+    return await this.followUsModel.create(CreateFollowUsDto )
   }
 
 
   // update follow us
-  async updateFollowUs(id: string, UpdateFollowUsDto: updateFollowUsDto, file: Express.Multer.File): Promise<FollowUs> {
-    if (file && file.path) {
-      const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
-      return await this.followUsModel.findByIdAndUpdate(id, { $set: { ...UpdateFollowUsDto, photo: data.url } }, { new: true })
-    } else {
-      return await this.followUsModel.findByIdAndUpdate(id, { $set: UpdateFollowUsDto })
+  async updateFollowUs(id: string, UpdateFollowUsDto: updateFollowUsDto): Promise<FollowUs> {
+      return await this.followUsModel.findByIdAndUpdate(id, { $set: UpdateFollowUsDto }, { new: true })
     }
-
-  }
 
 
   // delete follow us
