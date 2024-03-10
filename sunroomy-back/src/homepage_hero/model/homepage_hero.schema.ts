@@ -8,6 +8,8 @@ export class HomepageHero {
   title: string;
   @Prop({ required: true })
   link: string;
+  @Prop({ required: true })
+  subtitle: string;
 }
 
-export const HomepageHeroModel=SchemaFactory.createForClass(HomepageHero)
+export const HomepageHeroModel = SchemaFactory.createForClass(HomepageHero);

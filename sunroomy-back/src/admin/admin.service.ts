@@ -1523,14 +1523,14 @@ export class AdminService {
 
 
   // update homepage hero
-  async updateHomepageHero(_id: string, updateHomepageHeroDto: UpdateHomepageHeroDto, photo: Express.Multer.File): Promise<HomepageHero> {
-    const homepageHeroTitle = await this.homepage_heroModel.findOne({ title: updateHomepageHeroDto.title })
-    if (homepageHeroTitle) throw new HttpException("Homepage hero link already exist", HttpStatus.CONFLICT)
-    if (photo && photo.path) {
-      const photoUrl = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
-      return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set: { ...updateHomepageHeroDto, photo: photoUrl.url } })
+  async updateHomepageHero(_id:string, updateHomepageHeroDto:UpdateHomepageHeroDto,photo:Express.Multer.File):Promise<HomepageHero>{
+    const homepageHeroTitle=await this.homepage_heroModel.findOne({title:updateHomepageHeroDto.title})
+    if(homepageHeroTitle) throw new HttpException("Homepage hero already exist",HttpStatus.CONFLICT)
+    if(photo && photo.path) {
+      const photoUrl=await cloudinary.uploader.upload(photo.path,{public_id:photo.originalname})
+      return await this.homepage_heroModel.findByIdAndUpdate(_id,{ $set:{...updateHomepageHeroDto, photo:photoUrl.url}})
     }
-    return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set: { updateHomepageHeroDto } })
+    return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set: updateHomepageHeroDto })
   }
 
 
@@ -1556,24 +1556,17 @@ export class AdminService {
 
 
   // create follow us
-  async createFollowUs(CreateFollowUsDto: createFollowUsDto, file: Express.Multer.File): Promise<FollowUs> {
+  async createFollowUs(CreateFollowUsDto: createFollowUsDto): Promise<FollowUs> {
     const followUsExist = await this.followUsModel.findOne({ name: CreateFollowUsDto.name, link: CreateFollowUsDto.link })
     if (followUsExist) throw new HttpException('There is already a name or link in the Follow Us section', HttpStatus.CONFLICT)
-    const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
-    return await this.followUsModel.create({ ...CreateFollowUsDto, photo: data.url })
+    return await this.followUsModel.create(CreateFollowUsDto )
   }
 
 
   // update follow us
-  async updateFollowUs(id: string, UpdateFollowUsDto: updateFollowUsDto, file: Express.Multer.File): Promise<FollowUs> {
-    if (file && file.path) {
-      const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
-      return await this.followUsModel.findByIdAndUpdate(id, { $set: { ...UpdateFollowUsDto, photo: data.url } }, { new: true })
-    } else {
-      return await this.followUsModel.findByIdAndUpdate(id, { $set: UpdateFollowUsDto })
+  async updateFollowUs(id: string, UpdateFollowUsDto: updateFollowUsDto): Promise<FollowUs> {
+      return await this.followUsModel.findByIdAndUpdate(id, { $set: UpdateFollowUsDto }, { new: true })
     }
-
-  }
 
 
   // delete follow us
