@@ -656,7 +656,7 @@ export class AdminService {
   // create product - test edildi
   async createProduct(
     CreateProductDto: createProductDto,
-    file: Express.Multer.File,
+    file: { cover_photo: Express.Multer.File; photo: Express.Multer.File },
   ): Promise<Product> {
     const product = await this.productModel.findOne({
       title: CreateProductDto.title,
@@ -667,13 +667,19 @@ export class AdminService {
         HttpStatus.CONFLICT,
       );
     }
-    const fileuRL = await cloudinary.uploader.upload(file.path, {
-      public_id: file.originalname,
+    
+    const coverPhotoURL = await cloudinary.uploader.upload(file.cover_photo.path, {
+      public_id: file.cover_photo.originalname,
     });
+
+    const photoURL = await cloudinary.uploader.upload(file.photo.path, {
+      public_id: file.photo.originalname,
+    });
+   
     return await this.productModel.create({
       ...CreateProductDto,
       slug: slug(CreateProductDto.title, { lower: true }),
-      photo: fileuRL.url,
+      cover_photo: coverPhotoURL.url, photo: photoURL.url
     });
   }
 
@@ -681,7 +687,9 @@ export class AdminService {
   async updateProduct(
     id: string,
     UpdateProductDto: updateProductDto,
-    file: Express.Multer.File,
+    file: {
+      cover_photo: Express.Multer.File; photo: Express.Multer.File
+    },
   ): Promise<Product> {
     const productExist = await this.productModel.findById(id);
     // eger product yoxdursa
@@ -696,19 +704,22 @@ export class AdminService {
         'The product is already available in the database',
         HttpStatus.CONFLICT,
       );
-    if (UpdateProductDto.title || (file && file.path)) {
-      // fayl varsa title yoxsa
-      if (file && file.path) {
-        const fileUrl = await cloudinary.uploader.upload(file.path, {
-          public_id: file.originalname,
+    if (UpdateProductDto.title || (file.cover_photo && file.cover_photo.path) || (file.photo && file.photo.path)) {
+      // cover photo varsa title yoxsa
+      if (file.cover_photo && file.cover_photo.path) {
+        const fileUrl = await cloudinary.uploader.upload(file.cover_photo.path, {
+          public_id: file.cover_photo.originalname,
         });
-        return await this.productModel.findByIdAndUpdate(
-          id,
-          { $set: { ...UpdateProductDto, photo: fileUrl.url } },
-          { new: true },
-        );
+        return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, cover_photo: fileUrl.url } }, { new: true });
       }
-      // title varsa fayl yoxsa
+      // photo varsa title yoxsa
+      if (file.photo && file.photo.path) {
+        const filePhotoUrl = await cloudinary.uploader.upload(file.photo.path, {
+          public_id: file.photo.originalname,
+        });
+        return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, photo: filePhotoUrl.url } }, { new: true });
+      }
+      // title varsa fayllar yoxsa
       if (UpdateProductDto.title) {
         return await this.productModel.findByIdAndUpdate(
           id,

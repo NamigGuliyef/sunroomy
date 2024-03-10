@@ -283,16 +283,16 @@ export class AdminController {
   @Post('/dashboard/products')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
-  async createProduct(@Body() CreateProductDto: createProductDto, @UploadedFile() file: Express.Multer.File): Promise<Product> {
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'photo', maxCount: 1 }, { name: 'cover_photo', maxCount: 1 }], MulterOptionsCloudinary))
+  async createProduct(@Body() CreateProductDto: createProductDto, @UploadedFiles() file: { cover_photo: Express.Multer.File, photo: Express.Multer.File }): Promise<Product> {
     return await this.adminService.createProduct(CreateProductDto, file)
   }
 
   @Patch('/dashboard/products/:id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
-  async updateProduct(@Param('id') id: string, @Body() UpdateProductDto: updateProductDto, @UploadedFile() file: Express.Multer.File): Promise<Product> {
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'photo', maxCount: 1 }, { name: 'cover_photo', maxCount: 1 }], MulterOptionsCloudinary))
+  async updateProduct(@Param('id') id: string, @Body() UpdateProductDto: updateProductDto, @UploadedFiles() file: { cover_photo: Express.Multer.File, photo: Express.Multer.File }): Promise<Product> {
     return await this.adminService.updateProduct(id, UpdateProductDto, file)
   }
 
