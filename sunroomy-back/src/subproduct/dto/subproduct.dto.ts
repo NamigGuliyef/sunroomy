@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import mongoose from 'mongoose';
 
 export class createSubProductDto {
@@ -10,6 +10,10 @@ export class createSubProductDto {
   description_2: string;
   @IsNotEmpty()
   productId: mongoose.Schema.Types.ObjectId;
+  @IsOptional()
+  customId: mongoose.Schema.Types.ObjectId;
+  @IsOptional()
+  placementId: mongoose.Schema.Types.ObjectId;
 }
 
 export class updateSubProductDto {
@@ -17,4 +21,6 @@ export class updateSubProductDto {
   description: string;
   description_2: string;
   productId: mongoose.Schema.Types.ObjectId;
+  customId: mongoose.Schema.Types.ObjectId;
+  placementId: mongoose.Schema.Types.ObjectId;
 }

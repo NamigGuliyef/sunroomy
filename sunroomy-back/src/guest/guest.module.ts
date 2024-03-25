@@ -16,6 +16,8 @@ import { aboutUsModel } from '../about-us/model/about_us.schema';
 import { homeAboutUsModel } from '../home_about_us/model/home_about_us.schema';
 import { HomepageHeroModel } from '../homepage_hero/model/homepage_hero.schema';
 import { FollowUs } from '../follow_us/model/followus.schema';
+import { subproductCustomModel } from '../subproduct_custom/model/subproduct_custom.schema';
+import { subproductCustomItemModel } from '../subproduct-customItem/model/subproduct_customItem.schema';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'whyoutdorr', schema: whyOutdorrModel },
@@ -23,7 +25,9 @@ import { FollowUs } from '../follow_us/model/followus.schema';
   { name: 'subproduct', schema: subProductModel }, { name: 'project', schema: projectModel }, { name: 'contact', schema: contactModel },
   { name: 'projectdesign', schema: ProjectDesignModel }, { name: 'projectdesigndetail', schema: ProjectDesignDetailsModel },
   { name: 'requestproject', schema: requestProjectModel }, { name: 'letus_inspire_you', schema: LetUs_Inspire_YouModel }, { name: 'about_us', schema: aboutUsModel },
-  { name: 'home_about_us', schema: homeAboutUsModel },{ name: 'homepage_hero', schema: HomepageHeroModel },{name:'follow_us',schema:FollowUs} ])],
+  { name: 'home_about_us', schema: homeAboutUsModel },{ name: 'homepage_hero', schema: HomepageHeroModel },{name:'follow_us',schema:FollowUs},
+  { name: 'subproduct_custom', schema: subproductCustomModel }, { name: 'subproduct_customItem', schema: subproductCustomItemModel }
+ ])],
   providers: [GuestService],
   controllers: [GuestController]
 })

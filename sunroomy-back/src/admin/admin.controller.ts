@@ -11,6 +11,12 @@ import { createContactDto, updateContactDto } from '../contact/dto/contact.dto';
 import { Contact } from '../contact/model/contact.schema';
 import { createFeatureDto, updateFeatureDto } from '../features/dto/feature.dto';
 import { Feature } from '../features/model/feature.schema';
+import { createFollowUsDto, updateFollowUsDto } from '../follow_us/dto/followus.dto';
+import { FollowUs } from '../follow_us/model/followus.schema';
+import { CreateHomepageHeroDto, UpdateHomepageHeroDto } from '../homepage_hero/dto/homepage_hero.dto';
+import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
+import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto/home_about_us.dto';
+import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
 import { LetUs_Inspire_You_Dto } from '../letus-inspire-you/dto/letus_inspire_you.dto';
 import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.schema';
 import { createProjectNeedDto, updateProjectNeedDto } from '../needs/dto/need.dto';
@@ -26,8 +32,12 @@ import { Project } from '../projects/model/project.schema';
 import { RequestProject } from '../request-project/model/requestproject.schema';
 import { createSpecificationDto, updateSpecificationDto } from '../specifications/dto/specification.dto';
 import { Specification } from '../specifications/model/specification.schema';
+import { CreateSubproductCustomItemDto, UpdateSubproductCustomItemDto } from '../subproduct-customItem/dto/subproduct_customItem.dto';
+import { subproductCustomItem } from '../subproduct-customItem/model/subproduct_customItem.schema';
 import { createSubProductDto, updateSubProductDto } from '../subproduct/dto/subproduct.dto';
 import { Subproduct } from '../subproduct/model/subproduct.schema';
+import { createSubproductCustomDto, updateSubproductCustomDto } from '../subproduct_custom/dto/subproduct_custom.dto';
+import { subproductCustom } from '../subproduct_custom/model/subproduct_custom.schema';
 import { sendEmailText } from '../subscribe/dto/subscribe.dto';
 import { Subscribe } from '../subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from '../used-products/dto/usedproduct.dto';
@@ -35,12 +45,6 @@ import { UsedProducts } from '../used-products/model/usedproduct.schema';
 import { updateWhyOutdorrDto } from '../why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
 import { AdminService } from './admin.service';
-import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto/home_about_us.dto';
-import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
-import { CreateHomepageHeroDto, UpdateHomepageHeroDto } from '../homepage_hero/dto/homepage_hero.dto';
-import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
-import { createFollowUsDto, updateFollowUsDto } from '../follow_us/dto/followus.dto';
-import { FollowUs } from '../follow_us/model/followus.schema';
 
 @Controller('admin')
 export class AdminController {
@@ -695,7 +699,6 @@ export class AdminController {
   }
 
 
-
   // get follow us single
   @Get('/dashboard/followUs/:id')
   @HttpCode(HttpStatus.OK)
@@ -708,6 +711,90 @@ export class AdminController {
   @HttpCode(HttpStatus.OK)
   async getAllFolowUs(): Promise<FollowUs[]> {
     return await this.adminService.getAllFollowUs()
+  }
+
+
+  // create subproduct custom
+  @Post('/dashboard/subproduct-custom')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createSubproductCustom(@Body() CreatesubproductCustomDto: createSubproductCustomDto): Promise<subproductCustom> {
+    return await this.adminService.createSubproductCustom(CreatesubproductCustomDto)
+  }
+
+  // update subproduct custom
+  @Patch('/dashboard/subproduct-custom/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateSubproductCustom(@Param('id') id: string, @Body() UpdatesubproductCustomDto: updateSubproductCustomDto): Promise<subproductCustom> {
+    return await this.adminService.updateSubproductCustom(id, UpdatesubproductCustomDto)
+  }
+
+  // delete subproduct custom
+  @Delete('/dashboard/subproduct-custom/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteSubproductCustom(@Param('id') id: string): Promise<string> {
+    return await this.adminService.deleteSubproductCustom(id)
+  }
+
+
+  // get single subproduct custom
+  @Get('/dashboard/subproduct-custom/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSubproductCustom(@Param('id') id: string): Promise<subproductCustom> {
+    return await this.adminService.getSingleSubproductCustom(id)
+  }
+
+
+  // get all subproduct custom
+  @Get('/dashboard/subproduct-custom')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubproductCustom(): Promise<subproductCustom[]> {
+    return await this.adminService.getAllSubproductCustom()
+  }
+
+
+  // create subproduct custom item
+  @Post('/dashboard/subproduct-customItem')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async createSubproductCustomItem(@Body() createSubproductCustomItemDto: CreateSubproductCustomItemDto, @UploadedFile() photo: Express.Multer.File): Promise<string> {
+    return await this.adminService.createSubproductCustomItem(createSubproductCustomItemDto, photo)
+  }
+
+
+  // update subproduct custom item
+  @Patch('/dashboard/subproduct-customItem/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async updateSubproductCustomItem(@Param('id') id: string, @Body() updateSubproductCustomItemDto: UpdateSubproductCustomItemDto, @UploadedFile() photo: Express.Multer.File): Promise<string> {
+    return await this.adminService.updateSubproductCustomItem(id, updateSubproductCustomItemDto, photo)
+  }
+
+
+  // delete subproduct custom item
+  @Delete('/dashboard/subproduct-customItem/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteSubproductCustomItem(@Param('id') id: string): Promise<string> {
+    return await this.adminService.deleteSubproductCustomItem(id)
+  }
+
+
+  // get single subproduct custom item
+  @Get('/dashboard/subproduct-customItem/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSubproductCustomItem(@Param('id') id: string): Promise<subproductCustomItem> {
+    return await this.adminService.getSingleSubproductCustomItem(id)
+  }
+
+
+  // get all subproduct custom item
+  @Get('/dashboard/subproduct-customItem')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubproductCustomItem(): Promise<subproductCustomItem[]> {
+    return await this.adminService.getAllSubproductCustomItem()
   }
 
 

@@ -23,7 +23,11 @@ export class Subproduct {
   applicationIds: Types.ObjectId
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'product', required: true })
   productId: Types.ObjectId
-
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'subproduct_custom' })
+  customId: Types.ObjectId
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'subproduct_placement' })
+  placementId: Types.ObjectId
+  
 }
 
 export const subProductModel = SchemaFactory.createForClass(Subproduct)

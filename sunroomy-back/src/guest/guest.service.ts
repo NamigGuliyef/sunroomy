@@ -20,11 +20,13 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
 import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
 import { FollowUs } from '../follow_us/model/followus.schema';
+import { subproductCustom } from '../subproduct_custom/model/subproduct_custom.schema';
+import { subproductCustomItem } from '../subproduct-customItem/model/subproduct_customItem.schema';
 
 @Injectable()
 export class GuestService {
   constructor(
-    private mailerService:MailerService,
+    private mailerService: MailerService,
     @InjectModel('whyoutdorr') private whyOutdorrModel: Model<WhyOutdorr>,
     @InjectModel('subscribe') private subscribeModel: Model<Subscribe>,
     @InjectModel('product') private productModel: Model<Product>,
@@ -42,9 +44,10 @@ export class GuestService {
     @InjectModel('home_about_us') private homeAboutUsModel: Model<HomeAboutUs>,
     @InjectModel('homepage_hero') private homepage_heroModel: Model<HomepageHero>,
     @InjectModel('follow_us') private followUsModel: Model<FollowUs>,
+    @InjectModel('subproduct_custom') private subproductCustomModel: Model<subproductCustom>,
+    @InjectModel('subproduct_customItem') private subproductCustomItemModel: Model<subproductCustomItem>
 
-
-  ) {}
+  ) { }
 
   // get all product - test edildi
   async getAllProduct(): Promise<Product[]> {
@@ -74,7 +77,9 @@ export class GuestService {
         { path: 'featuresIds' },
         { path: 'specifications' },
         { path: 'applicationIds' },
-        { path: 'productId', select:'title', populate:{ path:'subProductIds', select:['title','description','cover_photo', 'slug']}}
+        { path: 'productId', select: 'title', populate: { path: 'subProductIds', select: ['title', 'description', 'cover_photo', 'slug'] } },
+        { path: 'customId' },
+        { path: 'placementId' }
       ]);
   }
 
@@ -83,7 +88,10 @@ export class GuestService {
     const subProductExist = await this.subProductModel
       .findOne({ slug })
       .populate([{ path: 'featuresIds' }, { path: 'specifications' }, { path: 'applicationIds' },
-      { path: 'productId',select:'title', populate:{ path:'subProductIds', select:['title','description','cover_photo', 'slug']}}]);
+      { path: 'productId', select: 'title', populate: { path: 'subProductIds', select: ['title', 'description', 'cover_photo', 'slug'] } },
+      { path: 'customId' },
+      { path: 'placementId' }
+      ]);
     if (!subProductExist) {
       throw new HttpException('Sub product not found', HttpStatus.NOT_FOUND);
     }
@@ -212,7 +220,7 @@ export class GuestService {
         });
         fileUrls.push(fileUrl.url);
       }
-       const newRequestProject = await this.requestProjectModel.create({
+      const newRequestProject = await this.requestProjectModel.create({
         ...createRequestProjectDto,
         window_and_doors,
         sunscreens,
@@ -220,10 +228,10 @@ export class GuestService {
       });
 
       this.mailerService.sendMail({
-        from:`${newRequestProject.email}`,
-        to:"sunroomy.inc@gmail.com",
-        subject:`Request a Project - ${newRequestProject.first_name + " " + newRequestProject.last_name}`,
-        html:""
+        from: `${newRequestProject.email}`,
+        to: "sunroomy.inc@gmail.com",
+        subject: `Request a Project - ${newRequestProject.first_name + " " + newRequestProject.last_name}`,
+        html: ""
       })
       return " Your project request has been successfully sent"
     } else {
@@ -241,9 +249,9 @@ export class GuestService {
     if (title) search.title = title;
     const titleRegex = new RegExp(title, 'i')  // 'i' parametresi büyük/küçük harf duyarlılığını kapatır
 
-    const product = await this.productModel.find({filter: titleRegex});
-    const subProduct = await this.subProductModel.find({title: titleRegex})
-    const project = await this.projectModel.find({title: titleRegex})
+    const product = await this.productModel.find({ filter: titleRegex });
+    const subProduct = await this.subProductModel.find({ title: titleRegex })
+    const project = await this.projectModel.find({ title: titleRegex })
     if (product.length > 0) {
       return product;
     }
@@ -256,69 +264,99 @@ export class GuestService {
   }
 
 
-    // get All let us inspire you - test ok
-    async getAllLetUsInspireYou():Promise<LetUs_Inspire_You[]>{
-      return await this.LetUs_Inspire_YouModel.find()
-    }
-  
-  
-   // get single let us inspire you - test ok
-   async geSingleLetUsInspireYou(id:string):Promise<LetUs_Inspire_You>{
+  // get All let us inspire you - test ok
+  async getAllLetUsInspireYou(): Promise<LetUs_Inspire_You[]> {
+    return await this.LetUs_Inspire_YouModel.find()
+  }
+
+
+  // get single let us inspire you - test ok
+  async geSingleLetUsInspireYou(id: string): Promise<LetUs_Inspire_You> {
     return await this.LetUs_Inspire_YouModel.findById(id)
-   }
+  }
 
 
-     // get single about us  - test ok
-  async getSingleAboutUs(id:string):Promise<aboutUs>{
-    const aboutUs=await this.aboutUsModel.findById(id)
-    if(!aboutUs) throw new HttpException('About us not found',HttpStatus.NOT_FOUND)
+  // get single about us  - test ok
+  async getSingleAboutUs(id: string): Promise<aboutUs> {
+    const aboutUs = await this.aboutUsModel.findById(id)
+    if (!aboutUs) throw new HttpException('About us not found', HttpStatus.NOT_FOUND)
     return aboutUs
   }
 
-  
+
   // get all about us  - test ok
-  async getAllAboutUs():Promise<aboutUs[]>{
+  async getAllAboutUs(): Promise<aboutUs[]> {
     return await this.aboutUsModel.find()
   }
 
 
-    // get single home about us
-    async getSingleHomeAboutUs(id: string): Promise<HomeAboutUs> {
-      const homeAboutUs = await this.homeAboutUsModel.findById(id);
-      if (!homeAboutUs) {
-        throw new HttpException('Home about us not found', HttpStatus.NOT_FOUND);
-      } else {
-        return homeAboutUs;
-      }
+  // get single home about us
+  async getSingleHomeAboutUs(id: string): Promise<HomeAboutUs> {
+    const homeAboutUs = await this.homeAboutUsModel.findById(id);
+    if (!homeAboutUs) {
+      throw new HttpException('Home about us not found', HttpStatus.NOT_FOUND);
+    } else {
+      return homeAboutUs;
     }
-  
-    //get All home about us
-    async getAllhomeAboutUs(): Promise<HomeAboutUs[]> {
-      return await this.homeAboutUsModel.find();
-    }
+  }
+
+  //get All home about us
+  async getAllhomeAboutUs(): Promise<HomeAboutUs[]> {
+    return await this.homeAboutUsModel.find();
+  }
 
 
-   // get single homepage hero
-   async getSingleHomepageHero(_id:string):Promise<HomepageHero>{
-     return await this.homepage_heroModel.findById(_id)
-   }
+  // get single homepage hero
+  async getSingleHomepageHero(_id: string): Promise<HomepageHero> {
+    return await this.homepage_heroModel.findById(_id)
+  }
 
 
-   // get all homepage hero
-   async getAllHomepageHero():Promise<HomepageHero[]>{
-     return await this.homepage_heroModel.find()
-   }
+  // get all homepage hero
+  async getAllHomepageHero(): Promise<HomepageHero[]> {
+    return await this.homepage_heroModel.find()
+  }
 
 
-   // get follow us single
-   async getSingleFolowUs(id:string):Promise<FollowUs>{
+  // get follow us single
+  async getSingleFolowUs(id: string): Promise<FollowUs> {
     return await this.followUsModel.findById(id)
-   }
+  }
 
 
-   // get all follow us
-   async getAllFollowUs():Promise<FollowUs[]>{
+  // get all follow us
+  async getAllFollowUs(): Promise<FollowUs[]> {
     return await this.followUsModel.find()
-   }
+  }
 
+
+  // get subproduct custom 
+  async getSingleSubproductCustom(id: string): Promise<subproductCustom> {
+    const subproductCustom = await this.subproductCustomModel.findById(id);
+    if (!subproductCustom) {
+      throw new HttpException('Subproduct custom not found', HttpStatus.NOT_FOUND);
+    } else {
+      return subproductCustom.populate([{ path: 'itemIds' }])
+    }
+  }
+
+
+  //get All subproduct custom 
+  async getAllSubproductCustom(): Promise<subproductCustom[]> {
+    return await this.subproductCustomModel.find().populate([{ path: 'itemIds' }]);
+  }
+
+
+  // get single subproduct custom item
+  async getSingleSubproductCustomItem(id: string): Promise<subproductCustomItem> {
+    const subproductCustomItemExist = await this.subproductCustomItemModel.findById(id)
+    if (!subproductCustomItemExist) throw new HttpException('Subproduct custom item not found', HttpStatus.NOT_FOUND)
+    return subproductCustomItemExist.populate([{ path: 'subproductCustomId' }])
+  }
+
+
+  // get all subproduct custom item
+  async getAllSubproductCustomItem(): Promise<subproductCustomItem[]> {
+    return await this.subproductCustomItemModel.find().populate([{ path: 'subproductCustomId' }])
+  }
 }

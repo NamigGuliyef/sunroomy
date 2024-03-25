@@ -19,6 +19,8 @@ import { aboutUs } from '../about-us/model/about_us.schema';
 import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
 import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
 import { FollowUs } from '../follow_us/model/followus.schema';
+import { subproductCustom } from '../subproduct_custom/model/subproduct_custom.schema';
+import { subproductCustomItem } from '../subproduct-customItem/model/subproduct_customItem.schema';
 
 @Controller('')
 export class GuestController {
@@ -122,30 +124,30 @@ export class GuestController {
 
   @Get('/q')
   @HttpCode(HttpStatus.OK)
-  async getAllFilter(@Query() filter:Filter){
+  async getAllFilter(@Query() filter: Filter) {
     return await this.guestService.getAllFilter(filter)
   }
 
 
   @Get('/letUs-inspire-you')
   @HttpCode(HttpStatus.OK)
-  async getAllLetUsInspireYou():Promise<LetUs_Inspire_You[]>{
+  async getAllLetUsInspireYou(): Promise<LetUs_Inspire_You[]> {
     return this.guestService.getAllLetUsInspireYou()
   }
 
 
   @Get('/letUs-inspire-you/:id')
   @HttpCode(HttpStatus.OK)
-  async geSingleLetUsInspireYou(@Param('id') id:string):Promise<LetUs_Inspire_You>{
+  async geSingleLetUsInspireYou(@Param('id') id: string): Promise<LetUs_Inspire_You> {
     return this.guestService.geSingleLetUsInspireYou(id)
   }
 
 
-  
+
   // get single about us
   @Get('/about-us/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleAboutUs(@Param('id') id:string):Promise<aboutUs>{
+  async getSingleAboutUs(@Param('id') id: string): Promise<aboutUs> {
     return await this.guestService.getSingleAboutUs(id)
   }
 
@@ -153,56 +155,87 @@ export class GuestController {
   // get all about us
   @Get('/about-us')
   @HttpCode(HttpStatus.OK)
-  async getAllAboutUs():Promise<aboutUs[]>{
+  async getAllAboutUs(): Promise<aboutUs[]> {
     return await this.guestService.getAllAboutUs()
   }
 
 
-    // get single home about us
-    @Get('/home_about_us/:id')
-    @HttpCode(HttpStatus.OK)
-    async getSingleHomeAboutUs(@Param('id') id: string): Promise<HomeAboutUs> {
-      return await this.guestService.getSingleHomeAboutUs(id)
-    }
-  
-    // get all home about us
-    @Get('/home_about_us')
-    @HttpCode(HttpStatus.OK)
-    async getAllHomeAboutUs(): Promise<HomeAboutUs[]> {
-      return await this.guestService.getAllhomeAboutUs()
-    }
+  // get single home about us
+  @Get('/home_about_us/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleHomeAboutUs(@Param('id') id: string): Promise<HomeAboutUs> {
+    return await this.guestService.getSingleHomeAboutUs(id)
+  }
 
-    
-    // get single homepage hero
-    @Get('/homepage_hero/:_id')
-    @HttpCode(HttpStatus.OK)
-    async getSingleHomepageHero(@Param('_id') _id:string):Promise<HomepageHero>{
-      return await this.guestService.getSingleHomepageHero(_id)
-    }
-  
-  
-    // get all home page hero
-    @Get('/homepage_hero')
-    @HttpCode(HttpStatus.OK)
-    async getAllHomepageHero():Promise<HomepageHero[]>{
-      return await this.guestService.getAllHomepageHero()
-    }
+  // get all home about us
+  @Get('/home_about_us')
+  @HttpCode(HttpStatus.OK)
+  async getAllHomeAboutUs(): Promise<HomeAboutUs[]> {
+    return await this.guestService.getAllhomeAboutUs()
+  }
 
 
-     // get follow us single
+  // get single homepage hero
+  @Get('/homepage_hero/:_id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleHomepageHero(@Param('_id') _id: string): Promise<HomepageHero> {
+    return await this.guestService.getSingleHomepageHero(_id)
+  }
+
+
+  // get all home page hero
+  @Get('/homepage_hero')
+  @HttpCode(HttpStatus.OK)
+  async getAllHomepageHero(): Promise<HomepageHero[]> {
+    return await this.guestService.getAllHomepageHero()
+  }
+
+
+  // get follow us single
   @Get('/followUs/:id')
   @HttpCode(HttpStatus.OK)
-  async getSingleFolowUs(@Param('id') id:string):Promise<FollowUs>{
-      return await this.guestService.getSingleFolowUs(id)
+  async getSingleFolowUs(@Param('id') id: string): Promise<FollowUs> {
+    return await this.guestService.getSingleFolowUs(id)
   }
-  
+
 
   @Get('/followUs')
   @HttpCode(HttpStatus.OK)
-  async getAllFolowUs():Promise<FollowUs[]>{
-      return await this.guestService.getAllFollowUs()
+  async getAllFolowUs(): Promise<FollowUs[]> {
+    return await this.guestService.getAllFollowUs()
   }
-  
+
+
+  // get single subproduct custom
+  @Get('/subproduct-custom/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSubproductCustom(@Param('id') id: string): Promise<subproductCustom> {
+    return await this.guestService.getSingleSubproductCustom(id)
+  }
+
+
+  // get all subproduct custom
+  @Get('/subproduct-custom')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubproductCustom(): Promise<subproductCustom[]> {
+    return await this.guestService.getAllSubproductCustom()
+  }
+
+
+
+  // get single subproduct custom item
+  @Get('/subproduct-customItem/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSubproductCustomItem(@Param('id') id: string): Promise<subproductCustomItem> {
+    return await this.guestService.getSingleSubproductCustomItem(id)
+  }
+
+
+  // get all subproduct custom item
+  @Get('/subproduct-customItem')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubproductCustomItem(): Promise<subproductCustomItem[]> {
+    return await this.guestService.getAllSubproductCustomItem()
+  }
 
 }
-

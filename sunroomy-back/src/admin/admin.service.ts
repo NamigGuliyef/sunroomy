@@ -5,80 +5,84 @@ import { Model } from 'mongoose';
 import slug from 'slugify';
 import {
   createAboutOutdorrDto,
-  updateAboutOutdorrDto,
+  updateAboutOutdorrDto
 } from '../about-outdorr/dto/aboutoutdorr.dto';
 import { AboutOutdorr } from '../about-outdorr/model/aboutoutdorr.schema';
 import { CreateAboutUsDto, UpdateAboutUsDto } from '../about-us/dto/about_us.dto';
 import { aboutUs } from '../about-us/model/about_us.schema';
 import {
   createApplicationDto,
-  updateApplicationDto,
+  updateApplicationDto
 } from '../applications/dto/application.dto';
 import { Application } from '../applications/model/application.schema';
 import cloudinary from '../config/cloudinary/cloudinary';
 import {
   createContactDto,
-  updateContactDto,
+  updateContactDto
 } from '../contact/dto/contact.dto';
 import { Contact } from '../contact/model/contact.schema';
 import {
   createFeatureDto,
-  updateFeatureDto,
+  updateFeatureDto
 } from '../features/dto/feature.dto';
 import { Feature } from '../features/model/feature.schema';
-import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto/home_about_us.dto';
-import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
+import { createFollowUsDto, updateFollowUsDto } from '../follow_us/dto/followus.dto';
+import { FollowUs } from '../follow_us/model/followus.schema';
 import { CreateHomepageHeroDto, UpdateHomepageHeroDto } from '../homepage_hero/dto/homepage_hero.dto';
 import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
+import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto/home_about_us.dto';
+import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
 import { LetUs_Inspire_You_Dto } from '../letus-inspire-you/dto/letus_inspire_you.dto';
 import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.schema';
 import {
   createProjectNeedDto,
-  updateProjectNeedDto,
+  updateProjectNeedDto
 } from '../needs/dto/need.dto';
 import { ProjectNeed } from '../needs/model/need.schema';
 import {
   createProductDto,
-  updateProductDto,
+  updateProductDto
 } from '../product/dto/product.dto';
 import { Product } from '../product/model/product.schema';
 import {
   CreateProjectDesignDetailsDto,
-  UpdateProjectDesignDetailsDto,
+  UpdateProjectDesignDetailsDto
 } from '../project-design-details/dto/projectdesigndetails.dto';
 import { ProjectDesignDetails } from '../project-design-details/model/projectdesigndetails.schema';
 import {
   CreateProjectDesignDto,
-  UpdateProjectDesignDto,
+  UpdateProjectDesignDto
 } from '../project-design/dto/projectdesign.dto';
 import { ProjectDesign } from '../project-design/model/projectdesign.schema';
 import {
   createProjectDto,
-  updateProjectDto,
+  updateProjectDto
 } from '../projects/dto/project.dto';
 import { Project } from '../projects/model/project.schema';
 import { RequestProject } from '../request-project/model/requestproject.schema';
 import {
   createSpecificationDto,
-  updateSpecificationDto,
+  updateSpecificationDto
 } from '../specifications/dto/specification.dto';
 import { Specification } from '../specifications/model/specification.schema';
+import { CreateSubproductCustomItemDto, UpdateSubproductCustomItemDto } from '../subproduct-customItem/dto/subproduct_customItem.dto';
+import { subproductCustomItem } from '../subproduct-customItem/model/subproduct_customItem.schema';
 import {
   createSubProductDto,
-  updateSubProductDto,
+  updateSubProductDto
 } from '../subproduct/dto/subproduct.dto';
 import { Subproduct } from '../subproduct/model/subproduct.schema';
+import { createSubproductCustomDto, updateSubproductCustomDto } from '../subproduct_custom/dto/subproduct_custom.dto';
+import { subproductCustom } from '../subproduct_custom/model/subproduct_custom.schema';
 import { sendEmailText } from '../subscribe/dto/subscribe.dto';
 import { Subscribe } from '../subscribe/model/subscribe.schema';
 import {
   createUsedProductsDto,
-  updateUsedProductsDto,
+  updateUsedProductsDto
 } from '../used-products/dto/usedproduct.dto';
 import { UsedProducts } from '../used-products/model/usedproduct.schema';
 import { updateWhyOutdorrDto } from '../why-outdorr/dto/whyoutdorr.dto';
 import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
-import { FollowUs } from '../follow_us/model/followus.schema';
-import { createFollowUsDto, updateFollowUsDto } from '../follow_us/dto/followus.dto';
 
 @Injectable()
 export class AdminService {
@@ -106,7 +110,9 @@ export class AdminService {
     @InjectModel('about_us') private aboutUsModel: Model<aboutUs>,
     @InjectModel('home_about_us') private homeAboutUsModel: Model<HomeAboutUs>,
     @InjectModel('homepage_hero') private homepage_heroModel: Model<HomepageHero>,
-    @InjectModel('follow_us') private followUsModel: Model<FollowUs>
+    @InjectModel('follow_us') private followUsModel: Model<FollowUs>,
+    @InjectModel('subproduct_custom') private subproductCustomModel: Model<subproductCustom>,
+    @InjectModel('subproduct_customItem') private subproductCustomItemModel: Model<subproductCustomItem>
 
   ) { }
 
@@ -667,7 +673,7 @@ export class AdminService {
         HttpStatus.CONFLICT,
       );
     }
-    
+
     const coverPhotoURL = await cloudinary.uploader.upload(file.cover_photo.path, {
       public_id: file.cover_photo.originalname,
     });
@@ -675,7 +681,7 @@ export class AdminService {
     const photoURL = await cloudinary.uploader.upload(file.photo.path, {
       public_id: file.photo.originalname,
     });
-   
+
     return await this.productModel.create({
       ...CreateProductDto,
       slug: slug(CreateProductDto.title, { lower: true }),
@@ -1523,12 +1529,12 @@ export class AdminService {
 
 
   // update homepage hero
-  async updateHomepageHero(_id:string, updateHomepageHeroDto:UpdateHomepageHeroDto,photo:Express.Multer.File):Promise<HomepageHero>{
-    const homepageHeroTitle=await this.homepage_heroModel.findOne({title:updateHomepageHeroDto.title})
-    if(homepageHeroTitle) throw new HttpException("Homepage hero already exist",HttpStatus.CONFLICT)
-    if(photo && photo.path) {
-      const photoUrl=await cloudinary.uploader.upload(photo.path,{public_id:photo.originalname})
-      return await this.homepage_heroModel.findByIdAndUpdate(_id,{ $set:{...updateHomepageHeroDto, photo:photoUrl.url}})
+  async updateHomepageHero(_id: string, updateHomepageHeroDto: UpdateHomepageHeroDto, photo: Express.Multer.File): Promise<HomepageHero> {
+    const homepageHeroTitle = await this.homepage_heroModel.findOne({ title: updateHomepageHeroDto.title })
+    if (homepageHeroTitle) throw new HttpException("Homepage hero already exist", HttpStatus.CONFLICT)
+    if (photo && photo.path) {
+      const photoUrl = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
+      return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set: { ...updateHomepageHeroDto, photo: photoUrl.url } })
     }
     return await this.homepage_heroModel.findByIdAndUpdate(_id, { $set: updateHomepageHeroDto })
   }
@@ -1559,14 +1565,14 @@ export class AdminService {
   async createFollowUs(CreateFollowUsDto: createFollowUsDto): Promise<FollowUs> {
     const followUsExist = await this.followUsModel.findOne({ name: CreateFollowUsDto.name, link: CreateFollowUsDto.link })
     if (followUsExist) throw new HttpException('There is already a name or link in the Follow Us section', HttpStatus.CONFLICT)
-    return await this.followUsModel.create(CreateFollowUsDto )
+    return await this.followUsModel.create(CreateFollowUsDto)
   }
 
 
   // update follow us
   async updateFollowUs(id: string, UpdateFollowUsDto: updateFollowUsDto): Promise<FollowUs> {
-      return await this.followUsModel.findByIdAndUpdate(id, { $set: UpdateFollowUsDto }, { new: true })
-    }
+    return await this.followUsModel.findByIdAndUpdate(id, { $set: UpdateFollowUsDto }, { new: true })
+  }
 
 
   // delete follow us
@@ -1590,5 +1596,102 @@ export class AdminService {
   }
 
 
+  // create subproduct custom 
+  async createSubproductCustom(
+    CreateSubproductCustomDto: createSubproductCustomDto,
+  ): Promise<subproductCustom> {
+    return await this.subproductCustomModel.create(CreateSubproductCustomDto);
+  }
+
+
+  // update  subproduct custom 
+  async updateSubproductCustom(id: string, UpdatesubproductCustomDto: updateSubproductCustomDto): Promise<subproductCustom> {
+    const subproductCustomExist = await this.subproductCustomModel.findById(id);
+    if (!subproductCustomExist) {
+      throw new HttpException('No project requirements found to be modified', HttpStatus.NOT_FOUND);
+    } else {
+      return await this.subproductCustomModel.findByIdAndUpdate(id, { $set: UpdatesubproductCustomDto }, { new: true });
+    }
+  }
+
+  // delete subproduct custom 
+  async deleteSubproductCustom(id: string): Promise<string> {
+    const subproductCustom = await this.subproductCustomModel.findById(id);
+    if (!subproductCustom) {
+      throw new HttpException(
+        'The subproduct custom you want to delete were not found',
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      await this.subproductCustomModel.findByIdAndDelete(id);
+      return 'Subproduct custom removed';
+    }
+  }
+
+  // get subproduct custom 
+  async getSingleSubproductCustom(id: string): Promise<subproductCustom> {
+    const subproductCustom = await this.subproductCustomModel.findById(id);
+    if (!subproductCustom) {
+      throw new HttpException('Subproduct custom not found', HttpStatus.NOT_FOUND);
+    } else {
+      return subproductCustom.populate([{ path: 'itemIds' }])
+    }
+  }
+
+
+  //get All subproduct custom 
+  async getAllSubproductCustom(): Promise<subproductCustom[]> {
+    return await this.subproductCustomModel.find().populate([{ path: 'itemIds' }]);
+  }
+
+
+  // create subproduct custom item 
+  async createSubproductCustomItem(createSubproductCustomItemDto: CreateSubproductCustomItemDto, photo: Express.Multer.File): Promise<string> {
+    const subproductCustomItem = await this.subproductCustomItemModel.findOne({ description: createSubproductCustomItemDto.description })
+    if (subproductCustomItem) throw new HttpException('Subproduct Custom item already exist', HttpStatus.CONFLICT)
+    const data = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
+    const NewSubproductCustomItem = await this.subproductCustomItemModel.create({ ...createSubproductCustomItemDto, photo: data.url })
+    await this.subproductCustomModel.findOneAndUpdate({ _id: NewSubproductCustomItem.subproductCustomId }, { $push: { itemIds: NewSubproductCustomItem._id } })
+    return 'New subproduct custom item created'
+  }
+
+
+  // update subproduct custom item
+  async updateSubproductCustomItem(id: string, updateSubproductCustomItemDto: UpdateSubproductCustomItemDto, photo: Express.Multer.File): Promise<string> {
+    const subproductCustomItemExist = await this.subproductCustomItemModel.findById(id)
+    if (!subproductCustomItemExist) throw new HttpException('Subproduct custom item not found', HttpStatus.NOT_FOUND)
+    if (photo && photo.path) {
+      const data = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
+      await this.subproductCustomItemModel.findByIdAndUpdate(id, { $set: { ...updateSubproductCustomItemDto, photo: data.url } })
+      return 'Subproduct custom item updated'
+    } else {
+      await this.subproductCustomItemModel.findByIdAndUpdate(id, { $set: updateSubproductCustomItemDto })
+      return 'Subproduct custom item updated'
+    }
+  }
+
+
+  // delete subproduct custom item
+  async deleteSubproductCustomItem(id: string): Promise<string> {
+    const subproductCustomItemExist = await this.subproductCustomItemModel.findById(id)
+    if (!subproductCustomItemExist) throw new HttpException('Subproduct custom item not found', HttpStatus.NOT_FOUND)
+    const subproductCustomItem = await this.subproductCustomItemModel.findByIdAndDelete(id)
+    await this.subproductCustomModel.findOneAndUpdate({ _id: subproductCustomItem.subproductCustomId }, { $pull: { itemIds: subproductCustomItem._id } })
+    return "Subproduct custom item deleted"
+  }
+
+
+  // get single subproduct custom item
+  async getSingleSubproductCustomItem(id: string): Promise<subproductCustomItem> {
+    const subproductCustomItemExist = await this.subproductCustomItemModel.findById(id)
+    if (!subproductCustomItemExist) throw new HttpException('Subproduct custom item not found', HttpStatus.NOT_FOUND)
+    return subproductCustomItemExist.populate([{ path: 'subproductCustomId' }])
+  }
+
+
+  // get all subproduct custom item
+  async getAllSubproductCustomItem(): Promise<subproductCustomItem[]> {
+    return await this.subproductCustomItemModel.find().populate([{ path: 'subproductCustomId' }])
+  }
 }
 
