@@ -673,13 +673,12 @@ export class AdminService {
         HttpStatus.CONFLICT,
       );
     }
-
-    const coverPhotoURL = await cloudinary.uploader.upload(file.cover_photo.path, {
-      public_id: file.cover_photo.originalname,
+    const coverPhotoURL = await cloudinary.uploader.upload(file.cover_photo[0].path, {
+      public_id: file.cover_photo[0].originalname,
     });
 
-    const photoURL = await cloudinary.uploader.upload(file.photo.path, {
-      public_id: file.photo.originalname,
+    const photoURL = await cloudinary.uploader.upload(file.photo[0].path, {
+      public_id: file.photo[0].originalname,
     });
 
     return await this.productModel.create({
@@ -710,18 +709,18 @@ export class AdminService {
         'The product is already available in the database',
         HttpStatus.CONFLICT,
       );
-    if (UpdateProductDto.title || (file.cover_photo && file.cover_photo.path) || (file.photo && file.photo.path)) {
+    if (UpdateProductDto.title || (file.cover_photo && file.cover_photo[0].path) || (file.photo && file.photo[0].path)) {
       // cover photo varsa title yoxsa
-      if (file.cover_photo && file.cover_photo.path) {
-        const fileUrl = await cloudinary.uploader.upload(file.cover_photo.path, {
-          public_id: file.cover_photo.originalname,
+      if (file.cover_photo && file.cover_photo[0].path) {
+        const fileUrl = await cloudinary.uploader.upload(file.cover_photo[0].path, {
+          public_id: file.cover_photo[0].originalname,
         });
         return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, cover_photo: fileUrl.url } }, { new: true });
       }
       // photo varsa title yoxsa
-      if (file.photo && file.photo.path) {
-        const filePhotoUrl = await cloudinary.uploader.upload(file.photo.path, {
-          public_id: file.photo.originalname,
+      if (file.photo && file.photo[0].path) {
+        const filePhotoUrl = await cloudinary.uploader.upload(file.photo[0].path, {
+          public_id: file.photo[0].originalname,
         });
         return await this.productModel.findByIdAndUpdate(id, { $set: { ...UpdateProductDto, photo: filePhotoUrl.url } }, { new: true });
       }
