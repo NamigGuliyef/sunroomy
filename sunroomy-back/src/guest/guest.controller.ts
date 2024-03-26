@@ -21,6 +21,8 @@ import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
 import { FollowUs } from '../follow_us/model/followus.schema';
 import { subproductCustom } from '../subproduct_custom/model/subproduct_custom.schema';
 import { subproductCustomItem } from '../subproduct-customItem/model/subproduct_customItem.schema';
+import { subproductPlacement } from '../subproduct_placement/model/subproduct_placement.schema';
+import { subproductPlacementItem } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
 
 @Controller('')
 export class GuestController {
@@ -238,4 +240,35 @@ export class GuestController {
     return await this.guestService.getAllSubproductCustomItem()
   }
 
+
+  // get single subproduct placement
+  @Get('/subproduct-placement/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSubproductPlacement(@Param('id') id: string): Promise<subproductPlacement> {
+    return await this.guestService.getSingleSubproductPlacement(id)
+  }
+
+
+  // get all subproduct placement
+  @Get('/subproduct-placement')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubproductPlacement(): Promise<subproductPlacement[]> {
+    return await this.guestService.getAllSubproductPlacement()
+  }
+
+
+  // get single subproduct placement item
+  @Get('/subproduct-placementItem/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSubproductPlacementItem(@Param('id') id: string): Promise<subproductPlacementItem> {
+    return await this.guestService.getSingleSubproductPlacementItem(id)
+  }
+
+
+  // get all subproduct placement item
+  @Get('/subproduct-placementItem')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubproductPlacementItem(): Promise<subproductPlacementItem[]> {
+    return await this.guestService.getAllSubproductPlacementItem()
+  }
 }

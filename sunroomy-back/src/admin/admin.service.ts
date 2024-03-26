@@ -67,6 +67,8 @@ import {
 import { Specification } from '../specifications/model/specification.schema';
 import { CreateSubproductCustomItemDto, UpdateSubproductCustomItemDto } from '../subproduct-customItem/dto/subproduct_customItem.dto';
 import { subproductCustomItem } from '../subproduct-customItem/model/subproduct_customItem.schema';
+import { CreateSubproductPlacementItemDto, UpdateSubproductPlacementItemDto } from '../subproduct-placementItem/dto/subproduct_placementItem.dto';
+import { subproductPlacementItem } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
 import {
   createSubProductDto,
   updateSubProductDto
@@ -74,6 +76,8 @@ import {
 import { Subproduct } from '../subproduct/model/subproduct.schema';
 import { createSubproductCustomDto, updateSubproductCustomDto } from '../subproduct_custom/dto/subproduct_custom.dto';
 import { subproductCustom } from '../subproduct_custom/model/subproduct_custom.schema';
+import { createSubproductPlacementDto, updateSubproductPlacementDto } from '../subproduct_placement/dto/subproduct_placement.dto';
+import { subproductPlacement } from '../subproduct_placement/model/subproduct_placement.schema';
 import { sendEmailText } from '../subscribe/dto/subscribe.dto';
 import { Subscribe } from '../subscribe/model/subscribe.schema';
 import {
@@ -112,7 +116,9 @@ export class AdminService {
     @InjectModel('homepage_hero') private homepage_heroModel: Model<HomepageHero>,
     @InjectModel('follow_us') private followUsModel: Model<FollowUs>,
     @InjectModel('subproduct_custom') private subproductCustomModel: Model<subproductCustom>,
-    @InjectModel('subproduct_customItem') private subproductCustomItemModel: Model<subproductCustomItem>
+    @InjectModel('subproduct_customItem') private subproductCustomItemModel: Model<subproductCustomItem>,
+    @InjectModel('subproduct_placement') private subproductPlacementModel: Model<subproductPlacement>,
+    @InjectModel('subproduct_placementItem') private subproductPlacementItemModel: Model<subproductPlacementItem>
 
   ) { }
 
@@ -1692,5 +1698,104 @@ export class AdminService {
   async getAllSubproductCustomItem(): Promise<subproductCustomItem[]> {
     return await this.subproductCustomItemModel.find().populate([{ path: 'subproductCustomId' }])
   }
+
+
+    // create subproduct placement 
+    async createSubproductPlacement(
+      CreateSubproductPlacementDto: createSubproductPlacementDto,
+    ): Promise<subproductPlacement> {
+      return await this.subproductPlacementModel.create(CreateSubproductPlacementDto);
+    }
+  
+  
+    // update  subproduct placement 
+    async updateSubproductPlacement(id: string, UpdatesubproductPlacementDto: updateSubproductPlacementDto): Promise<subproductPlacement> {
+      const subproductPlacementExist = await this.subproductPlacementModel.findById(id);
+      if (!subproductPlacementExist) {
+        throw new HttpException('No project requirements found to be modified', HttpStatus.NOT_FOUND);
+      } else {
+        return await this.subproductPlacementModel.findByIdAndUpdate(id, { $set: UpdatesubproductPlacementDto }, { new: true });
+      }
+    }
+  
+    // delete subproduct placement 
+    async deleteSubproductPlacement(id: string): Promise<string> {
+      const subproductPlacement = await this.subproductPlacementModel.findById(id);
+      if (!subproductPlacement) {
+        throw new HttpException(
+          'The subproduct placement you want to delete were not found',
+          HttpStatus.NOT_FOUND,
+        );
+      } else {
+        await this.subproductPlacementModel.findByIdAndDelete(id);
+        return 'Subproduct placement removed';
+      }
+    }
+  
+    // get subproduct placement 
+    async getSingleSubproductPlacement(id: string): Promise<subproductPlacement> {
+      const subproductPlacement = await this.subproductPlacementModel.findById(id);
+      if (!subproductPlacement) {
+        throw new HttpException('Subproduct placement not found', HttpStatus.NOT_FOUND);
+      } else {
+        return subproductPlacement.populate([{ path: 'itemIds' }])
+      }
+    }
+  
+  
+    //get All subproduct placement 
+    async getAllSubproductPlacement(): Promise<subproductPlacement[]> {
+      return await this.subproductPlacementModel.find().populate([{ path: 'itemIds' }]);
+    }
+  
+  
+    // create subproduct placement item 
+    async createSubproductPlacementItem(createSubproductPlacementItemDto: CreateSubproductPlacementItemDto, photo: Express.Multer.File): Promise<string> {
+      const subproductPlacementItem = await this.subproductPlacementItemModel.findOne({ description: createSubproductPlacementItemDto.description })
+      if (subproductPlacementItem) throw new HttpException('Subproduct placement item already exist', HttpStatus.CONFLICT)
+      const data = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
+      const NewSubproductPlacementItem = await this.subproductPlacementItemModel.create({ ...createSubproductPlacementItemDto, photo: data.url })
+      await this.subproductPlacementModel.findOneAndUpdate({ _id: NewSubproductPlacementItem.subproductPlacementId }, { $push: { itemIds: NewSubproductPlacementItem._id } })
+      return 'New subproduct placement item created'
+    }
+  
+  
+    // update subproduct placement item
+    async updateSubproductPlacementItem(id: string, updateSubproductPlacementItemDto: UpdateSubproductPlacementItemDto, photo: Express.Multer.File): Promise<string> {
+      const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
+      if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
+      if (photo && photo.path) {
+        const data = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
+        await this.subproductPlacementItemModel.findByIdAndUpdate(id, { $set: { ...updateSubproductPlacementItemDto, photo: data.url } })
+        return 'Subproduct placement item updated'
+      } else {
+        await this.subproductPlacementItemModel.findByIdAndUpdate(id, { $set: updateSubproductPlacementItemDto })
+        return 'Subproduct placement item updated'
+      }
+    }
+  
+  
+    // delete subproduct placement item
+    async deleteSubproductPlacementItem(id: string): Promise<string> {
+      const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
+      if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
+      const subproductPlacementItem = await this.subproductPlacementItemModel.findByIdAndDelete(id)
+      await this.subproductPlacementModel.findOneAndUpdate({ _id: subproductPlacementItem.subproductPlacementId }, { $pull: { itemIds: subproductPlacementItem._id } })
+      return "Subproduct placement item deleted"
+    }
+  
+  
+    // get single subproduct placement item
+    async getSingleSubproductPlacementItem(id: string): Promise<subproductPlacementItem> {
+      const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
+      if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
+      return subproductPlacementItemExist.populate([{ path: 'subproductPlacementId' }])
+    }
+  
+  
+    // get all subproduct placement item
+    async getAllSubproductPlacementItem(): Promise<subproductPlacementItem[]> {
+      return await this.subproductPlacementItemModel.find().populate([{ path: 'subproductPlacementId' }])
+    }
 }
 

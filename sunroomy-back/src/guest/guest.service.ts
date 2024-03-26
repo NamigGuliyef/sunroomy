@@ -22,6 +22,8 @@ import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
 import { FollowUs } from '../follow_us/model/followus.schema';
 import { subproductCustom } from '../subproduct_custom/model/subproduct_custom.schema';
 import { subproductCustomItem } from '../subproduct-customItem/model/subproduct_customItem.schema';
+import { subproductPlacement } from '../subproduct_placement/model/subproduct_placement.schema';
+import { subproductPlacementItem } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
 
 @Injectable()
 export class GuestService {
@@ -45,7 +47,9 @@ export class GuestService {
     @InjectModel('homepage_hero') private homepage_heroModel: Model<HomepageHero>,
     @InjectModel('follow_us') private followUsModel: Model<FollowUs>,
     @InjectModel('subproduct_custom') private subproductCustomModel: Model<subproductCustom>,
-    @InjectModel('subproduct_customItem') private subproductCustomItemModel: Model<subproductCustomItem>
+    @InjectModel('subproduct_customItem') private subproductCustomItemModel: Model<subproductCustomItem>,
+    @InjectModel('subproduct_placement') private subproductPlacementModel: Model<subproductPlacement>,
+    @InjectModel('subproduct_placementItem') private subproductPlacementItemModel: Model<subproductPlacementItem>
 
   ) { }
 
@@ -359,4 +363,38 @@ export class GuestService {
   async getAllSubproductCustomItem(): Promise<subproductCustomItem[]> {
     return await this.subproductCustomItemModel.find().populate([{ path: 'subproductCustomId' }])
   }
+
+
+
+  // get subproduct placement 
+  async getSingleSubproductPlacement(id: string): Promise<subproductPlacement> {
+    const subproductPlacement = await this.subproductPlacementModel.findById(id);
+    if (!subproductPlacement) {
+      throw new HttpException('Subproduct placement not found', HttpStatus.NOT_FOUND);
+    } else {
+      return subproductPlacement.populate([{ path: 'itemIds' }])
+    }
+  }
+
+
+  //get All subproduct placement 
+  async getAllSubproductPlacement(): Promise<subproductPlacement[]> {
+    return await this.subproductPlacementModel.find().populate([{ path: 'itemIds' }]);
+  }
+
+
+  // get single subproduct placement item
+  async getSingleSubproductPlacementItem(id: string): Promise<subproductPlacementItem> {
+    const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
+    if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
+    return subproductPlacementItemExist.populate([{ path: 'subproductPlacementId' }])
+  }
+
+
+  // get all subproduct placement item
+  async getAllSubproductPlacementItem(): Promise<subproductPlacementItem[]> {
+    return await this.subproductPlacementItemModel.find().populate([{ path: 'subproductPlacementId' }])
+  }
+
+
 }

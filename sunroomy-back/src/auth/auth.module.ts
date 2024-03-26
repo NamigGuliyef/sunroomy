@@ -18,8 +18,10 @@ import { projectModel } from '../projects/model/project.schema';
 import { requestProjectModel } from '../request-project/model/requestproject.schema';
 import { specificationModel } from '../specifications/model/specification.schema';
 import { subproductCustomItemModel } from '../subproduct-customItem/model/subproduct_customItem.schema';
+import { subproductPlacementItemModel } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
 import { subProductModel } from '../subproduct/model/subproduct.schema';
 import { subproductCustomModel } from '../subproduct_custom/model/subproduct_custom.schema';
+import { subproductPlacementModel } from '../subproduct_placement/model/subproduct_placement.schema';
 import { subscribeModel } from '../subscribe/model/subscribe.schema';
 import { usedProductsModel } from '../used-products/model/usedproduct.schema';
 import { whyOutdorrModel } from '../why-outdorr/model/whyoutdorr.schema';
@@ -51,7 +53,9 @@ import { AuthService } from './auth.service';
       { name: 'homepage_hero', schema: HomepageHeroModel },
       { name: 'follow_us', schema: followUsModel },
       { name: 'subproduct_custom', schema: subproductCustomModel },
-      { name: 'subproduct_customItem', schema: subproductCustomItemModel }
+      { name: 'subproduct_customItem', schema: subproductCustomItemModel },
+      { name: 'subproduct_placement', schema: subproductPlacementModel },
+      { name: 'subproduct_placementItem', schema: subproductPlacementItemModel }
     ]),
   ],
   controllers: [AuthController],

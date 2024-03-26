@@ -34,10 +34,14 @@ import { createSpecificationDto, updateSpecificationDto } from '../specification
 import { Specification } from '../specifications/model/specification.schema';
 import { CreateSubproductCustomItemDto, UpdateSubproductCustomItemDto } from '../subproduct-customItem/dto/subproduct_customItem.dto';
 import { subproductCustomItem } from '../subproduct-customItem/model/subproduct_customItem.schema';
+import { CreateSubproductPlacementItemDto, UpdateSubproductPlacementItemDto } from '../subproduct-placementItem/dto/subproduct_placementItem.dto';
+import { subproductPlacementItem } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
 import { createSubProductDto, updateSubProductDto } from '../subproduct/dto/subproduct.dto';
 import { Subproduct } from '../subproduct/model/subproduct.schema';
 import { createSubproductCustomDto, updateSubproductCustomDto } from '../subproduct_custom/dto/subproduct_custom.dto';
 import { subproductCustom } from '../subproduct_custom/model/subproduct_custom.schema';
+import { createSubproductPlacementDto, updateSubproductPlacementDto } from '../subproduct_placement/dto/subproduct_placement.dto';
+import { subproductPlacement } from '../subproduct_placement/model/subproduct_placement.schema';
 import { sendEmailText } from '../subscribe/dto/subscribe.dto';
 import { Subscribe } from '../subscribe/model/subscribe.schema';
 import { createUsedProductsDto, updateUsedProductsDto } from '../used-products/dto/usedproduct.dto';
@@ -797,5 +801,89 @@ export class AdminController {
     return await this.adminService.getAllSubproductCustomItem()
   }
 
+
+   // create subproduct placement
+   @Post('/dashboard/subproduct-placement')
+   @HttpCode(HttpStatus.CREATED)
+   @UsePipes(new ValidationPipe())
+   async createSubproductPlacement(@Body() CreatesubproductPlacementDto: createSubproductPlacementDto): Promise<subproductPlacement> {
+     return await this.adminService.createSubproductPlacement(CreatesubproductPlacementDto)
+   }
+ 
+   // update subproduct placement
+   @Patch('/dashboard/subproduct-placement/:id')
+   @HttpCode(HttpStatus.OK)
+   @UsePipes(new ValidationPipe())
+   async updateSubproductPlacement(@Param('id') id: string, @Body() UpdatesubproductPlacementDto: updateSubproductPlacementDto): Promise<subproductPlacement> {
+     return await this.adminService.updateSubproductPlacement(id, UpdatesubproductPlacementDto)
+   }
+ 
+   // delete subproduct placement
+   @Delete('/dashboard/subproduct-placement/:id')
+   @HttpCode(HttpStatus.OK)
+   async deleteSubproductPlacement(@Param('id') id: string): Promise<string> {
+     return await this.adminService.deleteSubproductPlacement(id)
+   }
+ 
+ 
+   // get single subproduct Placement
+   @Get('/dashboard/subproduct-placement/:id')
+   @HttpCode(HttpStatus.OK)
+   async getSingleSubproductPlacement(@Param('id') id: string): Promise<subproductPlacement> {
+     return await this.adminService.getSingleSubproductPlacement(id)
+   }
+ 
+ 
+   // get all subproduct placement
+   @Get('/dashboard/subproduct-placement')
+   @HttpCode(HttpStatus.OK)
+   async getAllSubproductPlacement(): Promise<subproductPlacement[]> {
+     return await this.adminService.getAllSubproductCustom()
+   }
+ 
+ 
+   // create subproduct placement item
+   @Post('/dashboard/subproduct-placementItem')
+   @HttpCode(HttpStatus.CREATED)
+   @UsePipes(new ValidationPipe())
+   @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+   async createSubproductPlacementItem(@Body() createSubproductPlacementItemDto: CreateSubproductPlacementItemDto, @UploadedFile() photo: Express.Multer.File): Promise<string> {
+     return await this.adminService.createSubproductPlacementItem(createSubproductPlacementItemDto, photo)
+   }
+ 
+ 
+   // update subproduct placement item
+   @Patch('/dashboard/subproduct-placementItem/:id')
+   @HttpCode(HttpStatus.OK)
+   @UsePipes(new ValidationPipe())
+   @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+   async updateSubproductPlacementItem(@Param('id') id: string, @Body() updateSubproductPlacementItemDto: UpdateSubproductPlacementItemDto, @UploadedFile() photo: Express.Multer.File): Promise<string> {
+     return await this.adminService.updateSubproductPlacementItem(id, updateSubproductPlacementItemDto, photo)
+   }
+ 
+ 
+   // delete subproduct placement item
+   @Delete('/dashboard/subproduct-placementItem/:id')
+   @HttpCode(HttpStatus.OK)
+   async deleteSubproductPlacementItem(@Param('id') id: string): Promise<string> {
+     return await this.adminService.deleteSubproductPlacementItem(id)
+   }
+ 
+ 
+   // get single subproduct placement item
+   @Get('/dashboard/subproduct-placementItem/:id')
+   @HttpCode(HttpStatus.OK)
+   async getSingleSubproductPlacementItem(@Param('id') id: string): Promise<subproductPlacementItem> {
+     return await this.adminService.getSingleSubproductPlacementItem(id)
+   }
+ 
+ 
+   // get all subproduct placement item
+   @Get('/dashboard/subproduct-placementItem')
+   @HttpCode(HttpStatus.OK)
+   async getAllSubproductPlacementItem(): Promise<subproductPlacementItem[]> {
+     return await this.adminService.getAllSubproductPlacementItem()
+   }
+ 
 
 }
