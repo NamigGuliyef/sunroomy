@@ -8,31 +8,31 @@ const Request: React.FC<RequestProps> = ({ size }) => {
   return (
     <div
       id="request"
-      className={`rounded-2.5xl font-sf flex md:items-center p-5 md:py-14 font-light flex-col w-full bg-[#1D1D1D] ${
+      className={`flex w-full flex-col rounded-2.5xl bg-[#1D1D1D] p-5 font-sf font-light md:items-center md:py-14 ${
         size === "lg" ? "max-w-full" : "max-w-[648px]"
       }`}
     >
-      <h1 className="text-xl sm:text-2xl text-secondarygray">
+      <h1 className="text-xl text-secondarygray sm:text-2xl">
         Couldn’t Find What You Are Looking For ?
       </h1>
-      <div className="leading-[150%] md:text-center text-white mt-3 md:mt-6 mb-11 text-base font-light">
+      <div className="mb-11 mt-3 text-base font-light leading-[150%] text-white md:mt-6 md:text-center">
         <p>
           We are always ready to help you to get the best out of our services
         </p>
         <p className="text-lightblue">7 / 24 Active Service</p>
       </div>
-      <form className="w-full overflow-hidden self-center md:self-auto relative h-[65px] flex bg-white rounded-[100px] max-w-[285px]">
+      <form className="relative flex h-[65px] w-full max-w-[285px] self-center overflow-hidden rounded-[100px] bg-white md:self-auto">
         <input
           disabled
           type="text"
-          className="bg-white placeholder:transition-all focus:ring-0 border-none placeholder:duration-500 focus:placeholder:opacity-0 w-[200px] pl-9 text-lg font-helvetica focus:outline-none placeholder:text-[#161618] outline-none"
+          className="w-[200px] border-none bg-white pl-9 font-helvetica text-lg outline-none placeholder:text-[#161618] placeholder:transition-all placeholder:duration-500 focus:outline-none focus:ring-0 focus:placeholder:opacity-0"
           name="Request"
-          placeholder="Request a Project"
+          placeholder="Contact Us"
           id="Request"
         />
         <Link
-          href={"/contacts"}
-          className="bg-black px-6 py-6 group hover:bg-black/90 cursor-pointer border bo text-white rounded-[100px] absolute right-1 top-1/2 -translate-y-1/2"
+          href={"/contact-us"}
+          className="bo group absolute right-1 top-1/2 -translate-y-1/2 cursor-pointer rounded-[100px] border bg-black px-6 py-6 text-white hover:bg-black/90"
         >
           <FaChevronRight size={12} className="text-white " />
         </Link>

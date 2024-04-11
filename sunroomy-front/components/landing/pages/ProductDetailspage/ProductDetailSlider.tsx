@@ -6,19 +6,37 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import "swiper/css";
 import "swiper/css/effect-fade";
-import { EffectFade, Navigation, Pagination } from "swiper/modules";
+import { EffectFade, Navigation, Pagination, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import Lightbox from "yet-another-react-lightbox";
 
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import NextJsImage from "../../Common/NextJSImage";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 function ProductDetailSlider({ product }: { product: ISubProduct }) {
   const { photos } = product;
   const [init, setInit] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const [isLastSlide, setIsLastSlide] = useState(false);
   const [isFirstSlide, setIsFirstSlide] = useState(true);
   const prevButtonRef = useRef(null);
   const nextButtonRef = useRef(null);
+  const slides = photos.map((photo) => ({
+    width: 1300,
+    height: 1300,
+    src: photo,
+  }));
   return (
     <>
       <Section className="mt-12 lg:mt-24">
+        <Lightbox
+          open={open}
+          close={() => setOpen(false)}
+          slides={slides}
+          render={{ slide: NextJsImage, thumbnail: NextJsImage }}
+          plugins={[Thumbnails]}
+        />
         <Swiper
           spaceBetween={24}
           speed={700}
@@ -37,13 +55,16 @@ function ProductDetailSlider({ product }: { product: ISubProduct }) {
               slidesPerView: "auto",
             },
           }}
+          autoplay={{
+            delay: 4000,
+          }}
           onInit={() => setInit(true)}
           onSlideChange={({ isBeginning, isEnd, activeIndex }) => {
             setIsFirstSlide(isBeginning);
             setIsLastSlide(isEnd);
           }}
           className="relative h-[327px] !select-none md:h-[500px]"
-          modules={[EffectFade, Navigation, Pagination]}
+          modules={[EffectFade, Navigation, Pagination, Autoplay]}
           navigation={{
             prevEl: prevButtonRef.current,
             nextEl: nextButtonRef.current,
@@ -51,19 +72,19 @@ function ProductDetailSlider({ product }: { product: ISubProduct }) {
         >
           {photos.map((item: any, idx: number) => (
             <SwiperSlide
+              onClick={() => setOpen(true)}
               // className="h-[327px] !select-none md:h-[500px]"
               className={cn(
-                "h-[327px] !select-none md:h-[500px]",
+                "h-[327px] !select-none group cursor-pointer md:h-[500px]",
                 idx === 0 ? "lg:!w-1/2" : idx === 2 ? "lg:!w-2/5" : "lg:!w-2/6",
               )}
               key={idx}
             >
               <Image
                 src={item}
-                className="block aspect-auto h-full max-h-full w-full rounded-2xl object-cover brightness-75 md:rounded-2.5xl md:object-cover"
+                className="block aspect-auto group-hover:scale-95 transition-all duration-500 h-full max-h-full w-full rounded-2xl object-cover brightness-75 md:rounded-2.5xl md:object-cover"
                 width={1320}
                 height={500}
-                loading="lazy"
                 alt="image"
               />
             </SwiperSlide>

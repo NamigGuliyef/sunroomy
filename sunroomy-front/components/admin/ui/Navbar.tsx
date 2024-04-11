@@ -23,11 +23,10 @@ import { useState } from "react";
 function Header({ user }: { user: User | undefined }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuItems = [
-    { title: "Home", href: "/admin/dashboard/" },
+    { title: "Home", href: "/admin" },
     { title: "Projects", href: "/admin/dashboard/projects" },
     { title: "Products", href: "/admin/dashboard/products" },
     { title: "Subproducts", href: "/admin/dashboard/subproducts" },
-    { title: "About", href: "/admin/dashboard/about" },
   ];
   const handleLogin = () => {
     signIn();

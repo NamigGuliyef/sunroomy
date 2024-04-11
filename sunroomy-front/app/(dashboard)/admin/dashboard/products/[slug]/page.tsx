@@ -3,12 +3,14 @@
 import NotFoundPage from "@/app/(dashboard)/not-found";
 import { PageWrapper } from "@/components/PageWrapper";
 import Preloader from "@/components/admin/Preloader";
+import AboutUsEditor from "@/components/admin/aboutUsEditor";
 import { Input as ShadInput } from "@/components/admin/ui/input";
 import { IProduct, ISubProduct } from "@/types/types";
 import { Button, Card, Input, Select, SelectItem } from "@nextui-org/react";
+import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -17,6 +19,7 @@ const ProductsPage = ({ params }: { params: { slug: string } }) => {
   const [data, setData] = useState<IProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [desc, setDesc] = useState<string | null>(null);
   const { data: session, status } = useSession();
 
   useEffect(() => {
@@ -40,6 +43,7 @@ const ProductsPage = ({ params }: { params: { slug: string } }) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FieldValues>();
   const router = useRouter();
@@ -55,6 +59,7 @@ const ProductsPage = ({ params }: { params: { slug: string } }) => {
           ? null
           : formSubmitData.description,
       photo: formSubmitData.files[0],
+      cover_photo: formSubmitData.cover_photo[0],
     };
     setLoading(true);
     const res = await axios
@@ -81,7 +86,12 @@ const ProductsPage = ({ params }: { params: { slug: string } }) => {
         setLoading(false);
       });
   };
-  if (error) return <NotFoundPage />;
+  if (error) {
+    notFound();
+  }
+  const handleChangeDesc = (e: any) => {
+    setValue("description", e);
+  };
   return (
     <div className="container mx-auto mt-6 max-w-[1280px] px-6">
       {loading ? (
@@ -108,7 +118,11 @@ const ProductsPage = ({ params }: { params: { slug: string } }) => {
                 defaultValue={data?.title!}
                 placeholder="Enter your title"
               />
-              <Input
+              <AboutUsEditor
+                desc={data?.description!}
+                onChangeDesc={handleChangeDesc}
+              />
+              {/* <Input
                 {...register("description")}
                 isDisabled={loading}
                 label="Description"
@@ -119,11 +133,22 @@ const ProductsPage = ({ params }: { params: { slug: string } }) => {
                 variant="underlined"
                 defaultValue={data?.description}
                 placeholder="Enter your description"
-              />
+              /> */}
+              <Label>Page Photo</Label>
               <ShadInput
                 id="file"
                 placeholder="file"
                 {...register("files")}
+                color="primary"
+                className="flex h-[64px] items-center justify-center file:mt-1 file:rounded-large file:bg-primary file:px-4 file:py-2 file:text-white file:shadow-lg file:hover:cursor-pointer hover:file:bg-primary/90"
+                type="file"
+                multiple
+              />
+              <Label>Cover Photo</Label>
+              <ShadInput
+                id="file"
+                placeholder="file"
+                {...register("cover_photo")}
                 color="primary"
                 className="flex h-[64px] items-center justify-center file:mt-1 file:rounded-large file:bg-primary file:px-4 file:py-2 file:text-white file:shadow-lg file:hover:cursor-pointer hover:file:bg-primary/90"
                 type="file"

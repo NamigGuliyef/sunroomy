@@ -1,4 +1,3 @@
-// pages/404.js
 import Link from "next/link";
 import {
   Card,
@@ -11,6 +10,10 @@ import { ArrowRight } from "lucide-react";
 import LandingLayout from "./(landing)/layout";
 
 const NotFoundPage = () => {
+  async function create() {
+    'use server'
+    
+  }
   return (
     <LandingLayout>
       <div className="container mx-auto mb-24 mt-24 max-w-[1280px] px-6">
@@ -23,14 +26,14 @@ const NotFoundPage = () => {
               <p className="mb-8 text-2xl">
                 The page you&apos;re looking for doesn&apos;t exist.
               </p>
-              <Link href="/" className="flex justify-end">
+              <Link href="./" className="flex justify-end">
                 <Button
                   size="md"
                   className="flex items-center text-xl"
                   color="default"
                   variant="faded"
                 >
-                  Go Home
+                  Go back!
                   <ArrowRight
                     className="text-inherit"
                     strokeWidth={"2px"}

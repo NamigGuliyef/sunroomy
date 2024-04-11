@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 const UsedProductsPage = ({ params }: { params: { id: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [usedProductData, setUsedProductData] = useState<IUsedProduct | null>(
-    null
+    null,
   );
   const {
     register,
@@ -35,7 +35,7 @@ const UsedProductsPage = ({ params }: { params: { id: string } }) => {
             headers: {
               Authorization: `Bearer ${session?.user.token}`,
             },
-          }
+          },
         );
         setUsedProductData(response.data);
       } catch (error) {
@@ -57,7 +57,7 @@ const UsedProductsPage = ({ params }: { params: { id: string } }) => {
         for (let i = 0; i < value.length; i++) {
           formData.append("photos", value[i]);
         }
-      } else if (key !== "photos" && (value.length > 1)) {
+      } else if (key !== "photos" && value.length > 1) {
         formData.append(key, value);
       }
     }
@@ -72,7 +72,7 @@ const UsedProductsPage = ({ params }: { params: { id: string } }) => {
             Authorization: `Bearer ${session?.user.token}`,
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       )
       .then((response) => {
         setIsLoading(false);
@@ -95,10 +95,10 @@ const UsedProductsPage = ({ params }: { params: { id: string } }) => {
           <Preloader />
         </div>
       ) : (
-        <div className="container mt-6 mx-auto px-6 max-w-[1280px]">
+        <div className="container mx-auto mt-6 max-w-[1280px] px-6">
           <PageWrapper>
             <h1 className="text-5xl">Create used product</h1>
-            <Card className="p-4 mt-8">
+            <Card className="mt-8 p-4">
               <form
                 className="flex flex-col gap-8"
                 onSubmit={handleSubmit(onSubmit)}
@@ -125,12 +125,22 @@ const UsedProductsPage = ({ params }: { params: { id: string } }) => {
                   variant="underlined"
                   placeholder="Enter your description"
                 />
+                <Input
+                  {...register("link")}
+                  label="Link"
+                  type="text"
+                  name="link"
+                  size="lg"
+                  id="text"
+                  variant="underlined"
+                  placeholder="Enter link to product"
+                />
                 <ShadInput
                   id="photos"
                   placeholder="photos"
                   {...register("photos")}
                   color="primary"
-                  className="file:bg-primary flex items-center justify-center h-[64px] file:shadow-lg file:hover:cursor-pointer file:text-white hover:file:bg-primary/90 file:py-2 file:mt-1 file:px-4 file:rounded-large"
+                  className="flex h-[64px] items-center justify-center file:mt-1 file:rounded-large file:bg-primary file:px-4 file:py-2 file:text-white file:shadow-lg file:hover:cursor-pointer hover:file:bg-primary/90"
                   type="file"
                   multiple
                 />

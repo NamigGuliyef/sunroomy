@@ -62,15 +62,17 @@ function Input({
           setFieldValue(name, e.target.value), onChange && onChange(e);
         }}
         value={value}
-        className={`focus:outline-none resize-none file:bg-black file:rounded-2.5xl file:px-4 file:py-2 file:text-white file:font-sf file:border-0 file:p-2 file:text-sm focus-visible:right-0 focus-visible:border-2 peer w-full font-sf outline-none rounded-[8px] ${
+        className={`peer w-full resize-none rounded-[8px] bg-inherit font-sf outline-none file:rounded-2.5xl file:border-0 file:bg-black file:p-2 file:px-4 file:py-2 file:font-sf file:text-sm file:text-white focus:outline-none focus-visible:right-0 focus-visible:border-2 ${
           component === "textarea" ? "h-24 md:h-32" : "h-[58px]"
-        } px-4 ${type === 'file' ? "py-[10px]" : "pt-6"} border border-[#ABAFB1] ${hasError && "!border-red-500"}`}
+        } px-4 ${
+          type === "file" ? "py-[10px]" : "pt-6"
+        } border border-[#ABAFB1] ${hasError && "!border-red-500"}`}
         type={type}
       />
       {type !== "file" && (
         <label
           htmlFor={htmlFor}
-          className="absolute cursor-text font-sf text-sm peer-placeholder-shown:text-base text-[#5E6366] peer-placeholder-shown:text-[#ABAFB1] top-2 peer-focus:top-2 peer-focus:left-4 transition-all left-4 peer-placeholder-shown:left-4 peer-placeholder-shown:top-4"
+          className="absolute left-4 top-2 cursor-text font-sf text-sm text-[#5E6366] transition-all peer-placeholder-shown:left-4 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-[#ABAFB1] peer-focus:left-4 peer-focus:top-2"
         >
           {placeholder}
         </label>
@@ -78,7 +80,7 @@ function Input({
       <ErrorMessage
         name={name}
         component="div"
-        className="text-red-500 text-sm"
+        className="text-sm text-red-500"
       />
     </div>
   );

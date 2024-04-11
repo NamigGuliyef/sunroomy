@@ -1,6 +1,6 @@
-import SendRequest from "./SendRequest";
 import RequestHeading from "./RequestHeading";
-
+import dynamic from "next/dynamic";
+const SendRequest = dynamic(() => import("./SendRequest"));
 const RequestView = () => {
   return (
     <>

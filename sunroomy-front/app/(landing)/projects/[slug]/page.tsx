@@ -8,6 +8,7 @@ import Image from "next/image";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import { Metadata, ResolvingMetadata } from "next";
+import UsedProductsImage from "@/components/landing/pages/ProjectDetailspage/UsedProductsImage";
 
 type ProjectDetailsProps = {
   params: {
@@ -24,12 +25,19 @@ export async function generateMetadata(
   const project = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/projects/${slug}`,
     {
-      next: { revalidate: 60 },
+      next: { revalidate: 1 },
     },
   ).then((res) => res.json());
 
   return {
     title: `${project.title}`,
+    openGraph: {
+      title: `${project.title} | Sunroomy`,
+      description: "The Next Generation of Design and Craft.",
+    },
+    alternates: {
+      canonical: `/projects/${project.slug}`,
+    },
   };
 }
 
@@ -37,7 +45,7 @@ export async function generateStaticParams() {
   const projects = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/projects`,
     {
-      next: { revalidate: 60 },
+      next: { revalidate: 1 },
     },
   ).then((res) => res.json());
 
@@ -49,14 +57,14 @@ async function getProjectData(slug: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/projects/${slug}`,
     {
-      next: { revalidate: 60 },
+      next: { revalidate: 1 },
     },
   );
   return res.json();
 }
 async function getData() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects`, {
-    next: { revalidate: 60 },
+    next: { revalidate: 1 },
   });
   return res.json();
 }
@@ -135,10 +143,10 @@ async function ProjectDetails({ params }: ProjectDetailsProps) {
           </div>
         </div>
         <div className="flex flex-col gap-6 md:flex-row">
-          <div className="order-2 flex min-h-[540px] flex-col justify-between rounded-[30px] border border-[#BABABA] p-6 text-darkgray md:order-1 md:min-h-[444px] md:w-1/2 lg:p-14">
+          <div className="order-2 flex min-h-[540px] flex-col justify-between rounded-[30px] border border-[#BABABA] p-6 text-darkgray md:order-1 md:min-h-[648px] md:w-1/2 lg:p-14">
             <div className="flex flex-col gap-6">
               <p className="text-base font-light ">USED PRODUCTS</p>
-              <h1 className="text-3.2xl font-semibold capitalize leading-[120%] text-darkgray md:text-5xl">
+              <h1 className="text-3.2xl font-semibold capitalize leading-[120%] text-darkgray lg:text-5xl">
                 {usedProductsId?.title} used in this Project
               </h1>
               <p className="text-2xl leading-[120%]">
@@ -146,21 +154,13 @@ async function ProjectDetails({ params }: ProjectDetailsProps) {
               </p>
             </div>
             <Button
-              to="#"
-              className="mt-8 w-9/12 px-6 py-5 font-sf font-semibold md:mt-0 md:w-1/2"
+              to={"/products/" + usedProductsId?.link}
+              className="mt-8 w-9/12 px-6 py-5 font-sf font-semibold md:mt-0 md:w-9/12 lg:w-1/2"
             >
               Find Out More
             </Button>
           </div>
-          <div className="order-1 max-h-[327px] overflow-hidden rounded-[30px] sm:max-h-[450px] md:order-2 md:max-h-[648px] md:w-1/2">
-            <Image
-              alt="Inspire"
-              src="/images/projects-page/imageabout.png"
-              className="block aspect-auto h-full max-h-full w-full object-cover md:object-cover"
-              height={648}
-              width={648}
-            />
-          </div>
+          <UsedProductsImage src={usedProductsId.photos[0]} />
         </div>
       </Section>
 
@@ -176,4 +176,4 @@ async function ProjectDetails({ params }: ProjectDetailsProps) {
 }
 
 export default ProjectDetails;
-export const revalidate = 60;
+export const revalidate = 1;

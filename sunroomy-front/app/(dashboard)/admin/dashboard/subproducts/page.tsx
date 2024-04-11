@@ -17,7 +17,7 @@ export default function SubproductsPage() {
     let selectedProductId = e.target.value;
     if (products) {
       let foundProduct = products.find(
-        (product) => product._id === selectedProductId
+        (product) => product._id === selectedProductId,
       );
       setSelectedProduct(foundProduct || null);
     } else {
@@ -49,9 +49,9 @@ export default function SubproductsPage() {
           <Preloader />
         </div>
       ) : (
-        <div className="container flex flex-col gap-6 items-start mt-6 mx-auto px-6 max-w-[1280px]">
-          <h1 className="text-5xl mb-4">Subproducts data</h1>
-          <div className="flex w-full mb-8 justify-between">
+        <div className="container mx-auto mt-6 flex max-w-[1280px] flex-col items-start gap-6 px-6">
+          <h1 className="mb-4 text-5xl">Subproducts data</h1>
+          <div className="mb-8 flex w-full justify-between">
             <Button
               as={Link}
               href="/admin/dashboard/subproducts/new"
@@ -81,7 +81,39 @@ export default function SubproductsPage() {
             )}
           </div>
           <SubProductsTable subproducts={selectedProduct?.subProductIds!} />
-          <div className="flex w-full gap-6 justify-between">
+          <div className="flex w-full justify-between gap-6">
+            <Helper
+              cardClass="w-1/3"
+              link="/admin/dashboard/subproduct-custom"
+              title="Subproduct custom"
+              text={
+                <p>
+                  After creating subproduct, you should go to{" "}
+                  <span className="font-medium underline">
+                    Create Subproduct custom page
+                  </span>{" "}
+                  {/* and create it, then you need to come back to this page and add
+                  it to your product via{" "} */}
+                  {/* <span className="font-medium underline">Edit button</span> */}
+                </p>
+              }
+            />
+            <Helper
+              cardClass="w-1/3"
+              link="/admin/dashboard/subproduct-placement"
+              title="Placement"
+              text={
+                <p>
+                  After creating subproduct, you should go to{" "}
+                  <span className="font-medium underline">
+                    Create Subproduct Placement page
+                  </span>{" "}
+                  {/* and create it, then you need to come back to this page and add
+                it to your product via{" "} */}
+                  {/* <span className="font-medium underline">Edit button</span> */}
+                </p>
+              }
+            />
             <Helper
               cardClass="w-1/3"
               link="/admin/dashboard/specifications/new"
@@ -91,38 +123,6 @@ export default function SubproductsPage() {
                   After creating subproduct, you should go to{" "}
                   <span className="font-medium underline">
                     Create specification page
-                  </span>{" "}
-                  and create it, then you need to come back to this page and add
-                  it to your product via{" "}
-                  <span className="font-medium underline">Edit button</span>
-                </p>
-              }
-            />
-            <Helper
-              cardClass="w-1/3"
-              link="/admin/dashboard/applications/new"
-              title="Applications"
-              text={
-                <p>
-                  After creating subproduct, you should go to{" "}
-                  <span className="font-medium underline">
-                    Create application page
-                  </span>{" "}
-                  and create it, then you need to come back to this page and add
-                  it to your product via{" "}
-                  <span className="font-medium underline">Edit button</span>
-                </p>
-              }
-            />
-            <Helper
-              cardClass="w-1/3"
-              link="/admin/dashboard/features/new"
-              title="Features"
-              text={
-                <p>
-                  After creating subproduct, you should go to{" "}
-                  <span className="font-medium underline">
-                    Create feature page
                   </span>{" "}
                   and create it, then you need to come back to this page and add
                   it to your product via{" "}

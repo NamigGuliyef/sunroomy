@@ -1,15 +1,26 @@
 import { PageWrapper } from "@/components/PageWrapper";
-import About from "@/components/landing/pages/Homepage/About";
-import Hero from "@/components/landing/pages/Homepage/Hero";
-import Inspire from "@/components/landing/pages/Homepage/Inspire";
-import Support from "@/components/landing/pages/Homepage/Support";
-import WhyUs from "@/components/landing/pages/Homepage/WhyUs";
+import { Metadata } from "next";
+import dynamic from "next/dynamic";
 
+// Dynamic imports for components
+const Hero = dynamic(() => import("@/components/landing/pages/Homepage/Hero"));
+const About = dynamic(
+  () => import("@/components/landing/pages/Homepage/About"),
+);
+const Inspire = dynamic(
+  () => import("@/components/landing/pages/Homepage/Inspire"),
+);
+const Support = dynamic(
+  () => import("@/components/landing/pages/Homepage/Support"),
+);
+const WhyUs = dynamic(
+  () => import("@/components/landing/pages/Homepage/WhyUs"),
+);
 const getWhyUs = async () => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/why-outdorr`,
     {
-      next: { revalidate: 60 },
+      next: { revalidate: 1 },
     },
   );
   return res.json();
@@ -19,7 +30,25 @@ const getInspire = async () => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/letUs-inspire-you`,
     {
-      next: { revalidate: 60 },
+      next: { revalidate: 1 },
+    },
+  );
+  return res.json();
+};
+const getAbout = async () => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/home_about_us`,
+    {
+      next: { revalidate: 1 },
+    },
+  );
+  return res.json();
+};
+const getContact = async () => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/contacts`,
+    {
+      next: { revalidate: 1 },
     },
   );
   return res.json();
@@ -27,19 +56,22 @@ const getInspire = async () => {
 
 export default async function Home() {
   try {
-    const [whyusData, inspireData] = await Promise.all([
+    const [whyusData, inspireData, aboutData, contactData] = await Promise.all([
       getWhyUs(),
       getInspire(),
+      getAbout(),
+      getContact(),
     ]);
     const whyUs = whyusData[0];
+    const about = aboutData[0];
     const inspire = inspireData[0];
-
+    const contact = contactData[0];
     return (
       <PageWrapper>
         <Hero />
-        <About />
+        <About data={about} />
         <WhyUs variant="home" data={whyUs} />
-        <Inspire data={inspire} />
+        <Inspire contact={contact} data={inspire} />
         <Support />
       </PageWrapper>
     );

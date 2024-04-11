@@ -72,7 +72,7 @@ export default function WhyItemsContainer({
               spaceBetween: 12,
             },
           }}
-          loop={true}
+          // loop={true}
           speed={700}
           onInit={handleSlideChange}
           onSlideChange={handleSlideChange}

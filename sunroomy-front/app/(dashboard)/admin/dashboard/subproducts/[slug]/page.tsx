@@ -4,48 +4,68 @@ import NotFoundPage from "@/app/(dashboard)/not-found";
 import { PageWrapper } from "@/components/PageWrapper";
 import Preloader from "@/components/admin/Preloader";
 import { Input as ShadInput } from "@/components/admin/ui/input";
-import { IFeature, IProduct, ISubProduct } from "@/types/types";
+import {
+  IFeature,
+  IProduct,
+  ISubProduct,
+  ISubProductCustom,
+  ISubProductPlacement,
+} from "@/types/types";
 import { Button, Card, Input, Select, SelectItem } from "@nextui-org/react";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { notFound, redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const ProjectsPage = ({ params }: { params: { slug: string } }) => {
   const [data, setData] = useState<ISubProduct | null>(null);
-  const [features, setFeatures] = useState<IFeature[] | null>(null);
+  const [customs, setCustoms] = useState<ISubProductCustom[] | null>(null);
+  const [placements, setPlacements] = useState<ISubProductPlacement[] | null>(
+    null,
+  );
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [products, setProducts] = useState<IProduct[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const [error, setError] = useState(false);
-  const subproductFeatures = features?.filter(
-    (feature) => feature.subProductId,
-  );
+  // const subproductFeatures = features?.filter(
+  //   (feature) => feature.subProductId,
+  // );
 
   const { data: session, status } = useSession();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [subproductResponse, featuresResponse, productsResponse] =
-          await Promise.all([
-            axios.get(
-              `${process.env.NEXT_PUBLIC_BACKEND_URL}/subproducts/${params.slug}`,
-            ),
-            axios.get(
-              `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/dashboard/features`,
-              {
-                headers: { Authorization: `Bearer ${session?.user.token}` },
-              },
-            ),
-            axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/products/`),
-          ]);
-
+        const [
+          subproductResponse,
+          customsResponse,
+          placementResponse,
+          productsResponse,
+        ] = await Promise.all([
+          axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/subproducts/${params.slug}`,
+          ),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/dashboard/subproduct-custom`,
+            {
+              headers: { Authorization: `Bearer ${session?.user.token}` },
+            },
+          ),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/dashboard/subproduct-placement`,
+            {
+              headers: { Authorization: `Bearer ${session?.user.token}` },
+            },
+          ),
+          axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/products/`),
+        ]);
+        console.log(placementResponse.data);
         setData(subproductResponse.data);
-        setFeatures(featuresResponse.data);
+        setCustoms(customsResponse.data);
+        setPlacements(placementResponse.data);
         setProducts(productsResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -81,11 +101,10 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
         postData.append("cover_photo", values[0]);
       } else if (key === "productId" && values && values.length >= 1) {
         postData.append("productId", values);
-      } else if (key === "featuresIds" && values && values.length >= 1) {
-        const featuresArray = values.split(",");
-        for (let i = 0; i < featuresArray.length; i++) {
-          postData.append("featuresIds[]", featuresArray[i]);
-        }
+      } else if (key === "customId" && values && values.length >= 1) {
+        postData.append("customId", values);
+      } else if (key === "placementId" && values && values.length >= 1) {
+        postData.append("placementId", values);
       } else if (key === "specifications" && values && values.length >= 1) {
         const specificationsArray = values.split(",");
         for (let i = 0; i < specificationsArray.length; i++) {
@@ -126,7 +145,9 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
       });
   };
 
-  if (error) return <NotFoundPage />;
+  if (error) {
+    redirect('/admin/auth/signin')
+  }
   return (
     <div className="container mx-auto mt-6 max-w-[1280px] px-6">
       {isLoading ? (
@@ -213,19 +234,36 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
                   )}
                 </Select>
               )}
-              {features && (
+              {customs && (
                 <Select
-                  items={subproductFeatures}
-                  label="Features"
+                  items={customs}
+                  label="Custom Combinations"
                   color="default"
-                  selectionMode="multiple"
-                  {...register("featuresIds")}
+                  selectionMode="single"
+                  {...register("customId")}
                   variant="underlined"
-                  placeholder="Select Features"
+                  placeholder="Select Customs"
                 >
-                  {(feature) => (
-                    <SelectItem value={feature._id} key={feature._id}>
-                      {feature.title}
+                  {(custom) => (
+                    <SelectItem value={custom._id} key={custom._id}>
+                      {custom.title + " - " + custom._id}
+                    </SelectItem>
+                  )}
+                </Select>
+              )}
+              {placements && (
+                <Select
+                  items={placements}
+                  label="Custom Placement"
+                  color="default"
+                  selectionMode="single"
+                  {...register("placementId")}
+                  variant="underlined"
+                  placeholder="Select placement"
+                >
+                  {(placement) => (
+                    <SelectItem value={placement._id} key={placement._id}>
+                      {placement.title + " - " + placement._id}
                     </SelectItem>
                   )}
                 </Select>

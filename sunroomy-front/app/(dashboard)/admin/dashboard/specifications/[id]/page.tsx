@@ -12,7 +12,7 @@ import { Button, Card, Input, Select, SelectItem } from "@nextui-org/react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -102,7 +102,9 @@ const Specifications = ({ params }: { params: { id: string } }) => {
         toast.success("Successfully edited specification!");
       });
   };
-  if (error) return <NotFoundPage />;
+  if (error) {
+    notFound();
+  }
   return (
     <>
       {!specsData ? (

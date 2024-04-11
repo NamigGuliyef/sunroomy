@@ -22,9 +22,10 @@ export default function FooterTop() {
         alt="logo"
       /> */}
       <p className="text-sm font-light text-white md:text-base">
-        Sustainable Outdoor Living Structures I Custom Pergolas, Sunrooms,
-        Louvers & ADU Modules
+        Sustainable Outdoor Living Structures I Custom Pergolas, Sunrooms &
+        Louvers
       </p>
+      {/* Louvers & ADU Modules */}
     </div>
   );
 }

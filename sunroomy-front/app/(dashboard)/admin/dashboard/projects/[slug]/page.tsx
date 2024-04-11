@@ -22,7 +22,7 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -34,9 +34,15 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [usedProducts, setUsedProducts] = useState<IUsedProduct[] | null>(null);
-  const [selectedType, setSelectedType] = useState("Home");
+  const [selectedType, setSelectedType] = useState(data?.type);
   const projectFeatures = features?.filter((feature) => feature.projectId);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<FieldValues>();
   const { data: session, status } = useSession();
   useEffect(() => {
     const fetchData = async () => {
@@ -82,6 +88,9 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
         setNeeds(needsResponse.data);
         setFeatures(featuresResponse.data);
         setUsedProducts(usedProductsResponse.data);
+        if (projectResponse.data) {
+          setSelectedType(projectResponse.data.type);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
         throw error;
@@ -94,11 +103,11 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
       fetchData();
     }
   }, [session?.user.token, params.slug]);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FieldValues>();
+  // if (data) {
+  //   setValue("title", data.title);
+  //   setValue("description", data.description);
+  //   setValue("used_products_joint", data.used_products_joint);
+  // }
   const router = useRouter();
   const onSubmit: SubmitHandler<FieldValues> = async (
     formSubmitData,
@@ -143,7 +152,9 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
       });
   };
 
-  if (error) return <NotFoundPage />;
+  if (error) {
+    notFound();
+  }
   return (
     <div className="container mx-auto mt-6 max-w-[1280px] px-6">
       {loading ? (
@@ -189,6 +200,7 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
                 type="text"
                 name="used_products_joint"
                 size="lg"
+                defaultValue={data?.used_products_joint!}
                 id="used_products_joint"
                 variant="underlined"
                 placeholder="Enter your used products joint"
@@ -198,6 +210,7 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
                 isDisabled={loading}
                 label="location"
                 type="text"
+                defaultValue={data?.location!}
                 name="location"
                 size="lg"
                 id="location"
@@ -266,7 +279,7 @@ const ProjectsPage = ({ params }: { params: { slug: string } }) => {
                 onValueChange={setSelectedType}
               >
                 <Radio value="Home">Home</Radio>
-                <Radio value="Business">Business</Radio>
+                <Radio value="Commerical">Commerical</Radio>
               </RadioGroup>
               <ShadInput
                 id="file"

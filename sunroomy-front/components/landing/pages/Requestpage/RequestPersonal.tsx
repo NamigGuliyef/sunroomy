@@ -7,9 +7,7 @@ import { FormikErrors } from "formik";
 import { MyFormProps } from "./SendRequest";
 
 const RequestPersonal = ({ errors }: { errors: FormikErrors<MyFormProps> }) => {
-  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    
-  };
+  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {};
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {};
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {};
   return (
@@ -22,7 +20,7 @@ const RequestPersonal = ({ errors }: { errors: FormikErrors<MyFormProps> }) => {
         name="first_name"
         onChange={handleFirstNameChange}
         type="text"
-        className=""
+        className="!bg-white"
         htmlFor="first_name"
       />
       <Input
@@ -32,10 +30,10 @@ const RequestPersonal = ({ errors }: { errors: FormikErrors<MyFormProps> }) => {
         name="last_name"
         onChange={handleLastNameChange}
         type="text"
-        className=""
+        className="!bg-white"
         htmlFor="last_name"
       />
-      <div className="flex flex-col md:flex-row gap-5">
+      <div className="flex flex-col gap-5 md:flex-row">
         <CountrySelect errors={errors} />
         <Input
           errors={errors}
@@ -54,11 +52,11 @@ const RequestPersonal = ({ errors }: { errors: FormikErrors<MyFormProps> }) => {
         placeholder="Email"
         name="email"
         type="text"
-        className=""
+        className="!bg-white"
         htmlFor="email"
       />
       <LocationSelector errors={errors} />
-      <div className="flex flex-col md:flex-row gap-5">
+      <div className="flex flex-col gap-5 md:flex-row">
         <Input
           errors={errors}
           id="city"

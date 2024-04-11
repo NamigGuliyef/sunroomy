@@ -8,11 +8,15 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Contacts",
   description: "The Next Generation of Design and Craft",
+  openGraph: {
+    title: "Contacts | Sunroomy",
+    description: "The Next Generation of Design and Craft.",
+  },
 };
 
 async function getData(): Promise<IContacts> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/contacts`, {
-    next: { revalidate: 60 },
+    next: { revalidate: 1 },
   });
   return res.json();
 }
@@ -44,3 +48,4 @@ export default async function Contacts() {
     </PageWrapper>
   );
 }
+export const revalidate = 1;

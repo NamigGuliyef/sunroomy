@@ -3,26 +3,25 @@ import Button from "./Button";
 export default function RequestInfo({ styles }: { styles?: string }) {
   return (
     <div
-      className={`container overflow-hidden ${styles} !text-secondaryblack font-sf `}
+      className={`container overflow-hidden ${styles} font-sf !text-secondaryblack `}
     >
-      <div className="lg:py-12 xl:py-20 p-5 xl:px-[120px] lg:px-[96px] flex flex-col gap-3 md:flex-row justify-between rounded-2xl lg:rounded-[30px] bg-secondarygray items-start md:gap-6">
+      <div className="flex flex-col items-start justify-between gap-3 rounded-2xl bg-secondarygray p-5 md:flex-row md:gap-6 lg:rounded-[30px] lg:px-[96px] lg:py-12 xl:px-[120px] xl:py-20">
         <div className="md:w-5/12">
-          <h1 className="text-2xl sm:text-3.2xl lg:text-5xl font-semibold leading-[120%] min-w-[222px] pr-6 sm:pr-0">
-            Request information or a quote
+          <h1 className="min-w-[222px] pr-6 text-2xl font-semibold leading-[120%] sm:pr-0 sm:text-3.2xl lg:text-5xl">
+            Discover pricing options
           </h1>
         </div>
-        <div className="md:w-6/12 flex flex-col">
-          <p className="text-base max-w-[528px] leading-[150%]">
-            Venenatis neque odio tempor proin ultrices arcu turpis amet iaculis.
-            Cursus maecenas tristique eget duis elit lectus turpis leo molestie.
-            Cras quis libero porttitor faucibus. Scelerisque nec mattis.
+        <div className="flex flex-col md:w-6/12">
+          <p className="max-w-[528px] text-lg leading-[150%]">
+            Enlarge your living space. Get a custom quote for Sliding Doors,
+            Folding Doors, Swing Doors, Bifold Doors and Windows.
           </p>
           <Button
-            to="#"
+            to="/request-a-quote"
             dark
-            className="w-full sm:w-7/12 px-6 text-lg mt-12 font-helvetica py-[18px]"
+            className="mt-12 w-full px-6 py-[18px] font-helvetica text-lg sm:w-7/12"
           >
-            Contact Us
+            Request a Quote
           </Button>
         </div>
       </div>

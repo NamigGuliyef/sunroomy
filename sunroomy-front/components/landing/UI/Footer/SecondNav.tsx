@@ -14,12 +14,12 @@ const LINKS = [
   {
     id: 3,
     text: "Request Now",
-    to: "/request",
+    to: "/request-a-quote",
   },
   {
     id: 4,
     text: "Tailored Design",
-    to: "/contacts",
+    to: "/contact-us",
   },
 ];
 

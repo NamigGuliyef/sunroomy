@@ -20,33 +20,45 @@ export default function ProjectsHeading() {
 
       return params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   return (
-    <div className="container px-6 lg:px-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 md:gap-6 lg:gap-0 pt-8 lg:pt-24 pb-8 lg:pb-24 text-darkgray">
-      <div className="lg:col-span-5 xl:col-span-4 flex flex-col justify-between">
-        <h1 className="text-3.2xl font-bold md:font-normal md:text-6xl lg:text-7.2xl">
+    <div className="container grid grid-cols-1 gap-12 px-6 pb-8 pt-8 text-darkgray md:grid-cols-2 md:gap-6 lg:grid-cols-12 lg:gap-0 lg:px-0 lg:pb-24 lg:pt-24">
+      <div className="flex flex-col justify-between lg:col-span-5 xl:col-span-4">
+        <h1 className="text-3.2xl font-bold md:text-6xl md:font-normal lg:text-7.2xl">
           Our Projects
         </h1>
         <ScrollDown />
       </div>
-      <div className="lg:col-span-6 lg:col-start-7 xl:col-start-8 flex flex-col">
-        <p className="text-xl lg:text-2xl max-w-[532px] leading-[125%]">
+      <div className="flex flex-col lg:col-span-6 lg:col-start-7 xl:col-start-8">
+        <p className="max-w-[532px] text-xl leading-[125%] lg:text-2xl">
           Ante quis sed nibh cras. Ornare ullamcorper libero at elementum enim
           morbi pulvinar. Ac hendrerit nisl rhoncus nisl tempus. Ante quis sed
           nibh cras. Ornare ullamcorper libero at elementum enim morbi pulvinar.
           Ac hendrerit nisl.
         </p>
-        <div className="p-1 md:p-2.5 mt-8 lg:mt-14 border font-helvetica flex gap-2.5 border-black rounded-full w-full sm:w-1/2 lg:w-fit">
+        <div className="mt-8 flex w-full gap-2.5 rounded-full border border-black p-1 font-helvetica sm:w-1/2 md:p-2.5 lg:mt-14 lg:w-fit">
+          <button
+            onClick={() => {
+              router.push(pathname + "?" + createQueryString("type", "all"), {
+                scroll: false,
+              });
+            }}
+            className={`w-1/2 rounded-full py-[9px] transition-all duration-500 lg:px-4 ${
+              !active || active === "all" ? "bg-black text-white" : ""
+            }`}
+          >
+            All
+          </button>
           <button
             onClick={() => {
               router.push(pathname + "?" + createQueryString("type", "home"), {
                 scroll: false,
               });
             }}
-            className={`py-[9px] w-1/2 lg:px-4 transition-all rounded-full duration-500 ${
-              !active || active === "home" ? "bg-black text-white" : ""
+            className={`w-1/2 rounded-full py-[9px] transition-all duration-500 lg:px-4 ${
+              active === "home" ? "bg-black text-white" : ""
             }`}
           >
             Home
@@ -54,17 +66,17 @@ export default function ProjectsHeading() {
           <button
             onClick={() => {
               router.push(
-                pathname + "?" + createQueryString("type", "business"),
+                pathname + "?" + createQueryString("type", "commercial"),
                 {
                   scroll: false,
-                }
+                },
               );
             }}
-            className={`py-[9px] w-1/2 lg:px-4 transition-all rounded-full duration-500 ${
-              active === "business" ? "bg-black text-white" : ""
+            className={`w-1/2 rounded-full py-[9px] transition-all duration-500 lg:px-4 ${
+              active === "commercial" ? "bg-black text-white" : ""
             }`}
           >
-            Business
+            Commercial
           </button>
         </div>
       </div>

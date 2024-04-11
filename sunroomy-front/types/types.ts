@@ -59,6 +59,8 @@ export interface ISubProduct {
   specifications: ISubProductSpecification[];
   applicationIds: IProductApplication[];
   productId: IProduct;
+  customId: ISubProductCustom;
+  placementId: ISubProductPlacement;
   statusCode: number;
   photo: string;
   subProductIds: ISubProduct[];
@@ -67,6 +69,31 @@ export interface ISubProduct {
 }
 export interface IExtendedSubproduct extends ISubProduct {}
 
+export interface ISubProductCustom {
+  _id: string;
+  title: string;
+  description: string;
+  itemIds: ISubProductCustomItem[];
+}
+
+export interface ISubProductCustomItem {
+  _id: string;
+  photo: string;
+  description: string;
+  subproductCustomId: ISubProductCustom;
+}
+export interface ISubProductPlacement {
+  _id: string;
+  title: string;
+  description: string;
+  itemIds: ISubProductPlacementItem[];
+}
+export interface ISubProductPlacementItem {
+  _id: string;
+  photo: string;
+  description: string;
+  subproductPlacementId: ISubProductPlacement;
+}
 export interface ISubProducts {
   subproducts: ISubProduct[];
 }
@@ -75,6 +102,7 @@ export interface IProduct {
   title: string;
   description: string;
   statusCode: number;
+  cover_photo: string;
   photo: string;
   subProductIds: ISubProduct[];
   createdAt: string;
@@ -102,14 +130,7 @@ export interface IProject {
     updatedAt: string;
   };
   featuresId: IFeature[];
-  usedProductsId: {
-    _id: string;
-    title: string;
-    description: string;
-    photos: string[];
-    createdAt: string;
-    updatedAt: string;
-  };
+  usedProductsId: IUsedProduct;
   createdAt: string;
   updatedAt: string;
 }
@@ -205,6 +226,7 @@ export interface IUsedProduct {
   title: string;
   description: string;
   photos: string[];
+  link: string;
 }
 
 export interface IUsedProducts {
@@ -245,6 +267,11 @@ export interface IInspire {
   description: string;
   photos: string[];
 }
+export interface IHomeAbout {
+  _id: string;
+  title: string;
+  description: string;
+}
 
 export interface IAboutUs {
   _id: string;
@@ -256,4 +283,25 @@ export interface IAboutUs {
 }
 export interface IAboutUsData {
   aboutUsData: IAboutUs[];
+}
+
+export interface IHomePageHero {
+  _id: string;
+  title: string;
+  subtitle: string;
+  link: string;
+  photo: string;
+}
+
+export interface IHomePageHeros {
+  heros: IHomePageHero[];
+}
+export interface IFollowUsLink {
+  _id: string;
+  name: string;
+  link: string;
+}
+
+export interface IFollowUsLinks {
+  followUs: IFollowUsLink[];
 }

@@ -6,7 +6,7 @@ function Hero() {
     <div className="rounded-t-2xl w-full lg:rounded-t-section max-h-[320px] lg:max-h-[472px] overflow-hidden">
       <div className="relative h-[320px] lg:h-[472px]">
         <Image
-          src="/images/request-page/hero.png"
+          src="/images/request-page/hero.webp"
           alt="Hero Image"
           fill
           quality={75}

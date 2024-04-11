@@ -105,7 +105,7 @@ export default function UserMenu({
 
           if (response.status === 200) {
             setSearchResults(response.data);
-            console.log(response.data);
+            (response.data);
           } else {
             console.error(
               "Error fetching search results:",

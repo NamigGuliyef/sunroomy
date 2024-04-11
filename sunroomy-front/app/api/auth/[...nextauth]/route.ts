@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
               email: credentials?.email,
               password: credentials?.password,
             }),
-          }
+          },
         );
 
         if (res.status === 200) {
@@ -65,7 +65,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  debug: true,
   jwt: {
     maxAge: 3600,
   },

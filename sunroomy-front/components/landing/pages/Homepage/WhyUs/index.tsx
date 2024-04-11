@@ -28,17 +28,19 @@ const WhyUs = ({
       >
         <div
           className={cn(
-            "h-in relative hidden h-[712px] md:block",
-            variant === "home" && "md:w-1/2 lg:w-3/12 xl:w-3/12",
+            "relative hidden h-[712px] md:flex",
+            variant === "home" &&
+              "!hidden justify-center md:w-1/2 lg:!flex lg:w-3/12 xl:w-3/12",
             variant === "about" && "md:w-1/2 lg:w-4/12 xl:w-6/12",
           )}
         >
           {variant === "home" && (
             <Image
               alt="image"
-              src={"/images/main-page/why.svg"}
-              height={758}
-              width={282}
+              src={"/images/logom2.svg"}
+              className="h-full -rotate-90 opacity-15"
+              height={300}
+              width={600}
             />
           )}
           {variant === "about" && (
@@ -56,7 +58,7 @@ const WhyUs = ({
         </div>
         <div
           className={cn(
-            variant === "home" && "md:w-1/2 lg:w-8/12 xl:w-6/12",
+            variant === "home" && "md:w-full lg:w-8/12 xl:w-6/12",
             variant === "about" && "md:w-1/2 lg:w-8/12 xl:w-7/12",
           )}
         >

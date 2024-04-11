@@ -21,7 +21,6 @@ const ProjectsItem: React.FC<ProjectsItemProps> = ({ data, slider }) => {
           alt="image"
           className="group-hover:scale-[1.1] object-cover object-center min-h-[327px] transition-all duration-500 ease-in-out w-full h-full cursor-pointer"
           src={photos[0]}
-          loading="lazy"
           width={424}
           height={400}
         />

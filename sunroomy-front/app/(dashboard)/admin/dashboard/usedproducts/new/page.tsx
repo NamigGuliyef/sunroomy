@@ -84,7 +84,7 @@ const UsedProductsPage = ({ params }: { params: { id: string } }) => {
                 <Input
                   {...register("title")}
                   label="Title"
-                  type="title"
+                  type="text"
                   name="title"
                   defaultValue={usedProduct?.title}
                   size="lg"
@@ -95,12 +95,22 @@ const UsedProductsPage = ({ params }: { params: { id: string } }) => {
                 <Input
                   {...register("description")}
                   label="Description"
-                  type="title"
+                  type="text"
                   name="description"
                   size="lg"
                   id="description"
                   variant="underlined"
                   placeholder="Enter your description"
+                />
+                <Input
+                  {...register("link")}
+                  label="Link"
+                  type="text"
+                  name="link"
+                  size="lg"
+                  id="text"
+                  variant="underlined"
+                  placeholder="Enter link to product"
                 />
                 <ShadInput
                   id="photos"

@@ -9,7 +9,7 @@ export default function Support() {
       <div className="relative flex overflow-x-hidden">
         <Image
           src={"/images/main-page/leaf.png"}
-          className="absolute -right-[48%] top-[5%] min-[460px]:-right-[30%] min-[610px]:-right-[0%] md:right-0 md:top-0"
+          className="absolute -right-[48%] top-[5%]  min-[1500px]:right-[2%] min-[1500px]:scale-125  min-[460px]:-right-[30%] min-[610px]:-right-[0%] md:right-0 md:top-0"
           alt="leaf"
           width={339}
           height={517}

@@ -43,7 +43,7 @@ const validationSchema = Yup.object().shape({
   state: Yup.string().required("State is required"),
   city: Yup.string().required("City is required"),
   zipcode: Yup.string().required("Zip code is required"),
-  main_structure_model: Yup.string().required("Please select one"),
+  // main_structure_model: Yup.string().required("Please select one"),
   width_in_feet: Yup.number()
     .min(1, "Must be greater than 0")
     .required("This field is required"),
@@ -53,12 +53,12 @@ const validationSchema = Yup.object().shape({
   height_in_feet: Yup.number()
     .min(1, "Must be greater than 0")
     .required("This field is required"),
-  structure_situation: Yup.string().required("This field is required"),
-  structure_color: Yup.string().required("This field is required"),
+  // structure_situation: Yup.string().required("This field is required"),
+  // structure_color: Yup.string().required("This field is required"),
   // window_and_doors: Yup.array().required("This field is required"),
-  sunscreens: Yup.array().required("This field is required"),
-  project_details: Yup.string().required("This field is required"),
-  about_us: Yup.string().required("This field is required"),
+  // sunscreens: Yup.array().required("This field is required"),
+  // project_details: Yup.string().required("This field is required"),
+  // about_us: Yup.string().required("This field is required"),
   countryCode: Yup.string().required("This field is required"),
 });
 const initialValues = {
@@ -81,7 +81,7 @@ const initialValues = {
   sunscreens: "",
   project_details: "",
   about_us: "",
-  countryCode: "",
+  countryCode: "+1",
   number: "",
 };
 
@@ -111,11 +111,11 @@ const SendRequest = () => {
       project_details: form.project_details,
       about_us: form.about_us,
     };
-    console.log(postData);
+    (postData);
     const formData = new FormData();
 
     for (const [key, value] of Object.entries(postData)) {
-      console.log(`${key}: ${value}`);
+      (`${key}: ${value}`);
       if (key === "files") {
         for (let i = 0; i < postData.files.length; i++) {
           formData.append("files", postData.files[i]);
@@ -154,7 +154,7 @@ const SendRequest = () => {
         <div className="relative flex h-full max-h-[327px] items-center justify-between gap-12 md:max-h-full xl:flex-col xl:gap-0">
           <div className="mx-auto hidden lg:block lg:h-1/2 lg:w-[90%]">
             <Image
-              src="/images/request-page/3d.png"
+              src="/images/request-page/3d.webp"
               alt="Hero Image"
               quality={75}
               width={500}
@@ -164,7 +164,7 @@ const SendRequest = () => {
           </div>
           <div className="relative mx-auto flex w-full flex-col items-center justify-center rounded-2.5xl bg-white md:max-h-[420px] lg:h-1/2 xl:mb-1 xl:max-h-max xl:w-[98%]">
             <Image
-              src="/images/request-page/model.png"
+              src="/images/request-page/model.webp"
               alt="Hero Image"
               quality={75}
               width={500}

@@ -6,6 +6,10 @@ import dynamic from "next/dynamic";
 export const metadata: Metadata = {
   title: "Contacts",
   description: "The Next Generation of Design and Craft",
+  openGraph: {
+    title: "Contacts | Sunroomy",
+    description: "The Next Generation of Design and Craft.",
+  },
 };
 const DynamicRequestView = dynamic(
   () => import("@/components/landing/pages/Requestpage/RequestView"),

@@ -7,10 +7,11 @@ import { Button } from "@nextui-org/react";
 import axios from "axios";
 import Link from "next/link";
 import { Suspense } from "react";
+export const revalidate = 1;
 const fetchProjects = async () => {
   try {
     const response = await axios.get(
-      process.env.NEXT_PUBLIC_BACKEND_URL + "/projects"
+      process.env.NEXT_PUBLIC_BACKEND_URL + "/projects",
     );
     return { results: response.data };
   } catch (error) {
@@ -22,8 +23,8 @@ export default async function page() {
   const { results: projects } = await fetchProjects();
   return (
     <Suspense fallback={<Loading />}>
-      <div className="container flex flex-col gap-6 mt-6 mx-auto px-6 max-w-[1280px]">
-        <h1 className="text-5xl mb-4">Projects data</h1>
+      <div className="container mx-auto mt-6 flex max-w-[1280px] flex-col gap-6 px-6">
+        <h1 className="mb-4 text-5xl">Projects data</h1>
 
         <div className="flex gap-4">
           <Button
@@ -55,7 +56,7 @@ export default async function page() {
           </Button>
         </div>
         <ProjectsTable projects={projects} />
-        <div className="flex w-full gap-6 justify-between">
+        <div className="flex w-full justify-between gap-6">
           <Helper
             cardClass="w-1/3"
             link="/admin/dashboard/needs/new"
@@ -63,9 +64,7 @@ export default async function page() {
             text={
               <p>
                 After creating project, you should go to{" "}
-                <span className="font-medium underline">
-                  Create needs page
-                </span>{" "}
+                <span className="font-medium underline">Create needs page</span>{" "}
                 and create it, then you need to come back to this page and add
                 it to your project via{" "}
                 <span className="font-medium underline">Edit button</span>

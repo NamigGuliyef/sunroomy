@@ -1,15 +1,24 @@
 "use client";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useSession } from "next-auth/react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { Button, Card, Input, useDisclosure } from "@nextui-org/react";
-import { Edit2Icon } from "lucide-react";
-import toast from "react-hot-toast";
-import Preloader from "@/components/admin/Preloader";
 import { PageWrapper } from "@/components/PageWrapper";
+import Preloader from "@/components/admin/Preloader";
 import { Input as ShadInput } from "@/components/admin/ui/input";
+import {
+  Avatar,
+  Button,
+  Card,
+  Input,
+  Radio,
+  RadioGroup,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import { Label } from "@radix-ui/react-label";
+import axios from "axios";
+import { Edit2Icon } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 import { IInspire } from "@/types/types";
 
@@ -25,7 +34,8 @@ const InspirePage = () => {
   const [loading, setLoading] = useState(true);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
-
+  const [uploadMode, setUploadMode] = useState("upload");
+  const [selectedPhotos, setSelectedPhotos] = useState([""]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,24 +62,30 @@ const InspirePage = () => {
       fetchData();
     }
   }, [session?.user.token]);
-
   const onSubmit: SubmitHandler<FieldValues> = async (formSubmitData) => {
     try {
       setLoading(true);
       const postData = new FormData();
-      console.log(formSubmitData);
-      for (let [key, values] of Object.entries(formSubmitData)) {
-        if (key === "photos" && values && values.length >= 1) {
-          for (let i = 0; i < values.length; i++) {
-            postData.append("photos", values[i]);
-          }
-        } else if (
-          key !== "photos" &&
-          values !== null &&
-          values?.length > 0 &&
-          values !== undefined
-        ) {
-          postData.append(key, values);
+      formSubmitData;
+
+      if (formSubmitData?.title?.length > 0) {
+        postData.append("title", formSubmitData.title);
+      } else {
+        postData.append("title", inspireData[0].title);
+      }
+      if (formSubmitData?.description?.length > 0) {
+        postData.append("description", formSubmitData.description);
+      } else {
+        postData.append("description", inspireData[0].description);
+      }
+
+      if (formSubmitData.photos && formSubmitData.photos.length > 1) {
+        for (let i = 0; i < formSubmitData.photos.length; i++) {
+          postData.append("photos", formSubmitData.photos[i]);
+        }
+      } else if (selectedPhotos.length > 1) {
+        for (let i = 0; i < selectedPhotos.length; i++) {
+          postData.append("photos", selectedPhotos[i]);
         }
       }
       await axios.patch(
@@ -91,13 +107,38 @@ const InspirePage = () => {
       console.error("Error updating about:", error);
       toast.error("Error updating about.");
     } finally {
-      setLoading(false);
-      setIsEditingDescription(false);
-      setIsEditingTitle(false);
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/dashboard/letUs-inspire-you`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.token}`,
+            },
+          },
+        );
+        setInspireData(res.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error("Error fetching data.");
+      } finally {
+        setLoading(false);
+        setIsEditingDescription(false);
+        setIsEditingTitle(false);
+      }
     }
   };
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const handleSelectionChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedValues = e.target.value.split(",");
+    selectedValues;
+    setSelectedPhotos(selectedValues);
+  };
+  let mappedPhotos;
+  if (inspireData && inspireData[0] && inspireData[0].photos) {
+    mappedPhotos = inspireData[0].photos.map((photo, index) => ({
+      id: index,
+      photo: photo,
+    }));
+  }
 
   return (
     <>
@@ -162,16 +203,102 @@ const InspirePage = () => {
                     <Edit2Icon size={14} />
                   </Button>
                 </div>
-                <Label>files</Label>
-                <ShadInput
-                  id="files"
-                  placeholder="files"
-                  {...register("photos")}
-                  color="primary"
-                  className="flex h-[64px] items-center justify-center file:mt-1 file:rounded-large file:bg-primary file:px-4 file:py-2 file:text-white file:shadow-lg file:hover:cursor-pointer hover:file:bg-primary/90"
-                  type="file"
-                  multiple
-                />
+                <RadioGroup
+                  label="Select change type:"
+                  value={uploadMode}
+                  onValueChange={setUploadMode}
+                >
+                  <Radio value="order">Order</Radio>
+                  <Radio value="upload">Upload</Radio>
+                </RadioGroup>
+                {uploadMode === "upload" ? (
+                  <>
+                    <Label>files</Label>
+                    <ShadInput
+                      id="files"
+                      placeholder="files"
+                      {...register("photos")}
+                      color="primary"
+                      className="flex h-[64px] items-center justify-center file:mt-1 file:rounded-large file:bg-primary file:px-4 file:py-2 file:text-white file:shadow-lg file:hover:cursor-pointer hover:file:bg-primary/90"
+                      type="file"
+                      multiple
+                    />
+                  </>
+                ) : (
+                  <Select
+                    items={mappedPhotos}
+                    label="Assigned to"
+                    className="max-w-xs"
+                    variant="bordered"
+                    selectionMode="multiple"
+                    onChange={handleSelectionChange}
+                    classNames={{
+                      value: "flex",
+                      label: "group-data-[filled=true]:-translate-y-5",
+                      trigger: "min-h-unit-16",
+                      listboxWrapper: "max-h-[400px]",
+                    }}
+                    listboxProps={{
+                      itemClasses: {
+                        base: [
+                          "rounded-md",
+                          "text-default-500",
+                          "transition-opacity",
+                          "data-[hover=true]:text-foreground",
+                          "data-[hover=true]:bg-default-100",
+                          "dark:data-[hover=true]:bg-default-50",
+                          "data-[selectable=true]:focus:bg-default-50",
+                          "data-[pressed=true]:opacity-70",
+                          "data-[focus-visible=true]:ring-default-500",
+                        ],
+                      },
+                    }}
+                    popoverProps={{
+                      classNames: {
+                        base: "before:bg-default-200",
+                        content:
+                          "p-0 border-small border-divider bg-background",
+                      },
+                    }}
+                  >
+                    {(photo) => (
+                      <SelectItem
+                        key={photo.photo}
+                        value={photo.photo}
+                        textValue={photo.photo}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Avatar
+                            alt={photo.photo}
+                            className="flex-shrink-0"
+                            size="sm"
+                            src={photo.photo}
+                          />
+                          <div className="flex flex-col">
+                            <span className="text-small">
+                              {"Photo" + photo.id}
+                            </span>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    )}
+                  </Select>
+                  // <Select
+                  //   items={mappedPhotos}
+                  //   variant="bordered"
+                  //   onChange={handleSelectionChange}
+                  //   selectionMode="multiple"
+                  //   placeholder="Select subproduct"
+                  //   className="max-w-xs"
+                  //   aria-label="Select subproduct"
+                  // >
+                  //   {(photo) => (
+                  //     <SelectItem key={photo.id} value={photo.photo}>
+                  //       {photo.photo}
+                  //     </SelectItem>
+                  //   )}
+                  // </Select>
+                )}
                 {/* Photo Input - You can add your logic for handling photos here */}
 
                 <Button

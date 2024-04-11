@@ -10,6 +10,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+
+interface UpdateData {
+  title?: string;
+  location?: string;
+  email?: string;
+  phone?: string;
+  mapLink?: string;
+}
+
 const ContactPage = () => {
   const { data: session } = useSession();
   const {
@@ -41,7 +50,7 @@ const ContactPage = () => {
         );
 
         setContactData(res.data);
-        console.log(res.data);
+        res.data;
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -53,52 +62,70 @@ const ContactPage = () => {
       fetchData();
     }
   }, [session?.user.token]);
-
+  const router = useRouter();
   const onSubmit: SubmitHandler<FieldValues> = async (formSubmitData) => {
     try {
       setLoading(true);
 
-      const formData = new FormData();
+      const updateData: UpdateData = {};
 
-      if (isEditingTitle && formSubmitData.title !== contactData[0]?.title) {
-        formData.append("title", formSubmitData.title || "");
+      if (isEditingTitle) {
+        updateData.title = formSubmitData.title;
+      } else {
+        updateData.title = contactData[0]?.title;
       }
 
-      if (
-        isEditingLocation &&
-        formSubmitData.location !== contactData[0]?.location
-      ) {
-        formData.append("location", formSubmitData.location || "");
+      if (isEditingLocation) {
+        updateData.location = formSubmitData.location;
+      } else {
+        updateData.location = contactData[0]?.location;
       }
 
-      if (isEditingEmail && formSubmitData.email !== contactData[0]?.email) {
-        formData.append("email", formSubmitData.email || "");
+      if (isEditingEmail) {
+        updateData.email = formSubmitData.email;
+      } else {
+        updateData.email = contactData[0]?.email;
       }
 
-      if (isEditingPhone && formSubmitData.phone !== contactData[0]?.phone) {
-        formData.append("phone", formSubmitData.phone || "");
+      if (isEditingPhone) {
+        updateData.phone = formSubmitData.phone;
+      } else {
+        updateData.phone = contactData[0]?.phone;
       }
 
-      if (
-        isEditingMapLink &&
-        formSubmitData.mapLink !== contactData[0]?.mapLink
-      ) {
-        formData.append("mapLink", formSubmitData.mapLink || "");
+      if (isEditingMapLink) {
+        updateData.mapLink = formSubmitData.mapLink;
+      } else {
+        updateData.mapLink = contactData[0]?.mapLink;
       }
-
       await axios.patch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/dashboard/contacts/${
           contactData && contactData[0]?._id
         }`,
-        formData,
+        updateData,
         {
           headers: {
             Authorization: `Bearer ${session?.user.token!}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/dashboard/contacts`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.token}`,
           },
         },
       );
 
+      setContactData(res.data);
+      router.refresh();
+      setIsEditingTitle(false);
+      setIsEditingLocation(false);
+      setIsEditingEmail(false);
+      setIsEditingPhone(false);
+      setIsEditingMapLink(false);
       toast.success("Successfully updated contact data!");
     } catch (error) {
       if (axios.isAxiosError(error)) {

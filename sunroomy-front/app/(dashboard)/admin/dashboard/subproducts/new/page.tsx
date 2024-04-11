@@ -29,13 +29,13 @@ const ProductsPage = ({ params }: { params: { id: string } }) => {
 
   const memoizedSession = useMemo(() => session, [session]);
   const subproductFeatures = features?.filter(
-    (feature) => feature.subProductId
+    (feature) => feature.subProductId,
   );
   useEffect(() => {
     setIsLoading(true);
     const fetchProducts = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/`,
       );
       setProducts(response.data);
       setIsLoading(false);
@@ -48,7 +48,7 @@ const ProductsPage = ({ params }: { params: { id: string } }) => {
             headers: {
               Authorization: `Bearer ${session?.user.token}`,
             },
-          }
+          },
         );
         setFeatures(response.data);
       } catch (error) {
@@ -63,7 +63,7 @@ const ProductsPage = ({ params }: { params: { id: string } }) => {
   }, [session?.user.token]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data, event) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     const postData = new FormData();
     for (let [key, values] of Object.entries(data)) {
       if (key === "photos") {
@@ -89,24 +89,26 @@ const ProductsPage = ({ params }: { params: { id: string } }) => {
             "Content-Type":
               "multipart/form-data;boundary=------------------------",
           },
-        }
+        },
       )
       .then((response) => {
         setIsSubmitting(false);
-        toast.success("Successfully added product!");
+        toast.success("Successfully added subproduct!");
         router.push("/admin/dashboard/subproducts");
         router.refresh();
       })
       .catch((err) => {
         if (err?.response?.status === 409) {
-          toast.error("This product has already been added");
+          toast.error("This subproduct has already been added");
+        } else {
+          toast.error(err?.message);
         }
         setIsSubmitting(false);
       });
   };
 
   return (
-    <div className="container mt-6 mx-auto px-6 max-w-[1280px]">
+    <div className="container mx-auto mt-6 max-w-[1280px] px-6">
       {isLoading ? (
         <div className="h-screen">
           <Preloader />
@@ -114,7 +116,7 @@ const ProductsPage = ({ params }: { params: { id: string } }) => {
       ) : (
         <PageWrapper>
           <h1 className="text-5xl">Create subproduct page</h1>
-          <Card className="p-4 mt-8">
+          <Card className="mt-8 p-4">
             <form
               className="flex flex-col gap-8"
               onSubmit={handleSubmit(onSubmit)}
@@ -158,16 +160,16 @@ const ProductsPage = ({ params }: { params: { id: string } }) => {
                 placeholder="cover_photo"
                 {...register("cover_photo", { required: true })}
                 color="primary"
-                className="file:bg-primary flex items-center justify-center h-[64px] file:shadow-lg file:hover:cursor-pointer file:text-white hover:file:bg-primary/90 file:py-2 file:mt-1 file:px-4 file:rounded-large"
+                className="flex h-[64px] items-center justify-center file:mt-1 file:rounded-large file:bg-primary file:px-4 file:py-2 file:text-white file:shadow-lg file:hover:cursor-pointer hover:file:bg-primary/90"
                 type="file"
               />
-              <Label>files</Label>
+              <Label>files(slider images)</Label>
               <ShadInput
                 id="files"
                 placeholder="files"
                 {...register("photos", { required: true })}
                 color="primary"
-                className="file:bg-primary flex items-center justify-center h-[64px] file:shadow-lg file:hover:cursor-pointer file:text-white hover:file:bg-primary/90 file:py-2 file:mt-1 file:px-4 file:rounded-large"
+                className="flex h-[64px] items-center justify-center file:mt-1 file:rounded-large file:bg-primary file:px-4 file:py-2 file:text-white file:shadow-lg file:hover:cursor-pointer hover:file:bg-primary/90"
                 type="file"
                 multiple
               />

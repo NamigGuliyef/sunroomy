@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 
 import { IAboutUs } from "@/types/types";
 import { useRouter } from "next/navigation";
+import AboutUsEditor from "@/components/admin/aboutUsEditor";
 
 const AboutUsPage = () => {
   const { data: session } = useSession();
@@ -18,6 +19,7 @@ const AboutUsPage = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   const [aboutUsData, setAboutUsData] = useState<IAboutUs[]>([]);
@@ -39,7 +41,7 @@ const AboutUsPage = () => {
           },
         },
       );
-      console.log(res.data);
+      (res.data);
       setAboutUsData(res.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -160,7 +162,9 @@ const AboutUsPage = () => {
       setIsEditingYears(false);
     }
   };
-
+  const handleChangeDesc = (e: any) => {
+    setValue("description", e);
+  };
   return (
     <>
       <div className="container mx-auto mt-6 max-w-[1280px] px-6">
@@ -176,7 +180,7 @@ const AboutUsPage = () => {
                 className="flex flex-col gap-8"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <div className="flex items-end gap-4">
+                {/* <div className="flex items-end gap-4">
                   <Input
                     {...register("description")}
                     isDisabled={loading || !isEditingDescription}
@@ -199,7 +203,7 @@ const AboutUsPage = () => {
                     Edit
                     <Edit2Icon size={14} />
                   </Button>
-                </div>
+                </div> */}
                 <div className="flex items-end gap-4">
                   <Input
                     {...register("years_of_experience")}
@@ -271,6 +275,10 @@ const AboutUsPage = () => {
                     <Edit2Icon size={14} />
                   </Button>
                 </div>
+                <AboutUsEditor
+                  desc={aboutUsData && aboutUsData[0]?.description}
+                  onChangeDesc={handleChangeDesc}
+                />
                 <Button
                   className="rounded-[8px]"
                   size="lg"

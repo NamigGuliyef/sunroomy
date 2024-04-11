@@ -44,7 +44,7 @@ export default function Header() {
   return (
     <SessionProvider>
       <header
-        className={`fixed z-50 px-6 lg:px-0 ${className} duration-[500ms] top-0 w-full transition-all ease-in-out`}
+        className={`fixed z-50 px-6 lg:px-0 ${className} duration-[500] top-0 w-full transition-all ease-in-out`}
       >
         <nav
           ref={ref}

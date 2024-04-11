@@ -6,7 +6,7 @@ export default function ScrollDown() {
     <div className="hidden lg:flex gap-4 font-sf font-light items-center">
       <div className="group w-fit cursor-pointer hover:invert transition-all duration-500">
         <Link
-          to="request"
+          to="#"
           offset={-200}
           smooth={true}
           duration={400}

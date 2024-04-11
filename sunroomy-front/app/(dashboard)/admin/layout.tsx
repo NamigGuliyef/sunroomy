@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   robots: {
     index: false,
   },
+  
 };
 export default async function DashboardLayout({
   children,

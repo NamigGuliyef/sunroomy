@@ -1,19 +1,15 @@
 "use client";
-import { useRef, useState } from "react";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import "swiper/css";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { PiArrowCircleLeftThin, PiArrowCircleRightThin } from "react-icons/pi";
+import { IProduct } from "@/types/types";
 import Image from "next/image";
-import { CollectionNav } from "./CollectionNav";
 import Link from "next/link";
+import { useRef, useState } from "react";
+import "swiper/css";
+import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { CollectionNav } from "./CollectionNav";
 
 export interface CollectionProps {
-  data: {
-    id: number;
-    image: string;
-    text: string;
-  }[];
+  data: IProduct[];
   containerClass?: string;
 }
 
@@ -54,16 +50,15 @@ const Collection: React.FC<CollectionProps> = ({ data, containerClass }) => {
               slidesPerView: 1,
               spaceBetween: 24,
             },
-            530: {
+            576: {
               slidesPerView: 2,
               spaceBetween: 24,
             },
-            768: {
+            1320: {
               slidesPerView: 3,
               spaceBetween: 24,
             },
           }}
-          loop
           speed={700}
           onInit={() => setInit(true)}
           onSlideChange={({ isBeginning, isEnd }) => {
@@ -76,21 +71,21 @@ const Collection: React.FC<CollectionProps> = ({ data, containerClass }) => {
             nextEl: nextButtonRef.current,
           }}
         >
-          {data.map((item: any) => (
-            <SwiperSlide key={item.id}>
-              <Link href={"/products/" + item.text}>
+          {data.map((item) => (
+            <SwiperSlide key={item._id}>
+              <Link href={"/products/" + item.slug}>
                 <div className="flex flex-col gap-8">
-                  <div className="w-full">
+                  <div className="min-h-[250px] w-full">
                     <Image
-                      src={"/images/main-page/" + item.image}
-                      className="h-full w-full select-none rounded-2.5xl object-cover transition-all duration-200 ease-in hover:scale-95"
+                      src={item.cover_photo}
+                      className="h-[250px] w-full select-none rounded-2.5xl object-cover transition-all duration-200 ease-in hover:scale-95 sm:h-[280px] md:h-[327px]"
                       width={500}
                       height={400}
                       alt="image"
                     />
                   </div>
                   <h1 className="text-2xl uppercase text-darkgray">
-                    {item.text}
+                    {item.title}
                   </h1>
                 </div>
               </Link>

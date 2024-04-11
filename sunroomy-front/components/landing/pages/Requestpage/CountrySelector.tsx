@@ -54,9 +54,20 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
     value: country.phonecode,
   }));
 
-  const [selectedCountry, setSelectedCountry] = useState<SelectOption | null>(
-    null,
-  );
+  const [selectedCountry, setSelectedCountry] = useState<SelectOption | null>({
+    label: (
+      <div className="flex items-center gap-2">
+        <img
+          src={`https://flagcdn.com/h20/us.png`}
+          height="24"
+          width="35"
+          alt="Ukraine"
+        />
+        +1
+      </div>
+    ),
+    value: "+1",
+  });
 
   const styles = useMemo(
     () => ({
@@ -110,6 +121,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({
         id="country-select"
         isSearchable={false}
         defaultValue={selectedCountry}
+        
         onChange={(e) => setFieldValue("countryCode", "+" + e?.value)}
         styles={styles}
         classNames={classNames}

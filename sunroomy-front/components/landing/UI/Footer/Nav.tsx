@@ -1,4 +1,3 @@
- ;
 import NavLink from "./NavLink";
 
 const LINKS = [
@@ -10,12 +9,12 @@ const LINKS = [
   {
     id: 2,
     text: "Sunrooms",
-    to: "/products/sunrooms",
+    to: "/products/sunroom",
   },
   {
     id: 3,
     text: "Louvers",
-    to: "/products/louvers",
+    to: "/products/louver",
   },
   {
     id: 4,
@@ -24,21 +23,23 @@ const LINKS = [
   },
   {
     id: 5,
-    text: "Window & Doors",
-    to: "/products/windows-and-doors",
+    text: "Doors & Windows",
+    to: "/products/doors-and-windows",
   },
-  {
-    id: 6,
-    text: "ADU Modules",
-    to: "/products/adu_modules",
-  },
+  // {
+  //   id: 6,
+  //   text: "ADU Modules",
+  //   to: "/products/adu-modules",
+  // },
 ];
 
 const Nav = () => {
   return (
-    <ul className="flex flex-row sm:justify-center flex-wrap gap-4 md:justify-center resize-none min-[996px]:gap-[72px] font-light border-t border-b border-white mb-12 py-12 md:mb-14 md:py-14">
+    <ul className="mb-12 flex resize-none flex-row flex-wrap gap-4 border-b border-t border-white py-12 font-light sm:justify-center md:mb-14 md:justify-center md:py-14 min-[996px]:gap-[72px]">
       {LINKS.map((link) => (
-        <NavLink to={link.to.toString()} key={link.id}>{link.text}</NavLink>
+        <NavLink to={link.to.toString()} key={link.id}>
+          {link.text}
+        </NavLink>
       ))}
     </ul>
   );

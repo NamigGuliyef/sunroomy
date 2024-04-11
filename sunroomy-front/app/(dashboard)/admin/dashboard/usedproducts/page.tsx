@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/react";
 import axios from "axios";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+export const revalidate = 1;
 const fetchUserProducts = async (token: any) => {
   try {
     const response = await axios.get(

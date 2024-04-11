@@ -10,13 +10,17 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Tailored Project Design",
   description: "The Next Generation of Design and Craft",
+  openGraph: {
+    title: "Tailored Project Design | Sunroomy",
+    description: "The Next Generation of Design and Craft.",
+  },
 };
 
 const getPageData = async () => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/project-design`,
     {
-      next: { revalidate: 60 },
+      next: { revalidate: 1 },
     },
   );
   return res.json();
@@ -46,3 +50,4 @@ export default async function page() {
     </PageWrapper>
   );
 }
+export const revalidate = 1;

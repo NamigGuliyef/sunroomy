@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/react";
 import axios from "axios";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+export const revalidate = 1;
 const fetchNeeds = async (token: any) => {
   try {
     const response = await axios.get(
@@ -13,7 +14,7 @@ const fetchNeeds = async (token: any) => {
         headers: {
           Authorization: "Bearer " + token,
         },
-      }
+      },
     );
     return { results: response.data };
   } catch (error) {
@@ -26,8 +27,8 @@ export default async function page() {
   const { results: needs } = await fetchNeeds(session?.user.token);
   return (
     <PageWrapper>
-      <div className="container mt-6 mx-auto px-6 max-w-[1280px]">
-        <h1 className="text-5xl mb-4">Needs data</h1>
+      <div className="container mx-auto mt-6 max-w-[1280px] px-6">
+        <h1 className="mb-4 text-5xl">Needs data</h1>
         <Button
           as={Link}
           href="/admin/dashboard/needs/new"

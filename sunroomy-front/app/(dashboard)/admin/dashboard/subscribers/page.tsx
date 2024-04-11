@@ -4,6 +4,7 @@ import SubscribersTable from "@/components/admin/subscribersTable";
 import { Button } from "@nextui-org/react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+export const revalidate = 1;
 async function ProjectsTable() {
   const session = await getServerSession(authOptions);
 
@@ -13,17 +14,19 @@ async function ProjectsTable() {
       {
         headers: { Authorization: `Bearer ${session?.user.token}` },
         next: { revalidate: 3600 },
-      }
+      },
     );
     return res.json();
   }
   const results = await getData();
   return (
     <PageWrapper>
-      <div className="container mt-6 mx-auto px-6 max-w-[1280px]">
+      <div className="container mx-auto mt-6 max-w-[1280px] px-6">
         <div className="flex justify-between">
-          <h1 className="text-4xl mb-8">Subscribers</h1>
-          <Button as={Link} href="./subscribers/notify">Send email to users!</Button>
+          <h1 className="mb-8 text-4xl">Subscribers</h1>
+          <Button as={Link} href="./subscribers/notify">
+            Send email to users!
+          </Button>
         </div>
         <SubscribersTable results={results} />
       </div>

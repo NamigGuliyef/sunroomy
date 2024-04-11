@@ -9,11 +9,18 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Projects",
   description: "The Next Generation of Design and Craft",
+  openGraph: {
+    title: "Projects | Sunroomy",
+    description: "The Next Generation of Design and Craft.",
+  },
+  alternates: {
+    canonical: `/projects`,
+  },
 };
 
 async function getData() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects`, {
-    next: { revalidate: 60 },
+    next: { revalidate: 1 },
   });
   return res.json();
 }
@@ -35,3 +42,4 @@ export default async function Projects() {
     </Section>
   );
 }
+export const revalidate = 1;

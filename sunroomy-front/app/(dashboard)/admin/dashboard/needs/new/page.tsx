@@ -1,11 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import NotFoundPage from "@/app/(dashboard)/not-found";
 import { PageWrapper } from "@/components/PageWrapper";
 import { Button, Card, Input } from "@nextui-org/react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -48,7 +47,9 @@ const NeedsPage = () => {
         setLoading(false);
       });
   };
-  if (error) return <NotFoundPage />;
+  if (error) {
+    notFound();
+  }
   return (
     <div className="container mx-auto mt-6 max-w-[1280px] px-6">
       <PageWrapper>

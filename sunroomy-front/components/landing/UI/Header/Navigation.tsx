@@ -24,11 +24,11 @@ export default function Navigation({ scroll }: NavigationProps) {
         } ${className}`}
       >
         <ul className="flex flex-col gap-9 border-t border-white border-opacity-20 pt-5 text-sm font-medium lg:mr-2 lg:flex-row lg:border-none lg:pt-0">
-          <LinkItem to="/products/pergola">Sunroom</LinkItem>
+          <LinkItem to="/products/sunroom">Sunroom</LinkItem>
           <LinkItem to="/products/louver">Louver</LinkItem>
           <LinkItem to="/products/pergola">Pergola</LinkItem>
           <LinkItem to="/products/blinds">Blinds</LinkItem>
-          <LinkItem to="/products/windows-and-doors">Windows & Doors</LinkItem>
+          <LinkItem to="/products/doors-and-windows">Doors & Windows</LinkItem>
         </ul>
         <div
           className={`linear -right-full z-[5] pb-5 transition-all duration-300 lg:fixed lg:h-full lg:w-[32%] lg:bg-[#1d1d1d] lg:pb-0 lg:pl-[2%] lg:pr-[5%] lg:pt-[5%] lg:duration-500 xl:w-[25%] ${
@@ -45,10 +45,10 @@ export default function Navigation({ scroll }: NavigationProps) {
             <LinkItem className="lg:!text-3xl" to="/about-us">
               About Us
             </LinkItem>
-            <LinkItem className="lg:!text-3xl" to="/request">
-              Request a project
+            <LinkItem className="lg:!text-3xl" to="/request-a-quote">
+              Request a Quote
             </LinkItem>
-            <LinkItem className="lg:!text-3xl" to="/contacts">
+            <LinkItem className="lg:!text-3xl" to="/contact-us">
               Contact Us
             </LinkItem>
             {session?.user && (

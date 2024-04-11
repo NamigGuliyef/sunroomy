@@ -19,7 +19,7 @@ const DashboardNotFoundPage = () => {
           </CardHeader>
           <CardContent>
             <p className="mb-8 text-2xl">
-              The page you&apos;re looking for doesn&apos;t exist.
+              The dashboard page you&apos;re looking for doesn&apos;t exist.
             </p>
             <Link href="/" className="flex justify-end">
               <Button

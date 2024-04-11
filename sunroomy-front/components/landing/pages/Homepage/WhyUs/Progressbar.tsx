@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
@@ -9,10 +9,13 @@ interface ProgressBarProps {
 const ProgressBar: React.FC<ProgressBarProps> = ({ totalSlides }) => {
   const [progress, setProgress] = useState(0);
 
-  const handleSlideChange = (swiper: any) => {
-    const currentProgress = (swiper.realIndex / (totalSlides - 1)) * 100;
-    setProgress(currentProgress);
-  };
+  const handleSlideChange = useCallback(
+    (swiper: any) => {
+      const currentProgress = (swiper.realIndex / (totalSlides - 1)) * 100;
+      setProgress(currentProgress);
+    },
+    [totalSlides],
+  );
 
   useEffect(() => {
     const swiperInstance = (document.querySelector(".swiper-container") as any)
@@ -22,12 +25,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ totalSlides }) => {
     return () => {
       swiperInstance.off("slideChange", handleSlideChange);
     };
-  }, [totalSlides]);
+  }, [totalSlides, handleSlideChange]);
 
   return (
     <div className="relative h-1 w-full bg-gray-300">
       <div
-        className="absolute top-0 left-0 h-full bg-blue-500"
+        className="absolute left-0 top-0 h-full bg-blue-500"
         style={{ width: `${progress}%` }}
       />
     </div>

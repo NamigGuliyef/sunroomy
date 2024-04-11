@@ -5,80 +5,31 @@ import Hero from "@/components/landing/pages/AboutUsPage/Hero";
 import SunroomyStats from "@/components/landing/pages/AboutUsPage/SunroomyStats";
 import Collection from "@/components/landing/pages/Homepage/About/Collection";
 import WhyUs from "@/components/landing/pages/Homepage/WhyUs";
-import { IAboutUs, WhyData } from "@/types/types";
+import { IAboutUs, IProduct, WhyData } from "@/types/types";
+import axios from "axios";
 import { Metadata } from "next";
 import Image from "next/image";
+export const revalidate = 1;
 
 export const metadata: Metadata = {
   title: "About Us",
   description: "The Next Generation of Design and Craft",
+  openGraph: {
+    title: "About Us | Sunroomy",
+    description: "The Next Generation of Design and Craft.",
+  },
 };
 
-const DATA = [
-  {
-    id: 1,
-    image: "pergola.png",
-    text: "pergola",
-  },
-  {
-    id: 2,
-    image: "sunroom.png",
-    text: "sunroom",
-  },
-  {
-    id: 3,
-    image: "louver.png",
-    text: "louver",
-  },
-  {
-    id: 4,
-    image: "pergola.png",
-    text: "pergola",
-  },
-  {
-    id: 5,
-    image: "sunroom.png",
-    text: "sunroom",
-  },
-  {
-    id: 6,
-    image: "louver.png",
-    text: "louver",
-  },
-  {
-    id: 7,
-    image: "pergola.png",
-    text: "pergola",
-  },
-  {
-    id: 8,
-    image: "sunroom.png",
-    text: "sunroom",
-  },
-  {
-    id: 9,
-    image: "louver.png",
-    text: "louver",
-  },
-  {
-    id: 10,
-    image: "pergola.png",
-    text: "pergola",
-  },
-  {
-    id: 11,
-    image: "sunroom.png",
-    text: "sunroom",
-  },
-  {
-    id: 12,
-    image: "louver.png",
-    text: "louver",
-  },
-];
+const getCollectionData = async (): Promise<IProduct[]> => {
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`,
+  );
+  return res.data;
+};
+
 async function getData(): Promise<IAboutUs[]> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/about-us`, {
-    next: { revalidate: 60 },
+    next: { revalidate: 1 },
   });
   return res.json();
 }
@@ -87,18 +38,22 @@ async function getWhyUs(): Promise<WhyData[]> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/why-outdorr`,
     {
-      next: { revalidate: 60 },
+      next: { revalidate: 1 },
     },
   );
   return res.json();
 }
 export default async function Page() {
   try {
-    const [data, whyusData] = await Promise.all([getData(), getWhyUs()]);
+    const [data, whyusData, collectionData] = await Promise.all([
+      getData(),
+      getWhyUs(),
+      getCollectionData(),
+    ]);
     const whyUs = whyusData[0];
     const { description } = data[0];
     const stats = data[0];
-    console.log(stats);
+    (stats);
     return (
       <Section className="mt-24 lg:mt-[88px]">
         <Hero />
@@ -191,7 +146,7 @@ export default async function Page() {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <Collection data={DATA} />
+                  <Collection data={collectionData} />
                   <div className="flex justify-center">
                     <Request size={"sm"} />
                   </div>

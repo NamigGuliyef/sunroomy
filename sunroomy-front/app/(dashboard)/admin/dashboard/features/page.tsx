@@ -39,7 +39,7 @@ export default function FeaturesPage() {
   }, [session?.user.token]);
 
   const handleSelectionChange = (event: any) => {
-    console.log(event.target.value);
+    (event.target.value);
     setSelected(event.target.value);
   };
   const filteredFeatures = features?.filter((feature: ISubProductFeature) => {
@@ -50,7 +50,7 @@ export default function FeaturesPage() {
     }
     return true; 
   });
-  console.log(filteredFeatures);
+  (filteredFeatures);
   return (
     <>
       {isLoading ? (

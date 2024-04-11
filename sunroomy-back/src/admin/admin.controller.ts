@@ -838,7 +838,7 @@ export class AdminController {
    @Get('/dashboard/subproduct-placement')
    @HttpCode(HttpStatus.OK)
    async getAllSubproductPlacement(): Promise<subproductPlacement[]> {
-     return await this.adminService.getAllSubproductCustom()
+     return await this.adminService.getAllSubproductPlacement()
    }
  
  

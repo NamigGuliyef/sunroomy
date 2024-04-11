@@ -3,7 +3,7 @@ export default function RequestHeading() {
     <div className="container px-6 lg:px-0 flex flex-col lg:flex-row gap-6 pt-8 lg:pt-24 pb-12 lg:pb-24 !text-darkgray">
       <div className="w-full lg:w-1/2 flex flex-col justify-between">
         <h1 className="text-3.2xl md:text-6xl lg:text-7.2xl lg:mb-36 font-semibold lg:font-normal">
-          Request a Project
+          Request a Quote
         </h1>
       </div>
       <div className="w-full lg:w-1/2 flex flex-col">

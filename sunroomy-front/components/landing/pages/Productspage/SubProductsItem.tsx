@@ -21,7 +21,6 @@ const SubProductsItem: React.FC<SubProductsItemProps> = ({ data, slider }) => {
           alt="image"
           className="group-hover:scale-[1.02] min-h-[327px] max-h-[328px] rounded-2.5xl transition-all duration-500 ease-in-out object-cover w-full h-full cursor-pointer"
           src={cover_photo}
-          loading="lazy"
           width={424}
           height={327}
         />

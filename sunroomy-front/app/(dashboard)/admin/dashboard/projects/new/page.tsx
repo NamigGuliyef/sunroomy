@@ -16,6 +16,7 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -133,7 +134,9 @@ const ProjectsPage = () => {
       });
   };
 
-  if (error) return <NotFoundPage />;
+  if (error) {
+    notFound();
+  }
   return (
     <div className="container mx-auto mt-6 max-w-[1280px] px-6">
       <PageWrapper>
@@ -250,7 +253,7 @@ const ProjectsPage = () => {
               onValueChange={setSelectedType}
             >
               <Radio value="Home">Home</Radio>
-              <Radio value="Business">Business</Radio>
+              <Radio value="Commerical">Commerical</Radio>
             </RadioGroup>
             <ShadInput
               id="file"

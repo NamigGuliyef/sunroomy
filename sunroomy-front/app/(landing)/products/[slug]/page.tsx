@@ -22,19 +22,26 @@ export async function generateMetadata(
   const product = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${slug}`,
     {
-      next: { revalidate: 60 },
+      next: { revalidate: 1 },
     },
   ).then((res) => res.json());
 
   return {
     title: `${product.title}`,
+    openGraph: {
+      title: `${product.title} | Sunroomy`,
+      description: "The Next Generation of Design and Craft.",
+    },
+    alternates: {
+      canonical: `/products/${product.slug}`,
+    },
   };
 }
 async function getData(slug: string): Promise<IProduct> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${slug}`,
     {
-      next: { revalidate: 60 },
+      next: { revalidate: 1 },
     },
   );
   return res.json();
