@@ -60,6 +60,8 @@ import {
 } from '../projects/dto/project.dto';
 import { Project } from '../projects/model/project.schema';
 import { RequestProject } from '../request-project/model/requestproject.schema';
+import { RequestQuoteDto } from '../request_quote/dto/request_quote.dto';
+import { RequestQuote } from '../request_quote/model/request_quote.schema';
 import {
   createSpecificationDto,
   updateSpecificationDto
@@ -118,7 +120,9 @@ export class AdminService {
     @InjectModel('subproduct_custom') private subproductCustomModel: Model<subproductCustom>,
     @InjectModel('subproduct_customItem') private subproductCustomItemModel: Model<subproductCustomItem>,
     @InjectModel('subproduct_placement') private subproductPlacementModel: Model<subproductPlacement>,
-    @InjectModel('subproduct_placementItem') private subproductPlacementItemModel: Model<subproductPlacementItem>
+    @InjectModel('subproduct_placementItem') private subproductPlacementItemModel: Model<subproductPlacementItem>,
+    @InjectModel('request_quote') private requestQuoteModel: Model<RequestQuote>,
+
 
   ) { }
 
@@ -1700,102 +1704,147 @@ export class AdminService {
   }
 
 
-    // create subproduct placement 
-    async createSubproductPlacement(
-      CreateSubproductPlacementDto: createSubproductPlacementDto,
-    ): Promise<subproductPlacement> {
-      return await this.subproductPlacementModel.create(CreateSubproductPlacementDto);
+  // create subproduct placement 
+  async createSubproductPlacement(
+    CreateSubproductPlacementDto: createSubproductPlacementDto,
+  ): Promise<subproductPlacement> {
+    return await this.subproductPlacementModel.create(CreateSubproductPlacementDto);
+  }
+
+
+  // update  subproduct placement 
+  async updateSubproductPlacement(id: string, UpdatesubproductPlacementDto: updateSubproductPlacementDto): Promise<subproductPlacement> {
+    const subproductPlacementExist = await this.subproductPlacementModel.findById(id);
+    if (!subproductPlacementExist) {
+      throw new HttpException('No project requirements found to be modified', HttpStatus.NOT_FOUND);
+    } else {
+      return await this.subproductPlacementModel.findByIdAndUpdate(id, { $set: UpdatesubproductPlacementDto }, { new: true });
     }
-  
-  
-    // update  subproduct placement 
-    async updateSubproductPlacement(id: string, UpdatesubproductPlacementDto: updateSubproductPlacementDto): Promise<subproductPlacement> {
-      const subproductPlacementExist = await this.subproductPlacementModel.findById(id);
-      if (!subproductPlacementExist) {
-        throw new HttpException('No project requirements found to be modified', HttpStatus.NOT_FOUND);
-      } else {
-        return await this.subproductPlacementModel.findByIdAndUpdate(id, { $set: UpdatesubproductPlacementDto }, { new: true });
-      }
+  }
+
+  // delete subproduct placement 
+  async deleteSubproductPlacement(id: string): Promise<string> {
+    const subproductPlacement = await this.subproductPlacementModel.findById(id);
+    if (!subproductPlacement) {
+      throw new HttpException(
+        'The subproduct placement you want to delete were not found',
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      await this.subproductPlacementModel.findByIdAndDelete(id);
+      return 'Subproduct placement removed';
     }
-  
-    // delete subproduct placement 
-    async deleteSubproductPlacement(id: string): Promise<string> {
-      const subproductPlacement = await this.subproductPlacementModel.findById(id);
-      if (!subproductPlacement) {
-        throw new HttpException(
-          'The subproduct placement you want to delete were not found',
-          HttpStatus.NOT_FOUND,
-        );
-      } else {
-        await this.subproductPlacementModel.findByIdAndDelete(id);
-        return 'Subproduct placement removed';
-      }
+  }
+
+  // get subproduct placement 
+  async getSingleSubproductPlacement(id: string): Promise<subproductPlacement> {
+    const subproductPlacement = await this.subproductPlacementModel.findById(id);
+    if (!subproductPlacement) {
+      throw new HttpException('Subproduct placement not found', HttpStatus.NOT_FOUND);
+    } else {
+      return subproductPlacement.populate([{ path: 'itemIds' }])
     }
-  
-    // get subproduct placement 
-    async getSingleSubproductPlacement(id: string): Promise<subproductPlacement> {
-      const subproductPlacement = await this.subproductPlacementModel.findById(id);
-      if (!subproductPlacement) {
-        throw new HttpException('Subproduct placement not found', HttpStatus.NOT_FOUND);
-      } else {
-        return subproductPlacement.populate([{ path: 'itemIds' }])
-      }
-    }
-  
-  
-    //get All subproduct placement 
-    async getAllSubproductPlacement(): Promise<subproductPlacement[]> {
-      return await this.subproductPlacementModel.find().populate([{ path: 'itemIds' }]);
-    }
-  
-  
-    // create subproduct placement item 
-    async createSubproductPlacementItem(createSubproductPlacementItemDto: CreateSubproductPlacementItemDto, photo: Express.Multer.File): Promise<string> {
-      const subproductPlacementItem = await this.subproductPlacementItemModel.findOne({ description: createSubproductPlacementItemDto.description })
-      if (subproductPlacementItem) throw new HttpException('Subproduct placement item already exist', HttpStatus.CONFLICT)
+  }
+
+
+  //get All subproduct placement 
+  async getAllSubproductPlacement(): Promise<subproductPlacement[]> {
+    return await this.subproductPlacementModel.find().populate([{ path: 'itemIds' }]);
+  }
+
+
+  // create subproduct placement item 
+  async createSubproductPlacementItem(createSubproductPlacementItemDto: CreateSubproductPlacementItemDto, photo: Express.Multer.File): Promise<string> {
+    const subproductPlacementItem = await this.subproductPlacementItemModel.findOne({ description: createSubproductPlacementItemDto.description })
+    if (subproductPlacementItem) throw new HttpException('Subproduct placement item already exist', HttpStatus.CONFLICT)
+    const data = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
+    const NewSubproductPlacementItem = await this.subproductPlacementItemModel.create({ ...createSubproductPlacementItemDto, photo: data.url })
+    await this.subproductPlacementModel.findOneAndUpdate({ _id: NewSubproductPlacementItem.subproductPlacementId }, { $push: { itemIds: NewSubproductPlacementItem._id } })
+    return 'New subproduct placement item created'
+  }
+
+
+  // update subproduct placement item
+  async updateSubproductPlacementItem(id: string, updateSubproductPlacementItemDto: UpdateSubproductPlacementItemDto, photo: Express.Multer.File): Promise<string> {
+    const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
+    if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
+    if (photo && photo.path) {
       const data = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
-      const NewSubproductPlacementItem = await this.subproductPlacementItemModel.create({ ...createSubproductPlacementItemDto, photo: data.url })
-      await this.subproductPlacementModel.findOneAndUpdate({ _id: NewSubproductPlacementItem.subproductPlacementId }, { $push: { itemIds: NewSubproductPlacementItem._id } })
-      return 'New subproduct placement item created'
+      await this.subproductPlacementItemModel.findByIdAndUpdate(id, { $set: { ...updateSubproductPlacementItemDto, photo: data.url } })
+      return 'Subproduct placement item updated'
+    } else {
+      await this.subproductPlacementItemModel.findByIdAndUpdate(id, { $set: updateSubproductPlacementItemDto })
+      return 'Subproduct placement item updated'
     }
-  
-  
-    // update subproduct placement item
-    async updateSubproductPlacementItem(id: string, updateSubproductPlacementItemDto: UpdateSubproductPlacementItemDto, photo: Express.Multer.File): Promise<string> {
-      const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
-      if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
-      if (photo && photo.path) {
-        const data = await cloudinary.uploader.upload(photo.path, { public_id: photo.originalname })
-        await this.subproductPlacementItemModel.findByIdAndUpdate(id, { $set: { ...updateSubproductPlacementItemDto, photo: data.url } })
-        return 'Subproduct placement item updated'
-      } else {
-        await this.subproductPlacementItemModel.findByIdAndUpdate(id, { $set: updateSubproductPlacementItemDto })
-        return 'Subproduct placement item updated'
-      }
+  }
+
+
+  // delete subproduct placement item
+  async deleteSubproductPlacementItem(id: string): Promise<string> {
+    const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
+    if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
+    const subproductPlacementItem = await this.subproductPlacementItemModel.findByIdAndDelete(id)
+    await this.subproductPlacementModel.findOneAndUpdate({ _id: subproductPlacementItem.subproductPlacementId }, { $pull: { itemIds: subproductPlacementItem._id } })
+    return "Subproduct placement item deleted"
+  }
+
+
+  // get single subproduct placement item
+  async getSingleSubproductPlacementItem(id: string): Promise<subproductPlacementItem> {
+    const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
+    if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
+    return subproductPlacementItemExist.populate([{ path: 'subproductPlacementId' }])
+  }
+
+
+  // get all subproduct placement item
+  async getAllSubproductPlacementItem(): Promise<subproductPlacementItem[]> {
+    return await this.subproductPlacementItemModel.find().populate([{ path: 'subproductPlacementId' }])
+  }
+
+
+  // create request quote 
+  async createRequestQuote(requestQuoteDto: RequestQuoteDto, file: Express.Multer.File): Promise<RequestQuote> {
+    const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
+    return await this.requestQuoteModel.create({ ...requestQuoteDto, cover_photo: data.secure_url })
+  }
+
+
+  // update request quote 
+  async updateRequestQuote(id: string, requestQuoteDto: RequestQuoteDto, file: Express.Multer.File): Promise<RequestQuote> {
+    const RequestQuoteExist = await this.requestQuoteModel.findById(id)
+    if (!RequestQuoteExist) {
+      throw new HttpException('Request quote not found', HttpStatus.NOT_FOUND)
     }
-  
-  
-    // delete subproduct placement item
-    async deleteSubproductPlacementItem(id: string): Promise<string> {
-      const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
-      if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
-      const subproductPlacementItem = await this.subproductPlacementItemModel.findByIdAndDelete(id)
-      await this.subproductPlacementModel.findOneAndUpdate({ _id: subproductPlacementItem.subproductPlacementId }, { $pull: { itemIds: subproductPlacementItem._id } })
-      return "Subproduct placement item deleted"
+    if (file && file.path) {
+      const data = await cloudinary.uploader.upload(file.path, { public_id: file.originalname })
+      return await this.requestQuoteModel.findByIdAndUpdate(id, { $set: { ...requestQuoteDto, cover_photo: data.secure_url } }, { new: true })
     }
-  
-  
-    // get single subproduct placement item
-    async getSingleSubproductPlacementItem(id: string): Promise<subproductPlacementItem> {
-      const subproductPlacementItemExist = await this.subproductPlacementItemModel.findById(id)
-      if (!subproductPlacementItemExist) throw new HttpException('Subproduct placement item not found', HttpStatus.NOT_FOUND)
-      return subproductPlacementItemExist.populate([{ path: 'subproductPlacementId' }])
+    return await this.requestQuoteModel.findByIdAndUpdate(id, { $set: { ...requestQuoteDto } }, { new: true })
+  }
+
+
+  // delete request quote 
+  async deleteRequestQuote(id: string): Promise<string> {
+    const RequestQuoteExist = await this.requestQuoteModel.findById(id)
+    if (!RequestQuoteExist) {
+      throw new HttpException('Request quote not found', HttpStatus.NOT_FOUND)
     }
-  
-  
-    // get all subproduct placement item
-    async getAllSubproductPlacementItem(): Promise<subproductPlacementItem[]> {
-      return await this.subproductPlacementItemModel.find().populate([{ path: 'subproductPlacementId' }])
-    }
+    await this.requestQuoteModel.findByIdAndDelete(id)
+    return 'The request quote section has been removed'
+  }
+
+
+  // get All request quote 
+  async getAllRequestQuote(): Promise<RequestQuote[]> {
+    return await this.requestQuoteModel.find()
+  }
+
+
+  // get single request quote 
+  async getSingleRequestQuote(id: string): Promise<RequestQuote> {
+    return await this.requestQuoteModel.findById(id)
+  }
+
 }
 

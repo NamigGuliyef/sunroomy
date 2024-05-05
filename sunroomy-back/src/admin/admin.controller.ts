@@ -30,6 +30,8 @@ import { ProjectDesign } from '../project-design/model/projectdesign.schema';
 import { createProjectDto, updateProjectDto } from '../projects/dto/project.dto';
 import { Project } from '../projects/model/project.schema';
 import { RequestProject } from '../request-project/model/requestproject.schema';
+import { RequestQuoteDto } from '../request_quote/dto/request_quote.dto';
+import { RequestQuote } from '../request_quote/model/request_quote.schema';
 import { createSpecificationDto, updateSpecificationDto } from '../specifications/dto/specification.dto';
 import { Specification } from '../specifications/model/specification.schema';
 import { CreateSubproductCustomItemDto, UpdateSubproductCustomItemDto } from '../subproduct-customItem/dto/subproduct_customItem.dto';
@@ -802,88 +804,132 @@ export class AdminController {
   }
 
 
-   // create subproduct placement
-   @Post('/dashboard/subproduct-placement')
-   @HttpCode(HttpStatus.CREATED)
-   @UsePipes(new ValidationPipe())
-   async createSubproductPlacement(@Body() CreatesubproductPlacementDto: createSubproductPlacementDto): Promise<subproductPlacement> {
-     return await this.adminService.createSubproductPlacement(CreatesubproductPlacementDto)
-   }
- 
-   // update subproduct placement
-   @Patch('/dashboard/subproduct-placement/:id')
-   @HttpCode(HttpStatus.OK)
-   @UsePipes(new ValidationPipe())
-   async updateSubproductPlacement(@Param('id') id: string, @Body() UpdatesubproductPlacementDto: updateSubproductPlacementDto): Promise<subproductPlacement> {
-     return await this.adminService.updateSubproductPlacement(id, UpdatesubproductPlacementDto)
-   }
- 
-   // delete subproduct placement
-   @Delete('/dashboard/subproduct-placement/:id')
-   @HttpCode(HttpStatus.OK)
-   async deleteSubproductPlacement(@Param('id') id: string): Promise<string> {
-     return await this.adminService.deleteSubproductPlacement(id)
-   }
- 
- 
-   // get single subproduct Placement
-   @Get('/dashboard/subproduct-placement/:id')
-   @HttpCode(HttpStatus.OK)
-   async getSingleSubproductPlacement(@Param('id') id: string): Promise<subproductPlacement> {
-     return await this.adminService.getSingleSubproductPlacement(id)
-   }
- 
- 
-   // get all subproduct placement
-   @Get('/dashboard/subproduct-placement')
-   @HttpCode(HttpStatus.OK)
-   async getAllSubproductPlacement(): Promise<subproductPlacement[]> {
-     return await this.adminService.getAllSubproductPlacement()
-   }
- 
- 
-   // create subproduct placement item
-   @Post('/dashboard/subproduct-placementItem')
-   @HttpCode(HttpStatus.CREATED)
-   @UsePipes(new ValidationPipe())
-   @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
-   async createSubproductPlacementItem(@Body() createSubproductPlacementItemDto: CreateSubproductPlacementItemDto, @UploadedFile() photo: Express.Multer.File): Promise<string> {
-     return await this.adminService.createSubproductPlacementItem(createSubproductPlacementItemDto, photo)
-   }
- 
- 
-   // update subproduct placement item
-   @Patch('/dashboard/subproduct-placementItem/:id')
-   @HttpCode(HttpStatus.OK)
-   @UsePipes(new ValidationPipe())
-   @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
-   async updateSubproductPlacementItem(@Param('id') id: string, @Body() updateSubproductPlacementItemDto: UpdateSubproductPlacementItemDto, @UploadedFile() photo: Express.Multer.File): Promise<string> {
-     return await this.adminService.updateSubproductPlacementItem(id, updateSubproductPlacementItemDto, photo)
-   }
- 
- 
-   // delete subproduct placement item
-   @Delete('/dashboard/subproduct-placementItem/:id')
-   @HttpCode(HttpStatus.OK)
-   async deleteSubproductPlacementItem(@Param('id') id: string): Promise<string> {
-     return await this.adminService.deleteSubproductPlacementItem(id)
-   }
- 
- 
-   // get single subproduct placement item
-   @Get('/dashboard/subproduct-placementItem/:id')
-   @HttpCode(HttpStatus.OK)
-   async getSingleSubproductPlacementItem(@Param('id') id: string): Promise<subproductPlacementItem> {
-     return await this.adminService.getSingleSubproductPlacementItem(id)
-   }
- 
- 
-   // get all subproduct placement item
-   @Get('/dashboard/subproduct-placementItem')
-   @HttpCode(HttpStatus.OK)
-   async getAllSubproductPlacementItem(): Promise<subproductPlacementItem[]> {
-     return await this.adminService.getAllSubproductPlacementItem()
-   }
- 
+  // create subproduct placement
+  @Post('/dashboard/subproduct-placement')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  async createSubproductPlacement(@Body() CreatesubproductPlacementDto: createSubproductPlacementDto): Promise<subproductPlacement> {
+    return await this.adminService.createSubproductPlacement(CreatesubproductPlacementDto)
+  }
+
+  // update subproduct placement
+  @Patch('/dashboard/subproduct-placement/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  async updateSubproductPlacement(@Param('id') id: string, @Body() UpdatesubproductPlacementDto: updateSubproductPlacementDto): Promise<subproductPlacement> {
+    return await this.adminService.updateSubproductPlacement(id, UpdatesubproductPlacementDto)
+  }
+
+  // delete subproduct placement
+  @Delete('/dashboard/subproduct-placement/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteSubproductPlacement(@Param('id') id: string): Promise<string> {
+    return await this.adminService.deleteSubproductPlacement(id)
+  }
+
+
+  // get single subproduct Placement
+  @Get('/dashboard/subproduct-placement/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSubproductPlacement(@Param('id') id: string): Promise<subproductPlacement> {
+    return await this.adminService.getSingleSubproductPlacement(id)
+  }
+
+
+  // get all subproduct placement
+  @Get('/dashboard/subproduct-placement')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubproductPlacement(): Promise<subproductPlacement[]> {
+    return await this.adminService.getAllSubproductPlacement()
+  }
+
+
+  // create subproduct placement item
+  @Post('/dashboard/subproduct-placementItem')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async createSubproductPlacementItem(@Body() createSubproductPlacementItemDto: CreateSubproductPlacementItemDto, @UploadedFile() photo: Express.Multer.File): Promise<string> {
+    return await this.adminService.createSubproductPlacementItem(createSubproductPlacementItemDto, photo)
+  }
+
+
+  // update subproduct placement item
+  @Patch('/dashboard/subproduct-placementItem/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('photo', MulterOptionsCloudinary))
+  async updateSubproductPlacementItem(@Param('id') id: string, @Body() updateSubproductPlacementItemDto: UpdateSubproductPlacementItemDto, @UploadedFile() photo: Express.Multer.File): Promise<string> {
+    return await this.adminService.updateSubproductPlacementItem(id, updateSubproductPlacementItemDto, photo)
+  }
+
+
+  // delete subproduct placement item
+  @Delete('/dashboard/subproduct-placementItem/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteSubproductPlacementItem(@Param('id') id: string): Promise<string> {
+    return await this.adminService.deleteSubproductPlacementItem(id)
+  }
+
+
+  // get single subproduct placement item
+  @Get('/dashboard/subproduct-placementItem/:id')
+  @HttpCode(HttpStatus.OK)
+  async getSingleSubproductPlacementItem(@Param('id') id: string): Promise<subproductPlacementItem> {
+    return await this.adminService.getSingleSubproductPlacementItem(id)
+  }
+
+
+  // get all subproduct placement item
+  @Get('/dashboard/subproduct-placementItem')
+  @HttpCode(HttpStatus.OK)
+  async getAllSubproductPlacementItem(): Promise<subproductPlacementItem[]> {
+    return await this.adminService.getAllSubproductPlacementItem()
+  }
+
+
+  // create request quote 
+  @Post('/dashboard/request-quote')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('cover_photo', MulterOptionsCloudinary))
+  async createRequestQuote(@Body() requestQuoteDto: RequestQuoteDto, @UploadedFile() file: Express.Multer.File): Promise<RequestQuote> {
+    return await this.adminService.createRequestQuote(requestQuoteDto, file)
+  }
+
+
+  // update request quote 
+  @Patch('/dashboard/request-qoute/:id')
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(FileInterceptor('cover_photo', MulterOptionsCloudinary))
+  async updateRequestQuote(@Param('id') id: string, @Body() requestQuoteDto: RequestQuoteDto, @UploadedFile() file: Express.Multer.File): Promise<RequestQuote> {
+    return await this.adminService.updateRequestQuote(id, requestQuoteDto, file)
+  }
+
+
+  // delete request quote 
+  @Delete('/dashboard/request-quote/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteRequestQuote(@Param('id') id: string): Promise<string> {
+    return await this.adminService.deleteRequestQuote(id)
+  }
+
+
+  // get All request quote 
+  @Get('/dashboard/request-qoute')
+  @HttpCode(HttpStatus.OK)
+  async getAllRequestQuote(): Promise<RequestQuote[]> {
+    return await this.adminService.getAllRequestQuote()
+  }
+
+
+  // get single request quote 
+  @Get('/dashboard/request-qoute/:id')
+  @HttpCode(HttpStatus.OK)
+  async geSingleRequestQuote(@Param('id') id: string): Promise<RequestQuote> {
+    return await this.adminService.getSingleRequestQuote(id)
+  }
+
 
 }

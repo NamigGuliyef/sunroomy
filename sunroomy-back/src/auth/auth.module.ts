@@ -16,6 +16,7 @@ import { ProjectDesignDetailsModel } from '../project-design-details/model/proje
 import { ProjectDesignModel } from '../project-design/model/projectdesign.schema';
 import { projectModel } from '../projects/model/project.schema';
 import { requestProjectModel } from '../request-project/model/requestproject.schema';
+import { RequestQuoteModel } from '../request_quote/model/request_quote.schema';
 import { specificationModel } from '../specifications/model/specification.schema';
 import { subproductCustomItemModel } from '../subproduct-customItem/model/subproduct_customItem.schema';
 import { subproductPlacementItemModel } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
@@ -55,7 +56,8 @@ import { AuthService } from './auth.service';
       { name: 'subproduct_custom', schema: subproductCustomModel },
       { name: 'subproduct_customItem', schema: subproductCustomItemModel },
       { name: 'subproduct_placement', schema: subproductPlacementModel },
-      { name: 'subproduct_placementItem', schema: subproductPlacementItemModel }
+      { name: 'subproduct_placementItem', schema: subproductPlacementItemModel },
+      { name: 'request_quote', schema: RequestQuoteModel }
     ]),
   ],
   controllers: [AuthController],
