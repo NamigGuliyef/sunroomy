@@ -23,6 +23,7 @@ import { subproductCustom } from '../subproduct_custom/model/subproduct_custom.s
 import { subproductCustomItem } from '../subproduct-customItem/model/subproduct_customItem.schema';
 import { subproductPlacement } from '../subproduct_placement/model/subproduct_placement.schema';
 import { subproductPlacementItem } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
+import { RequestQuote } from '../request_quote/model/request_quote.schema';
 
 @Controller('')
 export class GuestController {
@@ -271,4 +272,19 @@ export class GuestController {
   async getAllSubproductPlacementItem(): Promise<subproductPlacementItem[]> {
     return await this.guestService.getAllSubproductPlacementItem()
   }
+
+   // get All request quote 
+   @Get('/request-qoute')
+   @HttpCode(HttpStatus.OK)
+   async getAllRequestQuote(): Promise<RequestQuote[]> {
+     return await this.guestService.getAllRequestQuote()
+   }
+ 
+ 
+   // get single request quote 
+   @Get('/request-qoute/:id')
+   @HttpCode(HttpStatus.OK)
+   async geSingleRequestQuote(@Param('id') id: string): Promise<RequestQuote> {
+     return await this.guestService.getSingleRequestQuote(id)
+   }
 }

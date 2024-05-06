@@ -6,8 +6,8 @@ import { applicationModel } from '../applications/model/application.schema';
 import { contactModel } from '../contact/model/contact.schema';
 import { featureModel } from '../features/model/feature.schema';
 import { followUsModel } from '../follow_us/model/followus.schema';
-import { HomepageHeroModel } from '../homepage_hero/model/homepage_hero.schema';
 import { homeAboutUsModel } from '../home_about_us/model/home_about_us.schema';
+import { HomepageHeroModel } from '../homepage_hero/model/homepage_hero.schema';
 import { LetUs_Inspire_YouModel } from '../letus-inspire-you/model/letus_inspire_you.schema';
 import { projectNeedModel } from '../needs/model/need.schema';
 import { productModel } from '../product/model/product.schema';
@@ -18,7 +18,6 @@ import { requestProjectModel } from '../request-project/model/requestproject.sch
 import { RequestQuoteModel } from '../request_quote/model/request_quote.schema';
 import { specificationModel } from '../specifications/model/specification.schema';
 import { subproductCustomItemModel } from '../subproduct-customItem/model/subproduct_customItem.schema';
-import { subproductPlacementItemModel } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
 import { subProductModel } from '../subproduct/model/subproduct.schema';
 import { subproductCustomModel } from '../subproduct_custom/model/subproduct_custom.schema';
 import { subproductPlacementModel } from '../subproduct_placement/model/subproduct_placement.schema';
@@ -27,6 +26,7 @@ import { usedProductsModel } from '../used-products/model/usedproduct.schema';
 import { whyOutdorrModel } from '../why-outdorr/model/whyoutdorr.schema';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
+import { subproductPlacementItemModel } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
 
 @Module({
   imports: [
@@ -54,6 +54,7 @@ import { AdminService } from './admin.service';
       { name: 'subproduct_custom', schema: subproductCustomModel },
       { name: 'subproduct_customItem', schema: subproductCustomItemModel },
       { name: 'subproduct_placement', schema: subproductPlacementModel },
+      { name: 'subproduct_placementItem', schema: subproductPlacementItemModel },
       { name: 'request_quote', schema: RequestQuoteModel }
       
     ]),

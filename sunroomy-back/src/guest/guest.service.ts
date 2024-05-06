@@ -24,6 +24,7 @@ import { createSubscribeDto } from '../subscribe/dto/subscribe.dto';
 import { Subscribe } from '../subscribe/model/subscribe.schema';
 import { WhyOutdorr } from '../why-outdorr/model/whyoutdorr.schema';
 import { Filter } from './guest.filter';
+import { RequestQuote } from '../request_quote/model/request_quote.schema';
 
 @Injectable()
 export class GuestService {
@@ -56,6 +57,7 @@ export class GuestService {
     private subproductPlacementModel: Model<subproductPlacement>,
     @InjectModel('subproduct_placementItem')
     private subproductPlacementItemModel: Model<subproductPlacementItem>,
+    @InjectModel('request_quote') private requestQuoteModel: Model<RequestQuote>
   ) {}
 
   // get all product - test edildi
@@ -462,4 +464,18 @@ export class GuestService {
       .find()
       .populate([{ path: 'subproductPlacementId' }]);
   }
+
+
+  
+  // get All request quote 
+  async getAllRequestQuote(): Promise<RequestQuote[]> {
+    return await this.requestQuoteModel.find()
+  }
+
+
+  // get single request quote 
+  async getSingleRequestQuote(id: string): Promise<RequestQuote> {
+    return await this.requestQuoteModel.findById(id)
+  }
+
 }

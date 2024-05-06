@@ -28,10 +28,10 @@ import {
 import { Feature } from '../features/model/feature.schema';
 import { createFollowUsDto, updateFollowUsDto } from '../follow_us/dto/followus.dto';
 import { FollowUs } from '../follow_us/model/followus.schema';
-import { CreateHomepageHeroDto, UpdateHomepageHeroDto } from '../homepage_hero/dto/homepage_hero.dto';
-import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
 import { createHomeAboutUsDto, updateHomeAboutUsDto } from '../home_about_us/dto/home_about_us.dto';
 import { HomeAboutUs } from '../home_about_us/model/home_about_us.schema';
+import { CreateHomepageHeroDto, UpdateHomepageHeroDto } from '../homepage_hero/dto/homepage_hero.dto';
+import { HomepageHero } from '../homepage_hero/model/homepage_hero.schema';
 import { LetUs_Inspire_You_Dto } from '../letus-inspire-you/dto/letus_inspire_you.dto';
 import { LetUs_Inspire_You } from '../letus-inspire-you/model/letus_inspire_you.schema';
 import {
@@ -99,18 +99,15 @@ export class AdminService {
     @InjectModel('usedproducts') private usedProductsModel: Model<UsedProducts>,
     @InjectModel('application') private applicationModel: Model<Application>,
     @InjectModel('project') private projectModel: Model<Project>,
-    @InjectModel('specification')
-    private specificationModel: Model<Specification>,
+    @InjectModel('specification') private specificationModel: Model<Specification>,
     @InjectModel('subproduct') private subProductModel: Model<Subproduct>,
     @InjectModel('product') private productModel: Model<Product>,
     @InjectModel('contact') private contactModel: Model<Contact>,
     @InjectModel('subscribe') private subscribeModel: Model<Subscribe>,
     @InjectModel('whyoutdorr') private whyOutdorrModel: Model<WhyOutdorr>,
     @InjectModel('aboutoutdorr') private aboutOutdorrModel: Model<AboutOutdorr>,
-    @InjectModel('projectdesign')
-    private projectDesignModel: Model<ProjectDesign>,
-    @InjectModel('projectdesigndetail')
-    private projectDesignDetailsModel: Model<ProjectDesignDetails>,
+    @InjectModel('projectdesign') private projectDesignModel: Model<ProjectDesign>,
+    @InjectModel('projectdesigndetail') private projectDesignDetailsModel: Model<ProjectDesignDetails>,
     @InjectModel('requestproject') private requestProjectModel: Model<RequestProject>,
     @InjectModel('letus_inspire_you') private LetUs_Inspire_YouModel: Model<LetUs_Inspire_You>,
     @InjectModel('about_us') private aboutUsModel: Model<aboutUs>,
@@ -121,8 +118,7 @@ export class AdminService {
     @InjectModel('subproduct_customItem') private subproductCustomItemModel: Model<subproductCustomItem>,
     @InjectModel('subproduct_placement') private subproductPlacementModel: Model<subproductPlacement>,
     @InjectModel('subproduct_placementItem') private subproductPlacementItemModel: Model<subproductPlacementItem>,
-    @InjectModel('request_quote') private requestQuoteModel: Model<RequestQuote>,
-
+    @InjectModel('request_quote') private requestQuoteModel: Model<RequestQuote>
 
   ) { }
 

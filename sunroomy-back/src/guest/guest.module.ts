@@ -20,6 +20,7 @@ import { subproductCustomModel } from '../subproduct_custom/model/subproduct_cus
 import { subproductCustomItemModel } from '../subproduct-customItem/model/subproduct_customItem.schema';
 import { subproductPlacementModel } from '../subproduct_placement/model/subproduct_placement.schema';
 import { subproductPlacementItemModel } from '../subproduct-placementItem/model/subproduct_placementItem.schema';
+import { RequestQuoteModel } from '../request_quote/model/request_quote.schema';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'whyoutdorr', schema: whyOutdorrModel },
@@ -29,7 +30,8 @@ import { subproductPlacementItemModel } from '../subproduct-placementItem/model/
   { name: 'requestproject', schema: requestProjectModel }, { name: 'letus_inspire_you', schema: LetUs_Inspire_YouModel }, { name: 'about_us', schema: aboutUsModel },
   { name: 'home_about_us', schema: homeAboutUsModel },{ name: 'homepage_hero', schema: HomepageHeroModel },{name:'follow_us',schema:FollowUs},
   { name: 'subproduct_custom', schema: subproductCustomModel }, { name: 'subproduct_customItem', schema: subproductCustomItemModel },
-  { name: 'subproduct_placement', schema: subproductPlacementModel }, { name: 'subproduct_placementItem', schema: subproductPlacementItemModel }
+  { name: 'subproduct_placement', schema: subproductPlacementModel }, { name: 'subproduct_placementItem', schema: subproductPlacementItemModel },
+  { name: 'request_quote', schema: RequestQuoteModel }
  ])],
   providers: [GuestService],
   controllers: [GuestController]
